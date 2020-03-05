@@ -7,6 +7,7 @@ url: "https://whitecr0wz.github.io/"
 description: "Website description"
 cover: "/assets/img/cover.svg"
 fanpage_id: ""
+timezone: America/Argentina 
 
 # Site general settings
 lang: "en"
