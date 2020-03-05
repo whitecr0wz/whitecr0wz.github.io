@@ -2,7 +2,7 @@
 layout: default
 ---
 
-# # cat about.txt
+# $ cat about.txt
 {:id="about"}
 
 Currently under construction
