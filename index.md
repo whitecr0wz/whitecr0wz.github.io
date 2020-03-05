@@ -1,37 +1,83 @@
-## Welcome to GitHub Pages
+---
+layout: default
+---
 
-You can use the [editor on GitHub](https://github.com/whitecr0wz/whitecr0wz.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+# $ cat about.txt
+{:id="about"}
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+This is a theme intended to use to [lampiaosec](https://lampiaosec.github.io). So, it's our taste, but because we like free culture, it's free to.
 
-### Markdown
+The categories to post was to support us, but you can change as you need.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+# $ cat contact.txt
+{:id="contact"}
 
-```markdown
-Syntax highlighted code block
+I think that all about this theme is intuitive, but if you want help, please, contact me: [gjuniioor](https://github.com/gjuniioor).
 
-# Header 1
-## Header 2
-### Header 3
+# $ cat team.txt
+{:id="team"}
 
-- Bulleted
-- List
+<ul>
+{% for member in site.categories.team reversed %}
+<li id="{{ member.title }}">{{ member.title }}
+<ul>
+<li>{{ member.mail }}</li>
+<li><a href="https://github.com/{{ member.github }}">https://github.com/{{ member.github }}</a></li>
+<li><a href="{{ member.site }}">{{ member.site }}</a></li>
+</ul>
+</li>
+{% endfor %}
+</ul>
 
-1. Numbered
-2. List
+# $ cat projects.txt
+{:id="projects"}
 
-**Bold** and _Italic_ and `Code` text
+<ul>
+{% for project in site.categories.projects %}
+<li><a href="{{ project.link }}">{{ project.title }}</a> - {{ project.description }}</li>
+{% endfor %}
+</ul>
 
-[Link](url) and ![Image](src)
-```
+# $ cat tools.txt
+{:id="tools"}
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+<ul>
+{% for tool in site.categories.tools %}
+<li><a href="{{ tool.link }}">{{ tool.title }}</a> - {{ tool.description }}</li>
+{% endfor %}
+</ul>
 
-### Jekyll Themes
+# $ cat talks.txt
+{:id="talks"}
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/whitecr0wz/whitecr0wz.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+<ul>
+{% for talk in site.categories.talks %}
+<li><a href="{{ talk.link }}" title="{{ talk.description }}">{{ talk.title }}</a> at {{ talk.where }}</li>
+{% endfor %}
+</ul>
 
-### Support or Contact
+# $ cat posts.txt
+{:id="posts"}
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+<ul>
+{% for post in site.categories.posts %}
+
+{% if post.en %}
+<li>{{ post.title }} :: <a href="{{ post.url }}" title="{{ post.description }}">en</a> :: <a href="{{ post.pt }}" title="{{ post.description_pt }}">pt_br</a></li>
+{% endif %}
+
+{% endfor %}
+</ul>
+
+# $ cat articles.txt
+{:id="articles"}
+
+<ul>
+{% for post in site.categories.articles %}
+
+{% if post.en %}
+<li>{{ post.title }} :: <a href="{{ post.url }}" title="{{ post.description }}">en</a> :: <a href="{{ post.pt }}" title="{{ post.description_pt }}">pt_br</a></li>
+{% endif %}
+
+{% endfor %}
+</ul>
