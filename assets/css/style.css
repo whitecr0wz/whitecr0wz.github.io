@@ -7,8 +7,7 @@ html {
 body {
 	background-color: rgba(0,0,0,0.97);
 	color: rgba(255,255,255,0.7);
-	padding: 10px;
-	margin: auto;
+	padding: 5px;
 	width: 80%;
 	border: 1px dashed rgba(255,255,255,0.7);
 	font-family: "Helvetica";
