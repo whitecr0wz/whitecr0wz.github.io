@@ -13,4 +13,4 @@ The categories to post was to support us, but you can change as you need.
 
 # # cat contact.txt
 
-This theme was created by https://lampiaosec.github.io.
+This theme was created by lampiaosec(https://lampiaosec.github.io).
