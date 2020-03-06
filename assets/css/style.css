@@ -17,7 +17,7 @@ body {
 
 header, nav, main, footer {
 	margin: 15px;
-	border-bottom: 1px dashed rgba(255,255,255,0.5);
+	/*border-bottom: 1px dashed rgba(255,255,255,0.5);*/
 }
 
 header, nav {
