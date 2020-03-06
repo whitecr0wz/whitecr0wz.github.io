@@ -10,4 +10,3 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 ### Findings
 ------------------------------------------------------------------------------------------------------------------------------------------
-This theme was created by [lampiaosec](https://lampiaosec.github.io).
