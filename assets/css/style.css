@@ -57,11 +57,11 @@ a {
 	color: #2A6EA4;
 	font-weight: bold;
 }
-
+/*
 a:hover {
 	text-decoration: underline;
 }
-
+*/
 pre {
 	font-family: monospace;
 }
