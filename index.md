@@ -2,11 +2,31 @@
 layout: default
 title: Home
 ---
-# # cat about.txt
-{:id="about"}
+# # pwd
+This site was created by Felipe Winsnes. Here you will find multiple posts regarding Vulnerability Research and as well multiple techniques about Pentesting/Binary Exploitation
 
-Currently under construction!
 
-# # cat contact.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 This theme was created by [lampiaosec](https://lampiaosec.github.io).
