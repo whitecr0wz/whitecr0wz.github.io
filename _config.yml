@@ -8,6 +8,7 @@ description: "Website description"
 cover: "/assets/img/cover.svg"
 fanpage_id: ""
 timezone: America/Argentina/Buenos_Aires
+future: true
 
 # Site general settings
 lang: "en"
