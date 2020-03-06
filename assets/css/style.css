@@ -37,12 +37,12 @@ nav ul {
 	display: block;
 	padding: 0;
 }
-
+/*
 nav ul li {
 	display: inline;
 	padding-left: 10px;
 }
-
+*/
 nav ul li a {
 	text-decoration: none;
 	color: rgba(255,255,255,1);
@@ -51,7 +51,7 @@ nav ul li a {
 nav ul li a:hover {
 	font-weight: bold;
 }
-
+/*
 a {
 	text-decoration: none;
 	color: #2A6EA4;
@@ -61,11 +61,11 @@ a {
 a:hover {
 	text-decoration: underline;
 }
-
+*/
 pre {
 	font-family: monospace;
 }
-
+/*
 .highlighter-rouge {
 	color: rgba(255,255,255,0.4);
 }
@@ -73,6 +73,7 @@ pre {
 .highlight {
 	color: rgba(255,255,255,0.7);
 }
+*/
 /*
 .highlight {
 	border: 1px dashed rgba(255,255,255,0.3);
