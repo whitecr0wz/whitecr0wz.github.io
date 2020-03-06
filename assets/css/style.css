@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Helvetica);
+@import url(https://fonts.googleapis.com/css?family=Arial);
 
 html {
 	background-image: url("../img/background.gif");
@@ -12,7 +12,7 @@ body {
 	margin-top: 100px;
 	width: 80%;
 	border: 1px dashed rgba(255,255,255,0.7);
-	font-family: "Helvetica";
+	font-family: "Arial";
 }
 
 header, nav, main, footer {
