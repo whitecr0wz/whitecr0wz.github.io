@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Homee
+title: Home
 ---
 # # cat about.txt
 {:id="about"}
