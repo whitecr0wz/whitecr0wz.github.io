@@ -16,7 +16,7 @@ body {
 }
 
 header, nav, main, footer {
-	margin: 5px;
+	margin: 15px;
 	border-bottom: 1px dashed rgba(255,255,255,0.5);
 }
 
@@ -89,6 +89,6 @@ img, main iframe {
 
 main header {
 	text-align: center;
-	padding-bottom: 15px;
+	padding-bottom: 5px;
 	border: 0;
 }
