@@ -7,6 +7,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 ### Posts
 [Exploiting Vanilla Buffer Overflows on Windows](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/)
+[Exploiting SEH Overwrites on Windows with the use of Egghunters](https://whitecr0wz.github.io/posts/Exploiting-SEH-Overwrites-on-Windows-with-the-use-of-Egghunters/)
+[Exploiting SEH 3-byte Overwrite on Windows](https://whitecr0wz.github.io/posts/Exploiting-SEH-3-byte-Overwrite-on-Windows/)
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
 ### Findings
