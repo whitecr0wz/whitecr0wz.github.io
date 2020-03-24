@@ -26,4 +26,4 @@ f.close()
 
 Once the exploit is executed with python, it is opened and copied to clipboard with Notepad++:
 
-![](/asset/img/Findings1/0.png)
+![](/assets/img/Findings1/0.png)
