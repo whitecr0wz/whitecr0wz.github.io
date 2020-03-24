@@ -101,15 +101,15 @@ f.close()
 
 After the process of exploitation is once again repeated, the SEH Chains is overwritten by the short jump and POP POP RETN sequence:
 
-![](/assets/img/Findings1/8.png)
+![](/assets/img/Findings1/11.png)
 
 Moreover, if SHIFT+F9 combination is pressed twice, the execution continues as desired:
 
-![](/assets/img/Findings1/9.png)
+![](/assets/img/Findings1/8.png)
 
 Great! Execution has been granted, the last step is to generate some shellcode, isn't it?
 
-![](/assets/img/Findings1/10.png)
+![](/assets/img/Findings1/9.png)
 
 Final PoC:
 
@@ -167,4 +167,4 @@ f.close()
 
 # EndGame 
 
-![](/assets/img/Findings1/11.png)
+![](/assets/img/Findings1/10.png)
