@@ -15,3 +15,5 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 ### Findings
 [Locally Exploiting SMTP section in Easy File Sharing Web Server 7.2](https://whitecr0wz.github.io/posts/Locally-Exploiting-SMTP-section-in-Easy-File-Sharing-Web-Server/)
+
+[10-Strike Network Inventory Explorer Structered Exception Handling Overwrite](Strike-Network-Inventory-Explorer-Structered-Exception-Handling-Overwrite/)
