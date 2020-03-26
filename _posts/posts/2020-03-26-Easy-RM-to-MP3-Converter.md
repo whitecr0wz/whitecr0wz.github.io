@@ -15,7 +15,7 @@ Easy RM to MP3 Converter in version 2.7.3.700 suffers from multiple Buffer Overf
 
 To begin, a small fuzzing script is created, which will create a file named as "finding2.ram", containing 50 thousand bytes of A's:
 
-```python
+```term_session
 import struct
 
 buffer = "A" * 50000
@@ -24,3 +24,5 @@ f = open ("finding2.ram", "w")
 f.write(buffer)
 f.close()
 ```
+
+After the file is run, the application is started:
