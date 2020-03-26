@@ -99,13 +99,13 @@ The next step is to find a reliable POP-POP-RETN sequence.
 
 Listing the modules:
 
-![](/assets/img/Findings3/10.png)
+![](/assets/img/Findings3/11.png)
 
 In this case, i chose the module MSRMfilter03.dll, as it has all protections disabled and does not contain a NULL-byte within its base address.
 
 Listing POP-POP-RETN sequences:
 
-![](/assets/img/Findings3/11.png)
+![](/assets/img/Findings3/12.png)
 
 The first address was chosen and inserted into the script.
 
@@ -125,7 +125,7 @@ f.close()
 ```
 Succeeding the crash, SHIFT+F9 is pressed, granting execution:
 
-![](/assets/img/Findings3/12.png)
+![](/assets/img/Findings3/13.png)
 
 ## Shellcode
 
@@ -182,7 +182,7 @@ root@kali:~#
 
 # EndGame
 
-![](/assets/img/Findings3/13.png)
+![](/assets/img/Findings3/14.png)
 
 Final PoC: 
 
