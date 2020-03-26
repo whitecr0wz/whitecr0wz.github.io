@@ -38,3 +38,7 @@ Select the file created by the script, making the program to load the malicious 
 ![](/assets/img/Findings2/2.png)
 
 ![](/assets/img/Findings2/3.png)
+
+SEH Chain:
+
+![](/assets/img/Findings2/4.png)
