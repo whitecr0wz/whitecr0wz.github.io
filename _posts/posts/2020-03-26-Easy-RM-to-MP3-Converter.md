@@ -28,3 +28,15 @@ f.close()
 After the file is run, the application is started:
 
 ![](/assets/img/Findings2/0.png)
+
+The button 'Cancel' is selected:
+
+![](/assets/img/Findings2/1.png)
+
+The option 'Load' is chosen:
+
+![](/assets/img/Findings2/2.png)
+
+Select the file created by the script, making the program to load the malicious file, and as a result, crashing:
+
+![](/assets/img/Findings2/3.png)
