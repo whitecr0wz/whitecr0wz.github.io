@@ -26,3 +26,5 @@ f.close()
 ```
 
 After the file is run, the application is started:
+
+![](/assets/img/Findings2/0.png)
