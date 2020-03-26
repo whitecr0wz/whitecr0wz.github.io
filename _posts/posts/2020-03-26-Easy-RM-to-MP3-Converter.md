@@ -198,25 +198,25 @@ After such are sent, the tag is found with mona:
 
 The address is copied and followed within the Stack:
 
-![](/assets/img/Findings2/14.png)
-
 ![](/assets/img/Findings2/15.png)
 
 ![](/assets/img/Findings2/16.png)
 
+![](/assets/img/Findings2/17.png)
+
 Comparing the bad characters with mona:
 
-![](/assets/img/Findings2/17.png)
+![](/assets/img/Findings2/18.png)
 
 As seen, the byte 09 is taken as a bad character. Normally, 09 is not a bad character, on the other hand, 0a is normally a terrible character, as it means "line feed", used for CRLF combination. It is probable that 09 is being detected for such reason.
 
 If the process is yet repeated, 0a is found as a bad character:
 
-![](/assets/img/Findings2/18.png)
+![](/assets/img/Findings2/19.png)
 
 If the chain is yet once again sent without either 0a, but with 09 in it, the bytes are processed without any issue:
 
-![](/assets/img/Findings2/19.png)
+![](/assets/img/Findings2/20.png)
 
 ## Last but not least, shellcode
 
@@ -254,7 +254,7 @@ root@kali:~#
 ```
 # EndGame
 
-![](/assets/img/Findings2/19.png)
+![](/assets/img/Findings2/21.png)
 
 Final PoC:
 
