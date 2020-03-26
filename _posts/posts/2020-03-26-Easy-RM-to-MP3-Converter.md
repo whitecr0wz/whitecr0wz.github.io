@@ -25,7 +25,7 @@ f.write(buffer)
 f.close()
 ```
 
-After the script is run, the application is started, click 'Cancel'
+After the script is run and the application is started, click 'Cancel'
 
 ![](/assets/img/Findings2/0.png)
 
