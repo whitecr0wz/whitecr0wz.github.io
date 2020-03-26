@@ -87,3 +87,13 @@ f.close()
 After the aforementioned process is once again repeated, the SEH Chain is overwritten by the desired values:
 
 ![](/assets/img/Findings2/7.png)
+
+The modules are listed:
+
+![](/assets/img/Findings2/8.png)
+
+Despite the great variety of possible modules to pick in order to find a reliable POP POP RETN address, this is a SEH Overwrite in which it does not need further bytes after the POP POP RETN sequence in order to generate an exception, as a result, making it possible to exploit this application with a 3-byte overwrite, which would be a great demostration within this blog post. In this case, the module with a base address along with a NULL-byte is "RM2MP3Converter.exe".
+
+Listing possible POP POP RETN sequences within the module "RM2MP3Converter.exe":
+
+![](/assets/img/Findings2/8-2.png)
