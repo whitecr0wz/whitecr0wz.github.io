@@ -286,7 +286,7 @@ The process is yet repeated verifying control:
 
 ## Hijacking the power
 
-In a Vanilla Buffer Overflow it is needed to use an instruction which will align ESP with EIP, in the majority of the cases being a JMP ESP, or CALL ESP. However, in this case none of them were found in the MSRMfilter03.dll. Despite this obstacle, i was capable of finding a PUSH ESP, RET instruction, which will have the same function as the others:
+In a Vanilla Buffer Overflow it is needed to use an instruction which will align ESP with EIP, in the majority of the cases being a JMP ESP, or in some cases a CALL ESP. However, in this case none of them were found in the MSRMfilter03.dll module. Despite this obstacle, i was capable of finding a PUSH ESP, RET instruction, which will have the same function as the others:
 
 ![](/assets/img/Findings4/3.png)
 
