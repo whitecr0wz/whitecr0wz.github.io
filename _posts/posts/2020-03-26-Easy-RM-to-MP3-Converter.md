@@ -25,18 +25,16 @@ f.write(buffer)
 f.close()
 ```
 
-After the file is run, the application is started:
+After the script is run, the application is started, click 'Cancel'
 
 ![](/assets/img/Findings2/0.png)
 
-The button 'Cancel' is selected:
+The button 'Load' is selected:
 
 ![](/assets/img/Findings2/1.png)
 
-The option 'Load' is chosen:
+Select the file created by the script, making the program to load the malicious file, and as a result, crashing:
 
 ![](/assets/img/Findings2/2.png)
-
-Select the file created by the script, making the program to load the malicious file, and as a result, crashing:
 
 ![](/assets/img/Findings2/3.png)
