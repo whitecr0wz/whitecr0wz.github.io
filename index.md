@@ -15,6 +15,7 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 ### Findings
 [RM Downloader 3.1.3 - 'Load' Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/Exploiting-RM-Downloader-SEH/)
+
 [Easy RM to MP3 Converter 2.7.3.700 - 'Input' Buffer Overflows](https://whitecr0wz.github.io/posts/Easy-RM-to-MP3-Converter-2.7.3.700-Input/)
 
 [Easy RM to MP3 Converter 2.7.3.700 - Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/Easy-RM-to-MP3-Converter/)
