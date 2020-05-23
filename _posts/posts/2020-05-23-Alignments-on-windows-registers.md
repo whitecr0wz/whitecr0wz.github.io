@@ -22,7 +22,7 @@ Despite the fact that these techniques do not require much knowledge, having beg
 The definition of the word "alignment" is "arrangement in a straight line or in correct relative positions.", meaning that, when applied 
 to CPU registers, it would refer to having two or more variables with the same value. 
 
-# Why Aligning registers?
+# Why aligning registers?
 
 In order to execute shellcode within a stack, the payload will have to work directly with a register pointing to its address. For example, metasploit always includes 6 additional bytes within all generated payloads, whose function is to align a register, so the rest can work with such. However, not all softwares may accept such characters, issue which brings us to this post!
 
