@@ -28,4 +28,4 @@ In order to execute shellcode within a stack, the payload will have to work dire
 
 # The concept
 
-In order to perform this technique practically, i will use as an example the application RM Downloader, which i made a post about [here](https://whitecr0wz.github.io/posts/RM-Downloader-SEH/).
+In order to perform this technique practically, i will use as an example the RM Downloader application, which i made a post about [here](https://whitecr0wz.github.io/posts/RM-Downloader-SEH/).
