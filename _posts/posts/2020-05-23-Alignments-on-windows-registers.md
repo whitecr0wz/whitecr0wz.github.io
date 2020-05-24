@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Alignment on Windows Registers
+title: Alignments on Windows Registers
 date: 2020-03-26 14:45:00
 categories: posts
 comments: false
