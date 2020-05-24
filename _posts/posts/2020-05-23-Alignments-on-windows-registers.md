@@ -232,3 +232,7 @@ nasm >
 After the 4 bytes are positioned after the padding, the debugger reacts as intended:
 
 ![](/assets/img/Alignments/4.png)
+
+Note that ESP and EAX contain the same values.
+
+Once this is done, the next step would be to calculate the distance between a desired address, being on this case 
