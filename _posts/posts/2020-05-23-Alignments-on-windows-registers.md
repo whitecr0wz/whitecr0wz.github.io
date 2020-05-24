@@ -11,7 +11,7 @@ en: true
 
 Welcome once again to my website! Within this post, i will be introducing methods to align x86 registers on Windows, topic that was hard for me to find when starting regarding Binary Exploitation.
 
-Also, i would like to say that if by any means you find an error within this post, please let me know! I am a beginner within this technique.
+Also, i would like to say that if by any means you find an error within this post, please let me know! I am still a beginner.
 
 ## Small requirements
 
