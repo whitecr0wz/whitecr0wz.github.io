@@ -19,6 +19,12 @@
 }
 */ 
 
+img {
+  width: auto ;
+  max-width: 100% ;
+  height: auto ;
+}
+
 body {
 	background-color: rgba(0,0,0,0.97);
 	color: rgba(255,255,255);
@@ -94,9 +100,7 @@ pre {
 img, main iframe {
 	margin-left: 10%;
 	border: 1px dashed rgba(255,255,255,0.5);
-	width: auto ;
         max-width: 100% ;
-        height: auto ;
 }
 
 main header {
