@@ -6,7 +6,7 @@
 
 */ 
 
-body {
+/* body {
 	background-color: rgba(0,0,0,0.97);
 	color: rgba(255,255,255);
 	padding: 5px;
@@ -17,6 +17,7 @@ body {
 	border: 1px dashed rgba(255,255,255,0.7);
 	font-family: "Open Sans";
 }
+*/ 
 
 header, nav, main, footer {
 	margin: 15px;
