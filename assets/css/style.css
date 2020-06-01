@@ -92,9 +92,11 @@ pre {
 }
 
 img, main iframe {
-	width: 80%;
 	margin-left: 10%;
 	border: 1px dashed rgba(255,255,255,0.5);
+	width: auto ;
+        max-width: 100% ;
+        height: auto ;
 }
 
 main header {
