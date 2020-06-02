@@ -4,9 +4,9 @@ title: Home
 ---
 This site was created by Felipe Winsnes. Here you will find multiple posts regarding Vulnerability Research and as well multiple techniques about Pentesting/Binary Exploitation.
 
--
+--
 ### Posts
--
+--
 [Alignments on Windows Registers](https://whitecr0wz.github.io/posts/Alignments-on-windows-registers/)
 
 [Exploiting SEH 3-byte Overwrite on Windows](https://whitecr0wz.github.io/posts/Exploiting-SEH-3-byte-Overwrite-on-Windows/)
