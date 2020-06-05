@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Quick Pro 1.3 - "Browser.exe" Denial of Service
+title: Quick Player 1.3 - "Browser.exe" Denial of Service
 date: 2020-03-26 14:45:00
 categories: posts
 comments: false
