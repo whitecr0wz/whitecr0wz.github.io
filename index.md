@@ -16,6 +16,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 
 ### Findings
+[Quick Player 1.3 - "Browser.exe" Denial of Service](https://whitecr0wz.github.io/posts/Quick-Player-Browser-dos/)
+
 [RM Downloader 3.1.3 - 'Load' Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/RM-Downloader-SEH/)
 
 [Easy RM to MP3 Converter 2.7.3.700 - 'Input' Buffer Overflows](https://whitecr0wz.github.io/posts/Easy-RM-to-MP3-Converter-2.7.3.700-Input/)
