@@ -7,13 +7,13 @@ comments: false
 en: true
 ---
 
-# The Bug
+# The Bug.
 
 Uploader! 3.5 suffers from a Structered Exception Handling Overwrite which ends up simply being a Denial of Service due the lack of a valid address.
 
-## The Crash
+## The Crash.
 
-### Initial PoC
+### Initial PoC.
 
 ```term
 import struct
@@ -41,7 +41,7 @@ The clipboard is pasted within the three parameters, and the box stating "Check 
 
 ### With the use of the msf tools, the pattern is found out to be 477.
 
-### PoC
+### PoC.
 
 ```term
 import struct
