@@ -16,6 +16,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 
 ### Findings
+[UpLoader 3.5 - 'FTP Login' Denial of Service (PoC + SEH Overwrite)](https://whitecr0wz.github.io/posts/Uploader-SEH/)
+
 [FTPDummy! 4.80 - Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/ftp-dummy/)
 
 [Quick Player 1.3 - "Browser.exe" Denial of Service](https://whitecr0wz.github.io/posts/Quick-Player-Browser-dos/)
