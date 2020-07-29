@@ -66,3 +66,5 @@ f.close()
 ![](/assets/img/Findings9/6.png)
 
 ### Due to the fact that NULL-bytes are mangled by the application and its difficulty to implement into this exploit, the circumstances make it impossible to make use of such.
+
+![](/assets/img/Findings9/7.png)
