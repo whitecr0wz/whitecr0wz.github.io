@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Nidesoft DVD Ripper - 5.2.18 Local Buffer Overflow
-date: 2020-03-26 14:45:00
+date: 2020-07-29 14:45:00
 categories: posts
 comments: false
 en: true
