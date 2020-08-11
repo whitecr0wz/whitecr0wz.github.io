@@ -93,7 +93,7 @@ whitecr0wz@whitecr0wz:~/vuln$
 whitecr0wz@whitecr0wz:~/vuln$ chmod 777 cal 
 ```
 
-##### Now, where the fun begins, the $PATH variable is exported into the current working directory, being "/home/whitecr0wz/vuln", where "cal" will be searched for:
+##### Now, where the fun begins, the $PATH variable is exported into the current working directory, being "/home/whitecr0wz/vuln" the first folder where the system will check for any executable without a full path, therefore, "/home/whitecr0wz/vuln/vuln" will be encountered prior to /usr/bin/vuln:
 
 ```term
 whitecr0wz@whitecr0wz:~/vuln$ pwd 
