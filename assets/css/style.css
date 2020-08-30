@@ -1,4 +1,4 @@
-/*@import url(https://fonts.googleapis.com/css?family=Verdana);*/
+@import url(https://fonts.googleapis.com/css?family=Open Sans);
 
 /* html {
 	background-image: url("../img/background.gif");
@@ -18,10 +18,6 @@
 	font-family: "Open Sans";
 }
 */ 
-
-body {
-      font-family: "Open Sans";
-}
 	
 div.a {
   font-size: 16px;
