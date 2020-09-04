@@ -15,7 +15,7 @@ en: true
 
 ##### As with any other vulnerable applicaiton to a buffer overflow, we need to test it first in order to exploit it, as in the [previous](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/) walkthrough in vulnserver, the parameter was vulnerable to the use of /.:/ after it being called, let's test if this works as well with LTER.
 
-PoC code:
+###### PoC code:
 
 ```term
 import socket, sys, struct
@@ -32,3 +32,7 @@ s.send(buffer)
 
 s.close()
 ```
+
+###### Response of the SEH Chain
+
+![](/assets/img/LTER/1.png)
