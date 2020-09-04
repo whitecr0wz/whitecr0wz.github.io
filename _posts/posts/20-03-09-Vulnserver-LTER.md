@@ -9,7 +9,7 @@ en: true
 
 # Introduction
 
-### Last time we i blogged, we tackled aligning registers within windows exploit development. Today we will be seeing an example on the [vulnerable server by stephen bradshaw](https://github.com/stephenbradshaw/vulnserver/), in which, a restricted set of characters may be found. Furthermore, due to lack of executable space when leading the flow, it will be required to use additional techniques to successfully exploit the server.
+### Last time i blogged, we tackled aligning registers within windows exploit development. Today we will be seeing an example on the [vulnerable server by stephen bradshaw](https://github.com/stephenbradshaw/vulnserver/), in which, a restricted set of characters may be found. Furthermore, due to lack of executable space when leading the flow, it will be required to use additional techniques to successfully exploit the server.
 
 ### The basics once again
 
