@@ -17,7 +17,7 @@ en: true
 
 PoC code:
 
-```terminal
+```term
 import socket, sys, struct
 
 buffer = "LTER /.:/" + "A" * 5000
