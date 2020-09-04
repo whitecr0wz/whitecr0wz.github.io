@@ -36,3 +36,10 @@ s.close()
 ###### Response of the SEH Chain
 
 ![](/assets/img/LTER/1.png)
+
+##### As with any other buffer overflow, the next step is to use a pattern in order to find the offset through the cyclic pattern
+
+```
+root@whitecr0wz:~/Exploit-Dev/LTER# msf-pattern_create -l 5000 
+Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab . . .
+```
