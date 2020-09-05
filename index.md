@@ -5,7 +5,7 @@ title: Home
 This site was created by Felipe Winsnes. Here you will find multiple posts regarding Vulnerability Research and as well multiple techniques about Pentesting/Binary Exploitation.
 
 ### Posts
-[Vulnserver LTER - SEH Extreme char restriction & aligning registers](https://whitecr0wz.github.io/posts/Vulnserver-LTER/)
+[Vulnserver LTER - SEH Extremely restricted character set](https://whitecr0wz.github.io/posts/Vulnserver-LTER/)
 
 [Privilege Escalation - PATH Variable](https://whitecr0wz.github.io/posts/Privilege-Escalation-Path/)
 
