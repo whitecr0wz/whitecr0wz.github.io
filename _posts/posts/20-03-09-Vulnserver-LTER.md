@@ -518,7 +518,7 @@ nasm > RET
 
 ##### For encoding these opcodes through this method, i will use [slink](https://github.com/ihack4falafel/Slink) from [ihack4falafel](https://github.com/ihack4falafel).
 
-```
+```term
 root@whitecr0wz:~/Exploit-Dev/LTER# slink
 Enter your shellcode: \x53\x5C\x56\xC3
 Enter shellcode variable name: pushesi
