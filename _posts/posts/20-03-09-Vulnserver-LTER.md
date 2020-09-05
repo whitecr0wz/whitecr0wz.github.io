@@ -221,3 +221,18 @@ s.close()
 
 ##### This method sounds beautiful, doesn't it? The main issue here is that the instruction RET has an opcode of C3, which means that it may not be parsed as we would like to, neither we can encode this opcode, as we don't have enough space for that. To fix this, i decided to pursue the method of SUB/ADD encoding, in which a series of opcodes are encoded and then decoded if the ESP pointer is pointing at a lower address than this encoded instructions, i over simplified how this method works, but it is enough to know what it does. 
 
+##### The order of these alignments would be the following:
+
++ The value of ESP is inserted into EAX in order to perform calculations, and in EBX, just as a backup when it is time to execute the shellcode, as if the ESP has a similar address, it will mangle the entire execution!
+
++ It will be added to ax as much as needed in order to reach near the end of the buffer.
+
++ This value is popped into ESP.
+
++ The value of EBX is pushed into the stack and then popped into EAX in order to make calculations take less bytes.
+
++ EAX is aligned into the pure alphanumeric shellcode.
+
++ This value is popped into ESI.
+
++ The SUB/ADD encoded series of 4 instructed will be sent: PUSH EBX, POP ESP; PUSH ESI, RET. This will push the value of EBX into the stack and pop it into ESP, and after that pushing ESI into the stack and then return the address through RET. 
