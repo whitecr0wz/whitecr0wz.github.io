@@ -637,7 +637,7 @@ s.close()
 
 ![](/assets/img/LTER/21.png)
 
-##### This was fun, but as we have a lot of space due the location of our shellcode, we can easily just swap it into a reverse shell.
+##### This was fun, but as we have a lot of space due to the location of our shellcode, we can easily just swap it into a reverse shell.
 
 ##### Command used for generating the shellcode.
 
