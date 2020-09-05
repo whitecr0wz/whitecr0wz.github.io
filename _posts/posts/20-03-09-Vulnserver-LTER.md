@@ -223,7 +223,7 @@ s.close()
 
 ##### The order of these alignments would be the following:
 
-+ ##### The value of ESP is inserted into EAX in order to perform calculations, and in EBX, just as a backup when it is time to execute the shellcode, as if the ESP has a similar address, it will mangle the entire execution!
++ The value of ESP is inserted into EAX in order to perform calculations, and in EBX, just as a backup when it is time to execute the shellcode, as if the ESP has a similar address, it will mangle the entire execution!
 
 + It will be added to ax as much as needed in order to reach near the end of the buffer.
 
