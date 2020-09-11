@@ -109,6 +109,6 @@ f.close()
 
 ![](/assets/img/Findings11/11.png)
 
-
+##### Due to the fact that we have incredibly small buffer space (400 bytes), and we require an alphanumeric shellcode, an egghunter will be required. For more information, see [here](https://whitecr0wz.github.io/posts/Exploiting-SEH-Overwrites-on-Windows-with-the-use-of-Egghunters/)
 
 ![](/assets/img/Findings11/11-proof.gif)
