@@ -7,7 +7,7 @@ comments: false
 en: true
 ---
 
-#### Audio Playback Recorder 3.2.2 suffers from a Structured Exception Handling Overwrite when a long string is parsed through the parameter “License Name” within the registration in the bootup.
+#### Audio Playback Recorder 3.2.2 suffers from a Structured Exception Handling Overwrite when a long string is parsed through the parameter “Name” within the "Register" section.
 
 ##### Initial PoC:
 
