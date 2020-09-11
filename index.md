@@ -19,6 +19,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 
 ### Findings
+[Audio Playback Recorder 3.2.2](https://whitecr0wz.github.io/posts/Audio-Playback-Recorder/)
+
 [Nidesoft DVD Ripper - 5.2.18 Local Buffer Overflow](https://whitecr0wz.github.io/posts/DVD-Ripper/)
 
 [UpLoader 3.5 - 'FTP Login' Denial of Service (PoC + SEH Overwrite)](https://whitecr0wz.github.io/posts/Uploader-SEH/)
