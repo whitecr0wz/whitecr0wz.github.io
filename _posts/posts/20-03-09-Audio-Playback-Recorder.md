@@ -39,7 +39,7 @@ f.close()
 
 ![](/assets/img/Findings11/4.png)
 
-###### Creating a parameter with msf-pattern_create
+###### Creating a parameter with msf-pattern_create.
 
 ```term
 root@whitecr0wz:~# msf-pattern_create -l 500 
@@ -50,7 +50,7 @@ root@whitecr0wz:~# msf-pattern_create -l 500
 
 ![](/assets/img/Findings11/5.png)
 
-##### Response of the SEH Chain II
+##### Response of the SEH Chain II.
 
 ![](/assets/img/Findings11/6.png)
 
@@ -74,7 +74,7 @@ f.write(buffer)
 f.close()
 ```
 
-##### Response of the SEH Chain III
+##### Response of the SEH Chain III.
 
 ![](/assets/img/Findings11/7.png)
 
@@ -101,7 +101,7 @@ f.write(buffer)
 f.close()
 ```
 
-##### Response of the SEH Chain IV
+##### Response of the SEH Chain IV.
 
 ![](/assets/img/Findings11/10.png)
 
@@ -109,6 +109,6 @@ f.close()
 
 ![](/assets/img/Findings11/11.png)
 
-##### Due to the fact that we have incredibly small buffer space (400 bytes), and we require an alphanumeric shellcode, an egghunter will be required. For more information, see [here](https://whitecr0wz.github.io/posts/Exploiting-SEH-Overwrites-on-Windows-with-the-use-of-Egghunters/)
+##### Due to the fact that we have incredibly small buffer space (400 bytes), and we require an alphanumeric shellcode, an egghunter will be required. For more information, see [here](https://whitecr0wz.github.io/posts/Exploiting-SEH-Overwrites-on-Windows-with-the-use-of-Egghunters/).
 
 ![](/assets/img/Findings11/11-proof.gif)
