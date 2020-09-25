@@ -9,7 +9,11 @@ en: true
 
 # Introduction
 
-### In order to finish with the eccentric cases that vulnserver may offer us, today we will be seeing an odd case of a buffer overflow with a character conversion, meaning that the received bytes are parsed as expected. Nonetheless, the alphanumeric bytes suffer from no change whatsoever and are not ported as hex. For example, if the EIP is overflown with 1000 bytes of A's, the EIP may not reveal 41414141, instead, it will place "AAAAAAAA".
+### In order to finish with the eccentric cases that vulnserver may offer us, today we will be seeing an odd case of a buffer overflow with a character conversion.
+
+#### The issue itself
+
+##### Due to the character conversion, the received bytes are parsed as expected. Nonetheless, the alphanumeric bytes suffer from no change whatsoever and are not ported as hex. For example, if the EIP is overflown with 1000 bytes of A's, the EIP may not reveal 41414141, instead, it will place "AAAAAAAA".
 
 ### The basics
 
