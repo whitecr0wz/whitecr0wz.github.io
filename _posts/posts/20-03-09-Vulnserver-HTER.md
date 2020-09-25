@@ -17,7 +17,7 @@ en: true
 
 ### The basics
 
-##### As with any other vulnerable applicaiton to a buffer overflow, we need to test it first in order to exploit it, let's try with HTER + long string of bytes.
+##### As with any other vulnerable applicaiton to, so as to achieve a buffer overflow, we shall test it first in order to exploit it, let's try with HTER + long string of bytes.
 
 ###### PoC code:
 
@@ -37,12 +37,12 @@ s.send(buffer)
 s.close()
 ```
 
-#### Crash I
+#### Crash I.
 
 ![](/assets/img/HTER/1.png)
 
 ##### Gaze at the EIP for a bit, look how instead of converting the sent bytes into hex (41), it just parsed them as how they went dispatched.
-##### As there is no pattern available in order to obtain the offset, the best method is to deduce with the use of elimination process.
+##### As there is no pattern available in order to obtain the offset on these scenarios, the best method is to deduce the offset manually with the use of an elimination process.
 
 ###### PoC code:
 
@@ -62,7 +62,7 @@ s.send(buffer)
 s.close()
 ```
 
-##### Crash II
+##### Crash II.
 
 ![](/assets/img/HTER/2.png)
 
@@ -87,7 +87,7 @@ s.send(buffer)
 s.close()
 ```
 
-##### Crash III
+##### Crash III.
 
 ![](/assets/img/HTER/3.png)
 
@@ -125,7 +125,7 @@ s.send(buffer)
 s.close()
 ```
 
-##### Crash IV
+##### Crash IV.
 
 ![](/assets/img/HTER/6.png)
 
