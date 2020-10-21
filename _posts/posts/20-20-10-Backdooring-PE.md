@@ -20,6 +20,12 @@ During this tutorial, i will exhibit the latter, this is due to the fact that ad
 
 ##### Time to get our hands dirty.
 
-Through the course of this post i will use FTPDummy! FTP Client to explain such concept. I have made a previous post regarding such software [here](https://whitecr0wz.github.io/posts/ftp-dummy/).
+Through the course of this post i will use FTPDummy! FTP Client to explain such concept, due to the reason that it is lightweight, easy to use and does not have ASLR enabled on the main module, making things a little easier. I have made a previous post regarding such software [here](https://whitecr0wz.github.io/posts/ftp-dummy/).
 
 ![](/assets/img/Code_Cave/1.png)
+###### Main menu of FTPDummy!
+
+In addition, i will be using VirusTotal in order to check how many AV Software are capable of detecting the PE File.
+
+![](/assets/img/Code_Cave/2.png)
+###### FTPDummy! when checked by VirusTotal.
