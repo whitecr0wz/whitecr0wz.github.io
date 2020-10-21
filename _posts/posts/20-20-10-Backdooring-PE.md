@@ -142,9 +142,9 @@ To put it very simple, a breakpoint must be inserted at the start of the payload
 
 Note: Another modification must be issued into the shellcode, being this one a NOP on the last instruction (CALL EBP). This is due to the fact that CALL EBP will end the execution.
 
-![](/assets/img/Code_Cave/18.png)
+![](/assets/img/Code_Cave/20.png)
 
-![](/assets/img/Code_Cave/19.png)
+![](/assets/img/Code_Cave/21.png)
 
 We see values 0x0012FF68 and 0x0012FD68. This easy problem can be solved with a program:
 
@@ -164,4 +164,4 @@ root@whitecr0wz:~#
 
 As the value is 0x200, the instruction should be "ADD ESP, 0x200"
 
-![](/assets/img/Code_Cave/20.png)
+![](/assets/img/Code_Cave/22.png)
