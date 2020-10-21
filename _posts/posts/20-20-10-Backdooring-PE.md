@@ -165,3 +165,10 @@ root@whitecr0wz:~#
 As the value is 0x200, the instruction should be "ADD ESP, 0x200"
 
 ![](/assets/img/Code_Cave/22.png)
+
+If you remember well, at the start of the post it was stated that it is required to re-assemble the replaced instructions for the JMP to the Code Cave. These were PUSH EBP, MOV EBP, ESP and PUSH -1. Finally, a JMP instruction shall be assembled to the next instruction of the original chain, which is, in our case, a PUSH instruction.
+
+![](/assets/img/Code_Cave/23.png)
+
+
+
