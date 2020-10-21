@@ -13,7 +13,7 @@ en: true
 
 #### Normally, in order to achieve PE Injection or simply backdooring, there are two methods:
 
-#### + Adding a new header with empty space into the program, through programs such as PE Lord or CFF Explorer.
-#### + Using a Code Cave. An original section of the code which is not relevant to the execution.
+#### Adding a new header with empty space into the program, through programs such as PE Lord or CFF Explorer.
+#### Using a Code Cave. An original section of the code which is not relevant to the execution.
 
 ![](/assets/img/Code_Cave/1.png)
