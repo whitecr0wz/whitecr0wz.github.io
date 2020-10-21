@@ -190,8 +190,8 @@ Remember, when we first scanned our payload through Virus Total, it gave a resul
 
 ![](/assets/img/Code_Cave/29.png)
 
-Even though there is much to work, from 57 to 26 is a great improvement. On the following post i will be explaining this same technique on more profound sections of the program with encoding as well.
+Even though there is much to work, from 57 to 26 is a great improvement. On the following post i will be explaining this same technique within profound sections of the program with encoding as well.
 
-Here is the PoC for you to enjoy.
+Here is the PoC for you to enjoy. Thanks for reading!
 
 ![](/assets/img/Code_Cave/30.gif)
