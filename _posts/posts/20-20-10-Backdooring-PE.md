@@ -129,3 +129,9 @@ C:\Users\IEUser\Desktop2\FTPDummy_Code_Cave>
 However, once exited, the program is terminated.
 
 ![](/assets/img/Code_Cave/15.png)
+
+Note: As explained previously, the shellcode will require some modifications. In this case, the program execution will not continue unless the shellcode has finished, in order to change this, replace the instruction commonly given in msfvenom payloads DEC ESI (4E), for a NOP.
+
+![](/assets/img/Code_Cave/16.png)
+
+![](/assets/img/Code_Cave/17.png)
