@@ -29,3 +29,8 @@ In addition, i will be using VirusTotal in order to check how many AV Software a
 
 ![](/assets/img/Code_Cave/2.png)
 ###### FTPDummy! when checked by VirusTotal.
+
+Furthermore, when it comes to finding code caves, i have chosen [pycave.py](https://github.com/axcheron/pycave), it requires Python 3.8 and the module [PEFile](https://pypi.org/project/pefile/).
+
+![](/assets/img/Code_Cave/3.png)
+###### Revealed Code Caves
