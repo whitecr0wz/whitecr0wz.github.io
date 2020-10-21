@@ -77,3 +77,7 @@ Select what you desired to save and click on "Save file".
 Once the altered PE File is loaded, we now see that the JMP instruction is loaded as original.
 
 ![](/assets/img/Code_Cave/9.png)
+
+If it is stepped into the instruction (SHIFT+F7), the execution leads to the Code Caves:
+
+![](/assets/img/Code_Cave/10.png)
