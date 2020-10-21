@@ -34,3 +34,5 @@ Furthermore, when it comes to finding code caves, i have chosen [pycave.py](http
 
 ![](/assets/img/Code_Cave/3.png)
 ###### Revealed Code Caves
+
+As revealed on the image, there are several Code Caves in the .rsrc section. In order to not worry at all with space issues, i'll use 0x0052715E as it has 2814 bytes of spaces, according to pycave.py.
