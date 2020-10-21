@@ -7,4 +7,8 @@ comments: false
 en: true
 ---
 
+### Introduction
+
+#### Building malware is a topic which has been of great interest to me. However, injecting malicious code within benign software seems a very concerning yet engrossing concept. PE Injection is pretty much the aforementioned example, embedding shellcode into a non-used fragment of code within a program which is commonly not flagged as a program.  
+
 ![](/assets/img/Code_Cave/1.png)
