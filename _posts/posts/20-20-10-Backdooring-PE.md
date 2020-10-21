@@ -7,4 +7,4 @@ comments: false
 en: true
 ---
 
-![](/assets/img/Code_Caves/1.jpg)
+![](/assets/img/Code_Caves/1.png)
