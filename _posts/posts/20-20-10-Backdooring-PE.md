@@ -43,7 +43,7 @@ Before stepping into how the backdooring is done, i think the whole process shou
 
 In order to backdoor, the following steps must be taken:
 
-+ The flow must be hijacked. This can be achieved through several methods I.E Replacing the entry point instruction for a JMP instruction into the desired Code Cave. Also, more specific hijacking can be achieved, such as executing the JMP when executing a section of the code (I.E: Open Help, URL, Credits, or any other button). Nevertheless, due to the complexity of this last technique, it shall be reserved for the following post.
++ The flow must be hijacked. This can be achieved through several methods I.E Replacing the entry point instruction for a JMP instruction pointing into the desired Code Cave. Also, more specific hijacking can be achieved, such as executing the JMP when executing a section of the code (I.E: Open Help, URL, Credits, or any other button). Nevertheless, due to the complexity of this last technique, it shall be reserved for the following post.
 
 Once EIP points towards the Code Cave, the next combination of instructions must be assembled.
 
@@ -52,3 +52,19 @@ Once EIP points towards the Code Cave, the next combination of instructions must
 + Alignment. The ESP Register must be restored to its old value.
 + POPFD/POPAD. These instructions will restore our flags.
 + As when assembling the JMP on the entry point instruction some other instructions were replaced, these must be assembled once again so that the code runs as intended and does not crash!
+
+As explained previously, the initial instructions must be re-assembled later on. Due to this, these are saved.
+
+![](/assets/img/Code_Cave/4.png)
+###### The instructions are copied
+
+Moreover, the JMP instruction pointing to the Code Cave is assembled.
+
+![](/assets/img/Code_Cave/5.png)
+
+As seen on the image, the instructions PUSH EBP, MOV EBP, ESP and PUSH -1 were the only affected.
+
+As it is required to save our progress (otherwise it would be pretty tiring to re-do every step), it can be saved by using the option "Copy to executable".
+
+![](/assets/img/Code_Cave/6.png)
+
