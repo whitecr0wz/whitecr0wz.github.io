@@ -18,4 +18,8 @@ Normally, in order to achieve PE Injection or simply backdooring, there are two 
 
 During this tutorial, i will exhibit the latter, this is due to the fact that adding a new header is very noisy regarding space when read by AV Software. On the other hand, Code Caves do not change space whatsoever, as the space is already being used, and there are no new headers.
 
+##### Time to get our hands dirty.
+
+Through the course of this post i will use FTPDummy! FTP Client to explain such concept. I have made a previous post regarding such software [here](https://whitecr0wz.github.io/posts/ftp-dummy/).
+
 ![](/assets/img/Code_Cave/1.png)
