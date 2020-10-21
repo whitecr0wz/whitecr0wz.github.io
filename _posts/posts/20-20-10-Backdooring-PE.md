@@ -169,11 +169,13 @@ As the value is 0x200, the instruction should be "ADD ESP, 0x200"
 If you remember well, at the start of the post it was stated that it is required to re-assemble the replaced instructions for the JMP to the Code Cave. These were PUSH EBP, MOV EBP, ESP and PUSH -1. Finally, a JMP instruction shall be assembled to the next instruction of the original chain, which is, in our case, a PUSH instruction.
 
 ![](/assets/img/Code_Cave/24.png)
+![](/assets/img/Code_Cave/25.png)
+![](/assets/img/Code_Cave/26.png)
+![](/assets/img/Code_Cave/27.png)
+
 
 Note: In these scenarios, a sign that the alignment was issued with no mistakes is the fact that the value of ESP is equal when the execution began.
 
-![](/assets/img/Code_Cave/25.png)
-
 If the program is run and the flow continues (SHIFT+F9), we see that the bind shellcode is arranged and FTPDummy! boots up when it is interacted with the shellcode.
 
-![](/assets/img/Code_Cave/26.png)
+![](/assets/img/Code_Cave/28.png)
