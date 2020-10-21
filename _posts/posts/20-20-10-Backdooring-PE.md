@@ -36,3 +36,19 @@ Furthermore, when it comes to finding code caves, i have chosen [pycave.py](http
 ###### Revealed Code Caves
 
 As revealed on the image, there are several Code Caves in the .rsrc section. In order to not worry at all with space issues, i'll use 0x0052715E as it has 2814 bytes of spaces, according to pycave.py.
+
+#### The Process
+
+Before stepping into how the backdooring is done, i think the whole process should be explained clearly.
+
+In order to backdoor, the following steps must be taken:
+
++ The flow must be hijacked. This can be achieved through several methods I.E Replacing the entry point instruction for a JMP instruction into the desired Code Cave. Also, more specific hijacking can be achieved, such as executing the JMP when executing a section of the code (I.E: Open Help, URL, Credits, or any other button). Nevertheless, due to the complexity of this last technique, it shall be reserved for the following post.
+
+Once EIP points towards the Code Cave, the next combination of instructions must be assembled.
+
++ PUSHAD/PUSHFD instructions. These will save our instructions so that they are aligned later on. It is essential for the registers to be aligned so that the instructions work perfectly according to the value of these.
++ The Shellcode. Shellcode, we are used to it. Some modifications may need to be issued, such as the removal of the last instruction in some cases, as it tends to crash the flow and the modification of a byte which waits for the shellcode to exit for the main program to return its original flow.
++ Alignment. The ESP Register must be restored to its old value.
++ POPFD/POPAD. These instructions will restore our flags.
++ As when assembling the JMP on the entry point instruction some other instructions were replaced, these must be assembled once again so that the code runs as intended and does not crash!
