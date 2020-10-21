@@ -194,4 +194,4 @@ Even though there is much to work, from 57 to 26 is a great improvement. On the 
 
 Here is the PoC for you to enjoy.
 
-![](/assets/img/Code_Cave/poc.png)
+![](/assets/img/Code_Cave/30.gif)
