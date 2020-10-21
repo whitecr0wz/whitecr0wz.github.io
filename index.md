@@ -5,6 +5,8 @@ title: Home
 This site was created by Felipe Winsnes. Here you will find multiple posts regarding Vulnerability Research and as well multiple techniques about Pentesting/Binary Exploitation.
 
 ### Posts
+[Backdooring PE Files through Code Caves](https://whitecr0wz.github.io/posts/Backdooring-PE/)
+
 [Vulnserver HTER - Vanilla BOF & Character Conversion](https://whitecr0wz.github.io/posts/Vulnserver-HTER/)
 
 [Vulnserver LTER - SEH Extremely Restricted Characters](https://whitecr0wz.github.io/posts/Vulnserver-LTER/)
