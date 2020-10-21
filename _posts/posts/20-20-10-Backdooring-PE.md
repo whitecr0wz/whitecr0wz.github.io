@@ -68,3 +68,12 @@ As it is required to save our progress (otherwise it would be pretty tiring to r
 
 ![](/assets/img/Code_Cave/6.png)
 
+Select what you desired to save and click on "Save file".
+
+![](/assets/img/Code_Cave/7.png)
+
+![](/assets/img/Code_Cave/8.png)
+
+Once the altered PE File is loaded, we now see that the JMP instruction is loaded as original.
+
+![](/assets/img/Code_Cave/9.png)
