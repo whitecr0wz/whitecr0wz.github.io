@@ -135,3 +135,33 @@ Note: As explained previously, the shellcode will require some modifications. In
 ![](/assets/img/Code_Cave/16.png)
 
 ![](/assets/img/Code_Cave/17.png)
+
+The next footstep on this technique is quite tricky, but quite simple. It consists in aligning the ESP value, i have done a small guide [here](https://whitecr0wz.github.io/posts/Alignments-on-windows-registers/).
+
+To put it very simple, a breakpoint must be inserted at the start of the payload and at the ending of such. Then, the difference between of these two values of ESP is calculated and added into the Register.
+
+Note: Another modification must be issued into the shellcode, being this one a NOP on the last instruction (CALL EBP). This is due to the fact that CALL EBP will end the execution.
+
+![](/assets/img/Code_Cave/18.png)
+
+![](/assets/img/Code_Cave/19.png)
+
+We see values 0x0012FF68 and 0x0012FD68. This easy problem can be solved with a program:
+
+```term
+#!/bin/bash
+
+printf "0x%X\n" $(($1 - $2)
+```
+
+The calculation is done.
+
+```term
+root@whitecr0wz:~# hexcalc 0x0012FF68 0x0012FD68
+0x200
+root@whitecr0wz:~#
+```
+
+As the value is 0x200, the instruction should be "ADD ESP, 0x200"
+
+![](/assets/img/Code_Cave/20.png)
