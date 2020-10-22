@@ -3,7 +3,7 @@ name: "whitecr0wz.github.io"
 keywords: "Key, words, about, this, website"
 baseurl: ""
 url: "https://whitecr0wz.github.io/"
-description: "Website description"
+#description: "Website description"
 cover: "/assets/img/cover.svg"
 fanpage_id: ""
 timezone: America/Argentina/Buenos_Aires
