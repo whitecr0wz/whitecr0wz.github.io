@@ -175,7 +175,9 @@ If you remember well, at the start of the post it was stated that it is required
 ![](/assets/img/Code_Cave/24.png)
 
 ![](/assets/img/Code_Cave/25.png)
+
 ![](/assets/img/Code_Cave/26.png)
+
 ![](/assets/img/Code_Cave/27.png)
 
 Note: In these scenarios, a sign that the alignment was issued with no mistakes is the fact that the value of ESP is equal when the execution began.
