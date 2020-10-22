@@ -25,7 +25,7 @@ Through the course of this post i will use FTPDummy! FTP Client to explain such 
 ![](/assets/img/Code_Cave/1.png)
 ###### Main menu of FTPDummy!
 
-In addition, i will be using VirusTotal in order to check how many AV Software are capable of detecting the PE File.
+In addition, i will be using VirusTotal in order to check how many AV Software products are capable of detecting the PE File.
 
 ![](/assets/img/Code_Cave/2.png)
 ###### FTPDummy! when checked by VirusTotal.
@@ -177,16 +177,15 @@ If you remember well, at the start of the post it was stated that it is required
 ![](/assets/img/Code_Cave/26.png)
 ![](/assets/img/Code_Cave/27.png)
 
-
 Note: In these scenarios, a sign that the alignment was issued with no mistakes is the fact that the value of ESP is equal when the execution began.
 
-If the program is run and the flow continues (SHIFT+F9), we see that the bind shellcode is arranged and FTPDummy! boots up when it is interacted with the shellcode.
+If the program is run and the flow resumes (SHIFT+F9), we see that the bind shellcode is arranged and FTPDummy! boots up when it is interacted with the shellcode.
 
 ![](/assets/img/Code_Cave/28.png)
 
 #### Escaping from the cat.
 
-Remember, when we first scanned our payload through Virus Total, it gave a result of 57/70. Let's check how many AV Software manages to flag our new PE File as malware.
+Remember, when we first scanned our payload through Virus Total, it gave a result of 57/70. Let's check how many AV Software products manage to flag our new PE File as malware.
 
 ![](/assets/img/Code_Cave/29.png)
 
@@ -197,5 +196,6 @@ Here is the PoC for you to enjoy. Thanks for reading!
 ![](/assets/img/Code_Cave/30.gif)
 
 References
-Capt. Meelo's post: https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html
-Online x86/x64 Assembler/Disassembler: https://defuse.ca/online-x86-assembler.htm#disassembly2
+
+Capt. Meelo's post: [https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html](https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html)
+Online x86/x64 Assembler/Disassembler: [https://defuse.ca/online-x86-assembler.htm#disassembly2](https://defuse.ca/online-x86-assembler.htm#disassembly2)
