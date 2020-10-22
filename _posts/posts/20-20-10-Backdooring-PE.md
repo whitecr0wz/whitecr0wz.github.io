@@ -1,6 +1,5 @@
 ---
 layout: post
-title: Backdooring PE Files through Code Caves
 date: 2020-03-08 18:00:00
 categories: posts
 comments: false
