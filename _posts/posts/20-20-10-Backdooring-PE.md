@@ -47,10 +47,10 @@ In order to backdoor, the following steps must be taken:
 
 Once EIP points towards the Code Cave, the next combination of instructions must be assembled.
 
-+ PUSHAD/PUSHFD instructions. These will save our instructions so that they are aligned later on. It is essential for the registers to be aligned so that the instructions work perfectly according to the value of these.
++ PUSHAD/PUSHFD instructions. These will save our registers/flags so that they are aligned later on. It is essential for the registers/flags to be aligned so that the instructions work perfectly according to the value of these.
 + The Shellcode. Shellcode, we are used to it. Some modifications may need to be issued, such as the removal of the last instruction in some cases, as it tends to crash the flow and the modification of a byte which waits for the shellcode to exit for the main program to return its original flow.
 + Alignment. The ESP Register must be restored to its old value.
-+ POPFD/POPAD. These instructions will restore our flags.
++ POPFD/POPAD. These instructions will restore our registers/flags.
 + As when assembling the JMP on the entry point instruction some other instructions were replaced, these must be assembled once again so that the code runs as intended and does not crash!
 
 As explained previously, the initial instructions must be re-assembled later on. Due to this, these are saved.
