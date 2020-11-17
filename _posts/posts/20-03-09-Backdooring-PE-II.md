@@ -10,3 +10,5 @@ en: true
 ### Introduction
 
 You find yourself reading the second volume of the series "PE File Backdooring series", I highly recommend reading the first [one](https://whitecr0wz.github.io/posts/Backdooring-PE/), as it may help understanding the shown material on this post.
+
+![](assets/img/Code_Cave_II/1.png)
