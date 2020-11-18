@@ -252,7 +252,7 @@ Interesting, our JMP no longer points to 0040342B. Instead, it directs the flow 
 
 As seen on the image, the second opcode of the JMP, BA, has been replaced for 89, meaning that this is the byte that should be replaced in our custom.py.
 
-Python script (the only arranged change is at the last line):
+Python script (the only arranged change is at the five last hex characters):
 
 ```term
 root@whitecr0wz:~# cat custom.py 
