@@ -65,3 +65,13 @@ Immunity seems to have given us the desired result. Similarly to the previous bl
 In this case, I will replace the PUSH instruction that gives us the information. Moreover, the instructions will be saved so that they are re-assigned later on.
 
 ![](/assets/img/Code_Cave_II/7.png)
+
+The next step; assembling a JMP address to our code cave at 0x004A41FD, at the same time overwriting the address at 0x00403426.
+
+![](/assets/img/Code_Cave_II/8.png)
+
+Good, this is then saved as in the previous post through "Copy to Executable".
+
+Now, in contemplation of jumping to the code cave without any difficulty,the bytes prior and after 0x004A41FD will be replaced by NOPs.
+
+![](/assets/img/Code_Cave_II/9.png)
