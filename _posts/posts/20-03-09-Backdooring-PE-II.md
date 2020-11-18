@@ -11,7 +11,7 @@ en: true
 
 You find yourself reading the second volume of the "PE File Backdooring" series. As a result of such, I highly recommend reading the first [one](https://whitecr0wz.github.io/posts/Backdooring-PE/), as it may help understanding the shown material on this post.
 
-Today, I will be explaining how to backdoor PE Files with the addition of user interaction and encoding as well. Furthermore, in order to replay the concept, the application [recmp3](https://sourceforge.net/projects/recmp3/) will be used, as it is lightweight program which has several Code Caves with ASLR disabled within the affected zone. 
+Today, I will be explaining how to backdoor PE Files with the addition of user interaction and encoding as well. Furthermore, in order to replay the concept, the application [recmp3](https://sourceforge.net/projects/recmp3/) will be used, as it is a lightweight program which has several Code Caves with ASLR disabled within the affected zone. 
 
 ![](/assets/img/Code_Cave_II/1.png)
 ###### recmp3 when executed.
