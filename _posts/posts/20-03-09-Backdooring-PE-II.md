@@ -70,10 +70,14 @@ The next step; assembling a JMP address to our code cave at 0x004A41FD, at the s
 
 ![](/assets/img/Code_Cave_II/8.png)
 
-Good, this is then saved as in the previous post through "Copy to Executable".
+Good, this is then saved as in the previous post through "Copy to Executable" into a new file. 
+
+Furthermore, if we now make use of the option "About" once again, the flow will be redirected to the code cave.
+
+![](/assets/img/Code_Cave_II/9.gif)
 
 Now, in contemplation of jumping to the code cave without any difficulty,the bytes prior and after 0x004A41FD will be replaced by NOPs.
 
-![](/assets/img/Code_Cave_II/9.png)
-
 ![](/assets/img/Code_Cave_II/10.png)
+
+![](/assets/img/Code_Cave_II/11.png)
