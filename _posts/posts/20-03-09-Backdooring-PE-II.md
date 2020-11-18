@@ -60,7 +60,7 @@ It is gone to the top in order to search for a key phrase, such as for example, 
 
 ![](/assets/img/Code_Cave_II/6.png)
 
-Immunity seems to have given us the desired result. Similarly to the previous blog post, the following step is to replace a specific address that is being executed when the function is processed with a JMP instruction pointing to our code caves. In addition, when we finish with our shellcode and aligning the stack, the overwriten address is executed once again and a JMP instruction is placed pointing to the original flow.
+Immunity seems to have given us the desired result. Similarly to the previous blog post, the following step is to replace a specific address that is being executed when the function is processed with a JMP instruction pointing to our code cave. In addition with this, when we finish with our shellcode and aligning the stack, the overwriten address is executed once again and a JMP instruction is placed pointing to the original flow.
 
 In this case, I will replace the PUSH instruction that gives us the information. Moreover, the instructions will be saved so that they are re-assigned later on.
 
