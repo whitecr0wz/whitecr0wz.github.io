@@ -149,4 +149,4 @@ VirusTotal results:
 
 ![](/assets/img/Code_Cave_II/23.png)
 
-Although there is big room for improvement, 26 to 18 is a great enhancement.
+Although there is big room for improvement, 26 from VOL:I to 18 is a great enhancement.
