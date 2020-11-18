@@ -293,7 +293,7 @@ Let's repeat the previous process and save.
 
 VirusTotal results:
 
-![](/assets/img/Code_Cave_II/32.png)
+![](/assets/img/Code_Cave_II/result.png)
 
 From 18 to 0! This is beyond impressive! Thank you for reading this blog post! 
 
