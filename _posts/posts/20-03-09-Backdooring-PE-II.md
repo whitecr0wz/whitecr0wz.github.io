@@ -142,3 +142,11 @@ The JMP address pointing to 0x0040342B is assembled.
 ![](/assets/img/Code_Cave_II/21.png)
 
 #### EndGame #1
+
+![](/assets/img/Code_Cave_II/22.gif)
+
+VirusTotal results:
+
+![](/assets/img/Code_Cave_II/23.png)
+
+Although there is big room for improvement, 26 to 18 is a great enhancement.
