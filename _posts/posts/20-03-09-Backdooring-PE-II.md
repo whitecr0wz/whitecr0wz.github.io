@@ -75,3 +75,5 @@ Good, this is then saved as in the previous post through "Copy to Executable".
 Now, in contemplation of jumping to the code cave without any difficulty,the bytes prior and after 0x004A41FD will be replaced by NOPs.
 
 ![](/assets/img/Code_Cave_II/9.png)
+
+![](/assets/img/Code_Cave_II/10.png)
