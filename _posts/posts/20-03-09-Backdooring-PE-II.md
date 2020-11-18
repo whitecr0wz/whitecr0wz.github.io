@@ -123,19 +123,21 @@ DEC ESI is replaced for a NOP, this is done so that it allows the execution to c
 
 The final CALL EBP is removed as it would completely demolish the flow. Instead, the stack alignment is placed, which is the same that in the aforementioned post, as the payload is exactly the same.
 
-The stack alignment is placed.
-
 ![](/assets/img/Code_Cave_II/17.png)
 
-The POPAD/POPFD instructions are placed.
+The stack alignment is placed.
 
 ![](/assets/img/Code_Cave_II/18.png)
 
-The PUSH address is re-assigned.
+The POPAD/POPFD instructions are placed.
 
 ![](/assets/img/Code_Cave_II/19.png)
 
-The JMP address pointing to 0x0040342B is assembled.
+The PUSH address is re-assigned.
 
 ![](/assets/img/Code_Cave_II/20.png)
+
+The JMP address pointing to 0x0040342B is assembled.
+
+![](/assets/img/Code_Cave_II/21.png)
 
