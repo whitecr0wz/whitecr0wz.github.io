@@ -169,7 +169,7 @@ Copying the entire payload with "Binary Copy".
 
 ![](/assets/img/Code_Cave_II/24.png)
 
-This will copy the instructions to our clipboard in a hex format, similar to msfvenom when providing a payload. However, this is not the one that we need, reason why I used [defuse.ca](https://defuse.ca/online-x86-assembler.htm#disassembly2), that will turn the hex format into the escape sequences as desired for you, just paste them on the "decode" section and process them. You can also perform this task manually, but it may take you a very long time.
+This will copy the instructions to our clipboard in a hex format, similar to msfvenom when providing a payload. However, this is not the one that we need, reason why I used [defuse.ca](https://defuse.ca/online-x86-assembler.htm#disassembly2), that will turn the hex format into the escape sequences as desired for you, just paste them on the "Disassemble" section and process them. You can also perform this task manually, but it may take you a very long time.
 
 Raw payload:
 
