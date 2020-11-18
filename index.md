@@ -4,14 +4,10 @@ title: Home
 ---
 This site was created by Felipe Winsnes. Here you will find multiple posts regarding Vulnerability Research and as well multiple techniques about Pentesting/Binary Exploitation.
 
-### Posts
-[Backdooring PE Files through Code Caves](https://whitecr0wz.github.io/posts/Backdooring-PE/)
-
+### Exploit Development Series
 [Vulnserver HTER - Vanilla BOF & Character Conversion](https://whitecr0wz.github.io/posts/Vulnserver-HTER/)
 
 [Vulnserver LTER - SEH Extremely Restricted Characters](https://whitecr0wz.github.io/posts/Vulnserver-LTER/)
-
-[Privilege Escalation - PATH Variable](https://whitecr0wz.github.io/posts/Privilege-Escalation-Path/)
 
 [Alignments on Windows Registers](https://whitecr0wz.github.io/posts/Alignments-on-windows-registers/)
 
@@ -21,6 +17,13 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [Exploiting Vanilla Buffer Overflows on Windows](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/)
 
+### Linux Privilege Escalation
+[Privilege Escalation - PATH Variable](https://whitecr0wz.github.io/posts/Privilege-Escalation-Path/)
+
+### PE Backdooring Series
+[Backdooring PE Files through Code Caves + User Interaction + Encoding (VOL:II)](https://whitecr0wz.github.io/posts/Backdooring-PE-II/)
+
+[Backdooring PE Files through Code Caves (VOL:I)](https://whitecr0wz.github.io/posts/Backdooring-PE/)
 
 ### Findings
 [Audio Playback Recorder 3.2.2 - Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/Audio-Playback-Recorder/)
