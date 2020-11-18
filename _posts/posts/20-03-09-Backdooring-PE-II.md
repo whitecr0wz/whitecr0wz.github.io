@@ -46,4 +46,22 @@ As we desire to make the PE File execute shellcode when interacted with in a cer
 
 ![](/assets/img/Code_Cave_II/2.png)
 
-As it is seen, this allows us to gather information of the author 
+As it is seen, this allows us to gather information of the program and its author. We can use this function to our advantage. Let's investigate this function in Immunity.
+
+In order to find such, the option "Search For > All referenced text strings" will be used. This will search for all text strings that are somehow being used or pushed into the stack.
+
+![](/assets/img/Code_Cave_II/3.png)
+
+It is gone to the top in order to search for a key phrase, such as for example, "sourceforge".
+
+![](/assets/img/Code_Cave_II/4.png)
+
+![](/assets/img/Code_Cave_II/5.png)
+
+![](/assets/img/Code_Cave_II/6.png)
+
+Immunity seems to have given us the desired result. Similarly to the previous blog post, the following step is to replace a specific address that is being executed when the function is processed with a JMP instruction pointing to our code caves. In addition, when we finish with our shellcode and aligning the stack, the overwriten address is executed once again and a JMP instruction is placed pointing to the original flow.
+
+In this case, I will replace the PUSH instruction that gives us the information. Moreover, the instructions will be saved so that they are re-assigned later on.
+
+![](/assets/img/Code_Cave_II/7.png)
