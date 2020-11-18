@@ -226,3 +226,13 @@ Final size of hex file: 796 bytes
 root@whitecr0wz:~# 
 ```
 
+As seen, the payload has grown in terms of size, this will make the last JMP useless, we will take care of it later on.
+
+The entire chain of characters is removed with "Fill with 00".
+
+![](/assets/img/Code_Cave_II/25.png)
+
+The encoded payload is pasted with "Binary paste".
+
+![](/assets/img/Code_Cave_II/26.png)
+
