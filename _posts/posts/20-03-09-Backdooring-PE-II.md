@@ -45,3 +45,5 @@ C:\Users\IEUser\AppData\Local\Programs\Python\Python38-32>
 As we desire to make the PE File execute shellcode when interacted with in a certain manner, it is required to discover a place to intervene with the flow. For example, if we check the option "About", the program displays the following. 
 
 ![](/assets/img/Code_Cave_II/2.png)
+
+As it is seen, this allows us to gather information of the author 
