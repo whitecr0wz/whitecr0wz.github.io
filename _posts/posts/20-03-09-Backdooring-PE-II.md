@@ -236,3 +236,12 @@ The encoded payload is pasted with "Binary paste".
 
 ![](/assets/img/Code_Cave_II/26.png)
 
+When the function is not loaded, the shellcode remains encoded. Nevertheless, when interacted with, it will decode itself. As it is required to modify the last instruction, it will be interacted with.
+
+Last section of the payload before decoding.
+
+![](/assets/img/Code_Cave_II/27.png)
+
+After decoding.
+
+![](/assets/img/Code_Cave_II/28.png)
