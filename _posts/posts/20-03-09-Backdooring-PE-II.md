@@ -299,6 +299,6 @@ From 18 to 0! This is beyond impressive! Thank you for reading this blog post!
 
 ### References
 
-Capt. Meelo’s post: https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html
+Capt. Meelo’s post: [https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html](https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html)
 
-Online x86/x64 Assembler/Disassembler: https://defuse.ca/online-x86-assembler.htm#disassembly2
+Online x86/x64 Assembler/Disassembler: [https://defuse.ca/online-x86-assembler.htm#disassembly2](https://defuse.ca/online-x86-assembler.htm#disassembly2)
