@@ -26,6 +26,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 [Backdooring PE Files through Code Caves (VOL:I)](https://whitecr0wz.github.io/posts/Backdooring-PE/)
 
 ### Findings
+[Nidesoft 3GP Video Converter 2.6.18 - Local Stack Buffer Overflow](https://whitecr0wz.github.io/posts/3GP-Recorder/)
+
 [Audio Playback Recorder 3.2.2 - Structured Exception Handling Overwrite](https://whitecr0wz.github.io/posts/Audio-Playback-Recorder/)
 
 [Nidesoft DVD Ripper 5.2.18 - Local Buffer Overflow](https://whitecr0wz.github.io/posts/DVD-Ripper/)
