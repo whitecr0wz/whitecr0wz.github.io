@@ -20,3 +20,14 @@ f = open ("poc.txt", "w")
 f.write(buffer)
 f.close()
  ```
+ 
+Once the exploit is run, the payload is copied into the clipboard.
+In order to exploit the application, simply launch it, and the registration will appear. After such event is produced, simply paste the clipboard into the paramter "License Code", and click "OK" on the box that appears later on.
+
+![](/assets/img/Findings12/1.png)
+
+![](/assets/img/Findings12/2.png)
+
+#### Crash I
+
+![](/assets/img/Findings12/3.png)
