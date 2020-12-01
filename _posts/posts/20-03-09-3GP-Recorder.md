@@ -41,7 +41,7 @@ After finding the pattern, which is 4952, we are off to find a JMP ESP address t
 
 As seen on the image, there are several modules that could be from great help. However, the best to my view is avcodec.dll, as it has a friendly base address and most protections disabled.
 
-Looking for JMP ESP on avcodec.dll.
+Looking for a friendly JMP ESP address on avcodec.dll.
 
 ![](/assets/img/Findings12/7.png)
 
