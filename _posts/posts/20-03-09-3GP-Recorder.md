@@ -35,7 +35,7 @@ In order to exploit the application, simply launch it, and the registration will
 
 ![](/assets/img/Findings12/5.png)
 
-After finding the pattern, which is 4952, we are off to find a JMP ESP address that is friendly towards the parameter of the application. Note that others instructions such as CALL ESP or PUSH ESP, RET can be used.
+After finding the pattern, which is 4592, we are off to find a JMP ESP address that is friendly towards the parameter of the application. Note that others instructions such as CALL ESP or PUSH ESP, RET can be used.
 
 ![](/assets/img/Findings12/6.png)
 
