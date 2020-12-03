@@ -55,8 +55,16 @@ VA: 0x00435213
 C:\Users\IEUser\AppData\Local\Programs\Python\Python38-32>
 ```
 
-Interesting, we see several places in which we could inject our payload. However, this is actually not possible, as NX/DEP would prevent our instructions from being executed. Of course, we could just change the properties of certain sections such as .data or .rsrc, but this actually is found off the bounds of this post, isn't it? We need to circumvent such environment without changing the binary too much.
+Interesting, we see several places in which we could inject our payload. However, this is actually not possible, as NX/DEP would prevent our instructions from being executed. Of course, we could just change the properties of certain sections such as .data or .rsrc, but this is actually found off the bounds of this post, isn't it? We need to circumvent such environment without changing the binary too much.
 
 Let's check the enabled protections.
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/1.png)
+
+As aforementioned, everything seems enabled.
+
+As we are unable to use a the addition of a PE Header and a Code Cave, we are left with pretty scarce options. Nevertheless, if checked on most binaries, at the bottom of the stack, we may find unused data that is partially executable.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/2.png)
+
+It isn't quite much, perhaps among 500 bytes, but it sure is enough to fit our payload and execute it. Sadly, encoding is not available in such scenarios, as the section is too privileged for certain encoding characters which are obligatory.
