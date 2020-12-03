@@ -21,7 +21,7 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 [Privilege Escalation - PATH Variable](https://whitecr0wz.github.io/posts/Privilege-Escalation-Path/)
 
 ### PE Backdooring Series
-[Beating ASLR & NX/DEP without Additional PE Headers nor Code Caves (VOL:III)](https://whitecr0wz.github.io/posts/Backdooring-PE-III/)
+[Beating ASLR & NX/DEP without PE Headers/Code Caves (VOL:III)](https://whitecr0wz.github.io/posts/Backdooring-PE-III/)
 
 [Backdooring PE Files through Code Caves + User Interaction + Encoding (VOL:II)](https://whitecr0wz.github.io/posts/Backdooring-PE-II/)
 
