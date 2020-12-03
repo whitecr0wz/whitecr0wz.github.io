@@ -141,7 +141,7 @@ Results of VirusTotal:
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/15.png)
 
-Even though the results are very weak, this could very easily be improved with the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post.
+Even though the results are very weak, this could be improved with the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post.
 
 Thank you for reading! 
 
