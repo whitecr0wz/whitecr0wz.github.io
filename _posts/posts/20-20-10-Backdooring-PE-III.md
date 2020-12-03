@@ -73,7 +73,8 @@ Let's check the entrypoint, as such addresses will be later on restored as expla
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/3.png)
 
-We see a CALL towards 00D68396. As we need to restore this function later on, if we simply replace it with a JMP, we may not have the address to restore due to ASLR. For such reasons, I will perform this step at the ending, placing the PUSHAD/PUSHFD + shellcode + alignment + POPFD/POPAD + restore first and the replace the entrypoint at last.
+We see a CALL towards 00D68396. As we need to restore this function later on, if we simply replace it with a JMP, we may not have the address to restore due to ASLR. 
+#### For such reasons, I will perform this step at the ending, placing the PUSHAD/PUSHFD + shellcode + alignment + POPFD/POPAD + restore first and then replace the entrypoint at last.
 
 For this scenario, I will use address 00D7DE67.
 
@@ -135,3 +136,11 @@ This is then saved.
 If this is run, we may see how the shellcode is executed as intended without any complication!
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/14.gif)
+
+Results of VirusTotal:
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/15.png)
+
+Even though the results are very weak, this could very easily be improved with the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post.
+
+Thank you for reading! 
