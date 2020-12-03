@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Beating ASLR & NX/DEP without Additional PE Headers nor Code Caves (VOL:III)
+title: Beating ASLR & NX/DEP without PE Headers/Code Caves (VOL:III)
 date: 2020-03-08 18:00:00
 categories: posts
 comments: false
