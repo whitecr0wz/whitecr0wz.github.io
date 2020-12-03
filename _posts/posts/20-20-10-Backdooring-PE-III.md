@@ -124,7 +124,7 @@ This is then saved.
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/11.png)
 
-Replacing the entrypoint for a JMP instruction towards our unused bytes.
+Replacing the entrypoint for a JMP instruction towards our unused bytes. Even though ASLR is enabled, it should be clarified that JMP instructions do not hardcode their address, as if we remember in the last post, the address the instruction was pointing to changed whenever the location of the JMP was modified, meaning that all JMP opcodes are relative to their location and do not hardcode addresses. In fact, you could even calculate the distance between the unused bytes and the Entry Point and the result would be the same.
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/12.png)
 
