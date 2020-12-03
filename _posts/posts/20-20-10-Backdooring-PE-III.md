@@ -144,3 +144,8 @@ Results of VirusTotal:
 Even though the results are very weak, this could very easily be improved with the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post.
 
 Thank you for reading! 
+
+#### References
+Capt. Meelo’s post: [https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html](https://captmeelo.com/exploitdev/osceprep/2018/07/21/backdoor101-part2.html)
+
+Online x86/x64 Assembler/Disassembler: [https://defuse.ca/online-x86-assembler.htm#disassembly2](https://defuse.ca/online-x86-assembler.htm#disassembly2)
