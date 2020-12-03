@@ -59,4 +59,4 @@ Interesting, we see several places in which we could inject our payload. However
 
 Let's check the enabled protections.
 
-![](/assets/img/Backdooring\ PE\ Files\ (VOL\ III))
+![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III))
