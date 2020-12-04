@@ -141,7 +141,7 @@ Results of VirusTotal:
 
 ![](/assets/img/Backdooring%20PE%20Files%20(VOL%20III)/15.png)
 
-Even though the results are very weak, this could be improved with the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post.
+Even though the results are very weak, this could be  improved by changing this shellcode for one that is not as known, as the one used for these posts is pretty noisy against Anti-Malware software. Furthermore, the techniques discussed on the [previous](https://whitecr0wz.github.io/posts/Backdooring-PE-II/) post could be from great help in order to lower the detection.
 
 Thank you for reading! 
 
