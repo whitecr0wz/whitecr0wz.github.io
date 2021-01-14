@@ -17,7 +17,7 @@ easily configuring the port.
 
 #### Theory 
 
-In order to create a Reverse Shellcode, 4 main functions are required:
+In order to create a Reverse Shell, 4 main functions are required:
 
 + Socket
 
