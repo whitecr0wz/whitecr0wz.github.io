@@ -7,9 +7,17 @@ comments: false
 en: true
 ---
 
-### Introduction
+#### Introduction
 
-"Remote shellcode is used when an attacker wants to target a vulnerable process running on another machine on a local network, intranet, or a remote network. If successfully executed, the shellcode can provide the attacker access to the target machine across the network. Remote shellcodes normally use standard TCP/IP socket connections to allow the attacker access to the shell on the target machine. Such shellcode can be categorized based on how this connection is set up: if the shellcode establishes the connection, it is called a "reverse shell" or a connect-back shellcode because the shellcode connects back to the attacker's machine. On the other hand, if the attacker establishes the connection, the shellcode is called a bindshell because the shellcode binds to a certain port on the victim's machine. A third, much less common type, is socket-reuse shellcode. This type of shellcode is sometimes used when an exploit establishes a connection to the vulnerable process that is not closed before the shellcode is run. The shellcode can then re-use this connection to communicate with the attacker. Socket re-using shellcode is more elaborate, since the shellcode needs to find out which connection to re-use and the machine may have many connections open." - Wikipedia
+These series of posts starting with the prefix "Assignment" will be created in order to fulfill the requirements of the SLAE certification. Today we are going to have a close look at Linux Bind Shells. 
+
+A Bind shell is a form of malware which grants remote access to a system through a shell. However, differentiating from its peer the Reverse shell, binding to a local port of the compromised system, instead of arranging a specific connection on a trivial address.
+
+The first assignment from the seven requires the creation of a Bind Shell through the Assembly language, and afterwards, a wrapper written in any language that is capable of easily configuring the port.
+
+#### Where the fun begins
+
+
 
 ### Code
 
