@@ -15,9 +15,55 @@ A Bind shell is a form of malware which grants remote access to a system through
 
 The first assignment from the seven requires the creation of a Bind Shell through the Assembly language, and afterwards, a wrapper written in any language that is capable of easily configuring the port.
 
-#### Where the fun begins
+#### Theory
 
+In order to create a Bind Shellcode, 6 main functions are required:
 
++ Socket
+
++ Bind
+
++ Listen
+
++ Accept
+
++ Dup2
+
++ Execve
+
+#### Time to stick our hands into the mud
+
+The first thing required is to clean the registers, as when we execute our program, it will work as a charm, however, when introduced into a real program within a context of binary exploitation with different variables that alter the registers, it may not. Due to this, it's better to have a set of instructions that clean the registers that will be employed:
+
+```term
+global _start
+
+section .text
+
+_start:
+
+       xor eax, eax           ; Zeroes out EAX.
+       xor ebx, ebx           ; Zeroes out EBX.
+       xor ecx, ecx           ; Zeroes out ECX.
+       xor edx, edx           ; Zeroes out EDX.
+       xor esi, esi           ; Zeroes out ESI.
+```
+
+###### Socket
+
+Our next step is to initialize the socket. In order to concrete such action, it is required to move the value of the socket (359) syscall into eax. I have chosen to push the value as a word into the ax register, in order to avoid null characters. Furthermore, according to the syscall man page for socket, the required flags involve domain (EBX), type (ECX) and protocol (EDX). A common combination when it comes to remote shells is AF_INET, SOCK_STREAM. According to [this file](https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html), the value of AF_INET is 2 and SOCK_STREAM 1, therefore, this will be reflected on the EBX and ECX registers.
+
+```term
+socket:
+
+       push word 359          ; Pushes word 359 (socket) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov bl, 2              ; Moves value 2 into bl, giving the value AF_INET.
+       mov cl, 1              ; Moves value 1 into bl, giving the value SOCK_STREAM.
+       push edx               ; There isn't anything really needed within this parameter, so 0 is pushed from EDX.
+       int 0x80               ; Call to kernel.
+       mov esi, eax           ; Saves the value of eax for sockfd values later on.
+```
 
 ### Code
 
