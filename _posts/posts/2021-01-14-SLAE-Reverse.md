@@ -101,7 +101,9 @@ connect:
 
 ###### Duplicate a file descriptor
 
-Once again, we encounter ourselves with our buddy Dup2. This syscall will make our communication with the compromised device interactive by copying into the file descriptors STDIN (0), STDOUT (1), and STDERR (2). Just like the last time, a loop that is executed three times will be implemented which performs such task as long as the zero flag (ZF) is not set.
+Once again, we encounter ourselves with our buddy Dup2. This syscall will make our communication with the compromised device interactive by duplicating the file descriptors 
+STDIN (0), STDOUT (1), and STDERR (2) into our connection. Furthermore, as this requires for dup2 to be iterated 3 times, a loop that is executed in such circumstances will be 
+implemented that performs such task as long as the zero flag (ZF) is not set. Arguments are the following: ```int dup2(int oldfd, int newfd);```
 
 ```term
 dup2:
