@@ -273,7 +273,7 @@ execve:
 
 #### The Wrapper
 
-As stated in the introduction, one additional detail given in the assignment is to create a wrapper (in any language) that easily configures the port for the reverse shell.
+As stated in the introduction, one additional detail given in the assignment is to create a wrapper (in any language) that easily configures the address and port for the reverse shell.
 
 Wrapper code:
 
