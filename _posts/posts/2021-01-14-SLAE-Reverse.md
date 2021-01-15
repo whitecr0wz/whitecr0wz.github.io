@@ -111,7 +111,16 @@ connect:
 
 Once again, we encounter ourselves with our buddy Dup2. This syscall will make our communication with the compromised device interactive by duplicating the file descriptors 
 STDIN (0), STDOUT (1), and STDERR (2) into our connection. Furthermore, as this requires for dup2 to be iterated 3 times, a loop that is executed in such circumstances will be 
-implemented that performs such task as long as the zero flag (ZF) is not set. Arguments are the following: ```int dup2(int oldfd, int newfd);```
+implemented that performs such task as long as the zero flag (ZF) is not set. 
+
+###### Syscall value:
+```term
+root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep dup2
+#define __NR_dup2 63
+root@whitecr0wz:~#
+```
+
+###### manpage arguments: ```int dup2(int oldfd, int newfd);```
 
 ```term
 dup2:
@@ -133,7 +142,7 @@ dup2:
 
 Finally, the last syscall left to initialize is Execve, which will execute the program when the connection is stablished. 
 
-Syscall value:
+###### Syscall value:
 
 ```term
 root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep execve 
@@ -142,7 +151,7 @@ root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep exec
 root@whitecr0wz:~# 
 ```
 
-manpage arguments:
+###### manpage arguments:
 
 ```term
 int execve(const char *pathname, char *const argv[], char *const envp[]);
