@@ -29,8 +29,9 @@ In order to create a Reverse Shell, 4 main functions are required:
 
 #### Time to stick our hands into the mud
 
-The first thing required is to clean the registers, as when we execute our program, it will work as a charm, however, when introduced into a real program within a context of 
-binary exploitation with different variables that alter the registers, it may not. Due to this, it's better to have a set of instructions that clean the registers that will be 
+The first thing required is to clean the registers, as when we execute our program, it will work as a charm. Nevertheless, when introduced into a real program within a context 
+of 
+binary exploitation with different variables that modify the registers, it may not. Due to this, it's better to have a set of instructions that clean the registers that will be 
 employed:
 
 ```term
