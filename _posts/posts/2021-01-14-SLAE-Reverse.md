@@ -115,8 +115,7 @@ connect:
 ###### Duplicate a file descriptor
 
 Once again, we encounter ourselves with our buddy Dup2. This syscall will make our communication with the compromised device interactive by duplicating the file descriptors 
-STDIN (0), STDOUT (1), and STDERR (2) into our connection. Furthermore, as this requires for dup2 to be iterated 3 times, a loop that is executed in such circumstances will be 
-implemented that performs such task as long as the zero flag (ZF) is not set. 
+STDIN (0), STDOUT (1), and STDERR (2) into our connection. Furthermore, as this requires that dup2 is iterated 3 times, a loop that is executed in such on three occasions will be implemented that performs such task as long as the zero flag (ZF) is not set. 
 
 ###### Syscall value:
 ```term
