@@ -12,7 +12,8 @@ en: true
 These series of posts starting with the prefix "Assignment" will be created in order to fulfill the requirements of the SLAE certification. Today we are going to have a close 
 look at Linux Reverse Shells. 
 
-A Reverse shell is a form of malware which grants remote access to a system through a shell. However, differentiating from its peer the Bind shell, arranging a specific connection on a trivial address, instead of binding to a local port of the compromised system.
+A Reverse shell is a form of malware which grants remote access to a system through a shell. However, differentiating from its peer the Bind shell, arranging a specific 
+connection on a trivial address, instead of binding to a local port of the compromised system.
 
 The second assignment from the seven requires the creation of a Reverse Shell through the Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required to write a wrapper in any language of preference that is capable of 
 easily configuring the address and port.
@@ -78,7 +79,8 @@ descriptor.
 ###### Initiate a connection on a socket
 
 The following step is to initiate a connection on the socket. The arguments according the man page are the following: ```int connect(int sockfd, const struct sockaddr *addr, 
-socklen_t addrlen);```. As you may see, the required flags are quite the same to the bind syscall in the previous post. Nonetheless, if you remember, in the previous post a value of 0 was pushed within the IP protocol argument, value which will be essential this time, therefore, the order will be the following:
+socklen_t addrlen);```. As you may see, the required flags are quite the same to the bind syscall in the previous post. Nonetheless, if you remember, in the previous post a 
+value of 0 was pushed within the IP protocol argument, value which will be essential this time, therefore, the order will be the following:
 
 + 0            (As it is required to push 0, the instruction PUSH EDX will be used.)
 + IP Address   (As this is a reverse shell, it is required to point to a specific address. Due to the aforementioned, this will be set to our IP within hex.)
@@ -148,7 +150,11 @@ int execve(const char *pathname, char *const argv[], char *const envp[]);
 
 The procedure with this syscall will be the following:
 
-+ The program desired to execute will be /bin/bash. The string "////bin/bash" (additional slashes in order to be divisible by 4) will be pushed into the stack and then saved into EBX. Moreover, EDX will be set to 0 as the value envp[] is not required. Finally, EBX will be pushed and saved into ECX.
++ The program desired to execute will be /bin/bash. 
++ The string "////bin/bash" (additional slashes in order to be divisible by 4) will be pushed into the stack and then saved into EBX. 
++ EDX will be set to 0 as the value envp[] is not required. 
++ EBX will be pushed and saved into ECX.
++ Execve will be called.
 
 ```term
 execve:
