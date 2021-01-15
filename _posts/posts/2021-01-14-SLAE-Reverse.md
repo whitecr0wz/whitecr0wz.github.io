@@ -90,6 +90,13 @@ value of 0 was pushed within the IP protocol argument, value which will be essen
 Furthermore, we have to satisfy the socklen_t addrlen argument as well. This requires the length of the previous struct, as like in the previous chapter, it was 16 (any value 
 above this could be used as well) . This will be reflected upon the value of DL. 
 
+###### Syscall value:
+```term
+root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep connect 
+#define __NR_connect 362
+root@whitecr0wz:~#
+```
+
 ```term
 connect:
 
@@ -123,6 +130,9 @@ root@whitecr0wz:~#
 ###### manpage arguments: ```int dup2(int oldfd, int newfd);```
 
 ```term
+      xor ecx, ecx            ; Zeroes out ECX.
+      mov cl, 0x3             ; Starts counter for dup2.
+
 dup2:
 
       xor eax, eax            ; Zeroes out EAX.
