@@ -15,7 +15,7 @@ look at Linux Reverse Shells.
 A Reverse shell is a form of malware which grants remote access to a system through a shell. However, differentiating from its peer the Bind shell, arranging a specific connection on a trivial address, instead of binding to a local port of the compromised system.
 
 The second assignment from the seven requires the creation of a Reverse Shell through the Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required to write a wrapper in any language of preference that is capable of 
-easily configuring the port.
+easily configuring the address and port.
 
 If you were able to follow the previous post with ease, this should be a charm!
 
