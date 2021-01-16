@@ -84,7 +84,11 @@ section .text
 _start:
 
       jmp short master               ; Jumps to master
-      
+
+main:
+
+      pop ebp                        ; Pops the value of the shellcode into ebp
+
 master:
 
       call main                      ; Calls to main and pops shellcode into the stack
