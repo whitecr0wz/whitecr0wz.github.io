@@ -26,7 +26,7 @@ In order to create an Egghunter shellcode, there are several paths. However, as 
 + Repeat this process through a jump if not zero (JNZ) condition.
 + Jump into EBX.
 
-It is quite important to note that the tag does not contain an opocode that could interfere with our egghunter, such as an INC ESI (46), or DEC EBX (4B). The tag chosen is 45474547 (GEGE).
+It is quite important to note that the tag does not contain an opocode that could interfere with our egghunter, such as an INC ESI (46), or DEC EBX (4B). The chosen tag is 45474547 (GEGE).
 
 Code:
 
