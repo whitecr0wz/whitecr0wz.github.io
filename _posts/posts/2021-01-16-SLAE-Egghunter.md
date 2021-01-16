@@ -75,10 +75,11 @@ main()
 #### EndGame
 
 ```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_3$ gcc egghunter.c -o egghunter -fno-stack-protector -z execstack -w 
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_3$ ./egghunter 
 Shellcode size:  26
 Egg size:  12
-$ 
+$
 ```
 
 ### Code
