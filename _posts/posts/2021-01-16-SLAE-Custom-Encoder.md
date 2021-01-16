@@ -111,7 +111,7 @@ Now, the following steps are the same as when it comes to any insertion decoder:
 + Copy the value of BL into EDI, slowly restoring the original order.
 + Increment EDI in order to repeat the process.
 + AL is incremented by 2, once again to repeat the process.
-+ Start the loop
++ Start the loop.
 
 ```term
       lea edi, [esi + 1]             ; Points to the 0x45 byte
@@ -128,9 +128,50 @@ decode:
       xor bl, 0x45                   ; Turns 0x45 into 0x00
       mov bl, byte [esi + eax + 1]   ; Grabs intended value
       mov byte [edi], bl             ; Replaces 0x00 for the intended value
-      inc edi                        ; Increments EDI, holding next 0xAA for replacement
+      inc edi                        ; Increments EDI, holding next 0x45 for replacement
       add al, 2                      ; Adds 2 in order to continue the process
       loop decode                    ; Starts loop
+```
+
+Great! By now our shellcode should have the additional 0x45 bytes removed, the following step is to clean ESI and restore its value by copying the EBP register's one! Furthermore, it is left for use to set the counter once again! This time to the half of the shellcode, as the additional bytes have been removed. 
+
+```term
+      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+```
+
+The next step should be executing the NOT operation. And once again, clean the value of ESI and restore its value!
+
+The procedure of the NOT operation should be the pollowing:
+
++ Perform a NOT operation on the value of ESI.
++ Increment ESI, pointing to the next byte.
++ Continue the loop.
+
+```term
+decode2:
+
+      not byte [esi]                 ; Performs a NOT operation on the value pointed by ESI
+      inc esi                        ; Increments ESI, therefore performing a NOT operation on every opcode
+      loop decode2                   ; Starts loop
+
+      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+```
+
+Finally, at last we have to XOR the remaining part of the shellcode by 0x46.
+
+```term
+decode3:
+
+      xor byte [esi], 0x46           ; Performs a XOR operation between the value of ESI and 0x46
+      inc esi                        ; Increments ESI, therefore performing aXOR operation on every opcode
+      loop decode3                   ; Starts loop
+      jmp short shellcode            ; Jumps to the shellcode
+
+```
 
 #### EndGame
 
