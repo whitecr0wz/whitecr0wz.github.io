@@ -211,7 +211,7 @@ End of assembler dump.
 (gdb) 
 ```
 
-Let's put a breakpoint in 0x004011f7, place where the shellcode will finally be executed, loading the values that require the operation there.
+Let's put a breakpoint in 0x004011f7, place where the shellcode will finally be executed, loading the values that require the operation in EAX.
 
 ```term
 (gdb) break *0x004011f7
