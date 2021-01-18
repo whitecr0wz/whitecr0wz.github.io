@@ -322,9 +322,9 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$
 #### Conclusion (Shellcode #2)
 
 Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh through the ```PUSH DWORD``` instructions, whereas EDI is receiving the 
-value of ```-c```. Even more so, we can comprehend from this output that the following argument ```/bin/id``` is being called from a variable through the instruction ```call 0x1```, 
-finally pushing the order in reverse and saving the address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a 
-simple output and even filtering those bytes which would mangle the output.
+value of ```-c```. Even more so, we can comprehend from this output that the following argument ```/bin/id``` is being called from a variable through the instruction ```call 
+0x1```, finally pushing the order in reverse and saving the address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues
+within a simple output and even filtering those bytes which would mangle the output.
 
 #### read_file Shellcode (Shellcode #3)
 
@@ -396,7 +396,7 @@ int 0x80
 It seems that we have come accross a JMP-CALL-POP technique! The jump will have most likely ended in a section with the file ```./file``` specified. Moreover, EAX was set to 
 0x5, which is the syscall for open. Furthermore, the value of ```./file```  has been popped into EBX, as it is required to satisfy the argument ```pathname```. Lastly, ECX was set to zero, as it isn't very relevant. 
 
-###### Syscall Read
+##### Syscall Read
 
 ```term
 mov ebx,eax
@@ -411,10 +411,10 @@ Arguments required for read: ```ssize_t read(int fd, void *buf, size_t count);``
 
 + The value of EAX has been saved into EBX for further referrals to the file descriptor.
 + EAX is given the value of 3, syscall of read.
-+ The address of ESP is copied into EDI and from EDI to ECX, satisfying the argument *buf*.
++ The address of ESP is copied into EDI and from EDI to ECX, satisfying the argument *buf*, buffer where to read the file.
 + EDX is set 1000 in order to satisfy the ```count``` argument.
 
-###### Syscall Write
+##### Syscall Write
 
 ```term
 mov edx,eax
@@ -430,7 +430,13 @@ Arguments required for write:```ssize_t write(int fd, const void *buf, size_t co
 + EBX is given value 1, in order to write to the screen.
 + ECX keeps pointing to the buffer where to write bytes from.
 
+This will finally write to the screen what has been opened and read.
 
+The following syscalls aren't really as exciting, as they are exit syscalls in order to exit the program gracefully.
+
+#### Conclusion (Shellcode #3)
+
+This last shellcode will, open, read, write to the screen what was read and finally exit gracefully the program. 
 
 ### Code
 
