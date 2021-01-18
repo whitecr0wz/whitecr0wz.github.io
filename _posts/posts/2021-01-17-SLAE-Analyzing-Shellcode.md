@@ -261,144 +261,42 @@ unsigned char buf[] =
 root@whitecr0wz:~# 
 ```
 
-##### Ndisasm
-
-Let's analyze this shellcode with Ndisasm:
-
-```term
-whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x0B\x58\x99\x52\x66\x68\x2D\x63\x89\xE7\x68\x2F\x73\x68\x00\x68\x2F\x62\x69\x6E\x89\xE3\x52\xE8\x08\x00\x00\x00\x2F\x62\x69\x6E\x2F\x69\x64\x00\x57\x53\x89\xE1\xCD\x80" | ndisasm -u - 
-00000000  6A0B              push byte +0xb
-00000002  58                pop eax
-00000003  99                cdq
-00000004  52                push edx
-00000005  66682D63          push word 0x632d
-00000009  89E7              mov edi,esp
-0000000B  682F736800        push dword 0x68732f
-00000010  682F62696E        push dword 0x6e69622f
-00000015  89E3              mov ebx,esp
-00000017  52                push edx
-00000018  E808000000        call 0x25
-0000001D  2F                das
-0000001E  62696E            bound ebp,[ecx+0x6e]
-00000021  2F                das
-00000022  696400575389E1CD  imul esp,[eax+eax+0x57],dword 0xcde18953
-0000002A  80                db 0x80
-whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$ 
-```
-
-Interesting, EAX is given the value of 0xb, which is 11 in decimal. Let's check what syscall has such value:
-
-```term
-root@whitecr0wz:~# cat /usr/include/x86_64-linux-gnu/asm/unistd_32.h | grep '11$' 
-#define __NR_execve 11
-#define __NR_vhangup 111
-#define __NR_getresgid32 211
-#define __NR_set_robust_list 311
-#define __NR_timerfd_settime64 411
-root@whitecr0wz:~#
-```
-
-
 ##### Libemu
 
-Interesting, execve is being executed. In addition with this, ebx is being given the value of /bin/sh whereas edi is receiving the value of "-c". This could mean that the argument /bin/id is being called through a call instruction. Let's check this with Libemu:
+Let's analyze this shellcode with Libemu:
 
 ```term
-whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x0B\x58\x99\x52\x66\x68\x2D\x63\x89\xE7\x68\x2F\x73\x68\x00\x68\x2F\x62\x69\x6E\x89\xE3\x52\xE8\x08\x00\x00\x00\x2F\x62\x69\x6E\x2F\x69\x64\x00\x57\x53\x89\xE1\xCD\x80" | ../../../libemu/tools/sctest/sctest -vvv -Ss 10000 
-verbose = 3
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417000
-[emu 0x0x13a85f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417000
-[emu 0x0x13a85f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 6A0B                            push byte 0xb
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417002
-[emu 0x0x13a85f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 58                              pop eax
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417003
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 99                              cwd 
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417004
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 52                              push edx
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417005
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 66682D63                        push word 0x632d
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417009
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fc8  ebp=0x00000000  esi=0x00000000  edi=0x00000000
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 89E7                            mov edi,esp
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x0041700b
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fc8  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 682F736800                      push dword 0x68732f
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417010
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fc4  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 682F62696E                      push dword 0x6e69622f
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417015
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
-[emu 0x0x13a85f0 debug ] esp=0x00416fc0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 89E3                            mov ebx,esp
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417017
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fc0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 52                              push edx
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417018
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fbc  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] E8                              call 0x1
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417025
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb8  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 57                              push edi
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417026
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb4  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 53                              push ebx
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417027
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00000000  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 89E1                            mov ecx,esp
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x00417029
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00416fb0  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] CD80                            int 0x80
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x0B\x58\x99\x52\x66\x68\x2D\x63\x89\xE7\x68\x2F\x73\x68\x00\x68\x2F\x62\x69\x6E\x89\xE3\x52\xE8\x08\x00\x00\x00\x2F\x62\x69\x6E\x2F\x69\x64\x00\x57\x53\x89\xE1\xCD\x80" | ../../../libemu/tools/sctest/sctest -vv -Ss 10000 
+verbose = 2
+[emu 0x0x8205f0 debug ] cpu state    eip=0x00417000
+[emu 0x0x8205f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x8205f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x8205f0 debug ] Flags: 
+[emu 0x0x8205f0 debug ] 6A0B                            push byte 0xb
+[emu 0x0x8205f0 debug ] 58                              pop eax
+[emu 0x0x8205f0 debug ] 99                              cwd 
+[emu 0x0x8205f0 debug ] 52                              push edx
+[emu 0x0x8205f0 debug ] 66682D63                        push word 0x632d
+[emu 0x0x8205f0 debug ] 89E7                            mov edi,esp
+[emu 0x0x8205f0 debug ] 682F736800                      push dword 0x68732f
+[emu 0x0x8205f0 debug ] 682F62696E                      push dword 0x6e69622f
+[emu 0x0x8205f0 debug ] 89E3                            mov ebx,esp
+[emu 0x0x8205f0 debug ] 52                              push edx
+[emu 0x0x8205f0 debug ] E8                              call 0x1
+[emu 0x0x8205f0 debug ] 57                              push edi
+[emu 0x0x8205f0 debug ] 53                              push ebx
+[emu 0x0x8205f0 debug ] 89E1                            mov ecx,esp
+[emu 0x0x8205f0 debug ] CD80                            int 0x80
 execve
 int execve (const char *dateiname=00416fc0={/bin/sh}, const char * argv[], const char *envp[]);
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x0041702b
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00416fb0  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
-[emu 0x0x13a85f0 debug ] 0000                            add [eax],al
+[emu 0x0x8205f0 debug ] 0000                            add [eax],al
 cpu error error accessing 0x00000004 not mapped
 
 stepcount 15
-[emu 0x0x13a85f0 debug ] cpu state    eip=0x0041702d
-[emu 0x0x13a85f0 debug ] eax=0x0000000b  ecx=0x00416fb0  edx=0x00000000  ebx=0x00416fc0
-[emu 0x0x13a85f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
-[emu 0x0x13a85f0 debug ] Flags: 
+[emu 0x0x8205f0 debug ] cpu state    eip=0x0041702d
+[emu 0x0x8205f0 debug ] eax=0x0000000b  ecx=0x00416fb0  edx=0x00000000  ebx=0x00416fc0
+[emu 0x0x8205f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
+[emu 0x0x8205f0 debug ] Flags: 
 int execve (
      const char * dateiname = 0x00416fc0 => 
            = "/bin/sh";
@@ -418,11 +316,15 @@ int execve (
      const char * envp[] = 0x00000000 => 
          none;
 ) =  0;
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$
 ```
 
 #### Conclusion (Shellcode #2)
 
-Indeed we may see with this text that /bin/sh is being executed with the argument /bin/id being parsed. Furthermore, if paying close attention, we might notice the string ``` call 0x1``` followed by the PUSH EDI instruction ("-c"), this could mean that the argument is being loaded from a variable.
+Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh whereas EDI is receiving the value of "-c". Even more so, we can comprehend 
+from this output that the following argument "/bin/id" is being called from a variable through the instruction "call 0x1", finally pushing the order in reverse and saving the 
+address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a simple output and even filtering those bytes which 
+would mangle the output.
 
 ### Code
 
@@ -431,4 +333,4 @@ courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/on
 
 Student ID: SLAE-27812/PA-27812
 
-You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/Assignment_5).
+You can find all of the used resources [here](https://github.com/whitecr0wz/SLAE/).
