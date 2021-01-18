@@ -72,7 +72,7 @@ _start:
        int 0x80                  ; Calls to kernel.
 ```
 
-Let's obtain the dump the shellcode and test it!
+Let's dump the shellcode and test it!
 
 ```term
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/1_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
@@ -135,7 +135,9 @@ inc    eax
 int    0x80
 ```
 
-There aren't many things that we can do. Nonetheless, we can apply similar techniques as we did on the previous shellcode:
+There aren't many things that we can do. Nonetheless, we can apply similar techniques as we did on the previous shellcode.
+
+###### Final code:
 
 ```term
 ; Original Shellcode: http://shell-storm.org/shellcode/files/shellcode-590.php
@@ -171,7 +173,7 @@ _start:
        int 0x80           ; Call to kernel.
 ```
 
-Let's obtain the dump the shellcode and test it!
+Let's dump the shellcode and test it!
 
 ```term
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
