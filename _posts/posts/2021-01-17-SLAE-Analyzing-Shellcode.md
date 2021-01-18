@@ -322,11 +322,78 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$
 #### Conclusion (Shellcode #2)
 
 Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh through the ```PUSH DWORD``` instructions, whereas EDI is receiving the 
-value of ```-c```. Even more so, we can comprehend from this output that the following argument "/bin/id" is being called from a variable through the instruction ```call 0x1```, 
+value of ```-c```. Even more so, we can comprehend from this output that the following argument ```/bin/id``` is being called from a variable through the instruction ```call 0x1```, 
 finally pushing the order in reverse and saving the address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a 
 simple output and even filtering those bytes which would mangle the output.
 
 #### read_file Shellcode (Shellcode #3)
+
+The second shellcode to be analyzed will be one that opens a file and reads it, in this case the one chosen being "./file". 
+
+Generating the shellcode with msfvenom:
+
+```term
+root@whitecr0wz:~# msfvenom -p linux/x86/read_file PATH=./file -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 68 bytes
+Final size of c file: 311 bytes
+unsigned char buf[] = 
+"\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8"
+"\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80"
+"\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8"
+"\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff"
+"\xff\x2e\x2f\x66\x69\x6c\x65\x00";
+root@whitecr0wz:~#
+```
+
+#### Ndisasm
+
+Let's analyze this with Ndisasm:
+
+```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect3$ echo -ne "\xEB\x36\xB8\x05\x00\x00\x00\x5B\x31\xC9\xCD\x80\x89\xC3\xB8\x03\x00\x00\x00\x89\xE7\x89\xF9\xBA\x00\x10\x00\x00\xCD\x80\x89\xC2\xB8\x04\x00\x00\x00\xBB\x01\x00\x00\x00\xCD\x80\xB8\x01\x00\x00\x00\xBB\x00\x00\x00\x00\xCD\x80\xE8\xC5\xFF\xFF\xFF\x2E\x2F\x66\x69\x6C\x65" | ndisasm -u - 
+00000000  EB36              jmp short 0x38
+00000002  B805000000        mov eax,0x5
+00000007  5B                pop ebx
+00000008  31C9              xor ecx,ecx
+0000000A  CD80              int 0x80
+0000000C  89C3              mov ebx,eax
+0000000E  B803000000        mov eax,0x3
+00000013  89E7              mov edi,esp
+00000015  89F9              mov ecx,edi
+00000017  BA00100000        mov edx,0x1000
+0000001C  CD80              int 0x80
+0000001E  89C2              mov edx,eax
+00000020  B804000000        mov eax,0x4
+00000025  BB01000000        mov ebx,0x1
+0000002A  CD80              int 0x80
+0000002C  B801000000        mov eax,0x1
+00000031  BB00000000        mov ebx,0x0
+00000036  CD80              int 0x80
+00000038  E8C5FFFFFF        call 0x2
+0000003D  2E2F              cs das
+0000003F  66                o16
+00000040  69                db 0x69
+00000041  6C                insb
+00000042  65                gs
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect3$
+```
+
+Let's go section-by-section what is going on:
+
+```term
+jmp short 0x38
+mov eax,0x5
+pop ebx
+xor ecx,ecx
+int 0x80
+```
+
+It seems that we have come accross a JMP-CALL-POP technique! The jump will have most likely ended in a section with the file ```./file``` specified. Moreover, EAX was set to 
+0x5, which is the syscall for open. Furthermore, the value of EAX was copied into EBX, in order to refer to the file descriptor later on. Lastly, ECX was set to 
+zero, as it isn't very relevant. 
 
 
 
