@@ -383,6 +383,8 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect3$
 
 Let's go section-by-section what is going on:
 
+##### Syscall Open
+
 ```term
 jmp short 0x38
 mov eax,0x5
@@ -392,8 +394,41 @@ int 0x80
 ```
 
 It seems that we have come accross a JMP-CALL-POP technique! The jump will have most likely ended in a section with the file ```./file``` specified. Moreover, EAX was set to 
-0x5, which is the syscall for open. Furthermore, the value of EAX was copied into EBX, in order to refer to the file descriptor later on. Lastly, ECX was set to 
-zero, as it isn't very relevant. 
+0x5, which is the syscall for open. Furthermore, the value of ```./file```  has been popped into EBX, as it is required to satisfy the argument ```pathname```. Lastly, ECX was set to zero, as it isn't very relevant. 
+
+###### Syscall Read
+
+```term
+mov ebx,eax
+mov eax,0x3
+mov edi,esp
+mov ecx,edi
+mov edx,0x1000
+int 0x80
+```
+
+Arguments required for read: ```ssize_t read(int fd, void *buf, size_t count);```
+
++ The value of EAX has been saved into EBX for further referrals to the file descriptor.
++ EAX is given the value of 3, syscall of read.
++ The address of ESP is copied into EDI and from EDI to ECX, satisfying the argument *buf*.
++ EDX is set 1000 in order to satisfy the ```count``` argument.
+
+###### Syscall Write
+
+```term
+mov edx,eax
+mov eax,0x4
+mov ebx,0x1
+int 0x80
+```
+
+Arguments required for write:```ssize_t write(int fd, const void *buf, size_t count);```
+
++ EDX is given the bytes returned from the Read Syscall from through EAX.
++ EAX is given the value of 4, syscall of write.
++ EBX is given value 1, in order to write to the screen.
++ ECX keeps pointing to the buffer where to write bytes from.
 
 
 
