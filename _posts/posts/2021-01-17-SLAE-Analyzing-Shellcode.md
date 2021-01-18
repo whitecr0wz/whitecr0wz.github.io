@@ -321,10 +321,14 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$
 
 #### Conclusion (Shellcode #2)
 
-Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh whereas EDI is receiving the value of "-c". Even more so, we can comprehend 
-from this output that the following argument "/bin/id" is being called from a variable through the instruction "call 0x1", finally pushing the order in reverse and saving the 
-address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a simple output and even filtering those bytes which 
-would mangle the output.
+Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh through the ```PUSH DWORD``` instructions, whereas EDI is receiving the 
+value of ```-c```. Even more so, we can comprehend from this output that the following argument "/bin/id" is being called from a variable through the instruction ```call 0x1```, 
+finally pushing the order in reverse and saving the address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a 
+simple output and even filtering those bytes which would mangle the output.
+
+#### read_file Shellcode (Shellcode #3)
+
+
 
 ### Code
 
