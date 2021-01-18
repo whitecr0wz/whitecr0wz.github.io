@@ -393,8 +393,10 @@ xor ecx,ecx
 int 0x80
 ```
 
+Arguments required for open:```int open(const char *pathname, int flags);```
+
 It seems that we have come accross a JMP-CALL-POP technique! The jump will have most likely ended in a section with the file ```./file``` specified. Moreover, EAX was set to 
-0x5, which is the syscall for open. Furthermore, the value of ```./file```  has been popped into EBX, as it is required to satisfy the argument ```pathname```. Lastly, ECX was set to zero, as it isn't very relevant. 
+0x5, which is the syscall for open. Furthermore, the value of ```./file```  has been popped into EBX, as it is required to satisfy the argument ```pathname```. Lastly, ECX was set to zero, as the flags aren't relevant. 
 
 ##### Syscall Read
 
@@ -426,13 +428,13 @@ int 0x80
 Arguments required for write:```ssize_t write(int fd, const void *buf, size_t count);```
 
 + EDX is given the bytes returned from the Read Syscall from through EAX.
-+ EAX is given the value of 4, syscall of write.
-+ EBX is given value 1, in order to write to the screen.
++ EAX is given the value of 4, syscall for write.
++ EBX is given value 1, in order to write to the screen through STDOUT.
 + ECX keeps pointing to the buffer where to write bytes from.
 
 This will finally write to the screen what has been opened and read.
 
-The following syscalls aren't really as exciting, as they are exit syscalls in order to exit the program gracefully.
+The following syscalls beyond the already shown are exit syscalls in order to exit the program gracefully. Furthermore, the resting bytes should be the variables.
 
 #### Conclusion (Shellcode #3)
 
