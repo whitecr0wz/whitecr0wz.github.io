@@ -13,7 +13,8 @@ These series of posts starting with the prefix "Assignment" will be created in o
 look at a Custom Encoder. 
 
 
-The fourth assignment from the seven requires the creation of a Custom Encoder, similar to the one shown in the course as the "Insertion Encoder". This should be written in the Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required that such is tested later on the C format.
+The fourth assignment from the seven requires the creation of a Custom Encoder, similar to the one shown in the course as the "Insertion Encoder". This should be written in the 
+Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required that such is tested later on the C format.
 
 ##### The Encoder
 
@@ -68,8 +69,10 @@ Let's encode the shellcode:
 ```term
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ python custom_encoder.py 
 Encoded shellcode ...
-"\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45"
-0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45,
+"\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45
+"
+0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x
+45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45,
 Len: 22
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$
 ```
@@ -133,7 +136,8 @@ decode:
       loop decode                    ; Starts loop
 ```
 
-Great! By now our shellcode should have the additional 0x45 bytes removed, the following step is to clean ESI and restore its value by copying the EBP register's one! Furthermore, it is left for use to set the counter once again! This time to the half of the shellcode, as the additional bytes have been removed. 
+Great! By now our shellcode should have the additional 0x45 bytes removed, the following step is to clean ESI and restore its value by copying the EBP register's one! 
+Furthermore, it is left for use to set the counter once again! This time to the half of the shellcode, as the additional bytes have been removed. 
 
 ```term
       mov cl, 22                     ; Stores counter (22 bytes)
@@ -187,7 +191,9 @@ Let's test this encoder within the C format:
 #include<string.h>
 
 unsigned char code[] = \
-"\xeb\x38\x5d\x89\xee\x8d\x7e\x01\x31\xc0\x31\xdb\xb1\x2c\xb0\x01\x8a\x1c\x06\x80\xf3\x45\x8a\x5c\x06\x01\x88\x1f\x47\x04\x02\xe2\xef\xb1\x16\x31\xf6\x89\xee\xf6\x16\x46\xe2\xfb\xb1\x16\x31\xf6\x89\xee\x80\x36\x46\x46\xe2\xfa\xeb\x05\xe8\xc3\xff\xff\xff\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45";
+"\xeb\x38\x5d\x89\xee\x8d\x7e\x01\x31\xc0\x31\xdb\xb1\x2c\xb0\x01\x8a\x1c\x06\x80\xf3\x45\x8a\x5c\x06\x01\x88\x1f\x47\x04\x02\xe2\xef\xb1\x16\x31\xf6\x89\xee\xf6\x16\x46\xe2\xfb
+\xb1\x16\x31\xf6\x89\xee\x80\x36\x46\x46\xe2\xfa\xeb\x05\xe8\xc3\xff\xff\xff\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\
+x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45";
 
 main()
 {
