@@ -27,6 +27,22 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [Backdooring PE Files through Code Caves (VOL:I)](https://whitecr0wz.github.io/posts/Backdooring-PE/)
 
+### Linux x86 Shellcoding
+
+[SLAE Assignment 7: Custom Crypter](https://whitecr0wz.github.io/posts/SLAE-Custom-Crypter/)
+
+[SLAE Assignment 6: Polymorphic Shellcode](https://whitecr0wz.github.io/posts/SLAE-Polymorphic/)
+
+[SLAE Assignment 5: Analyzing 3rd party Shellcode](https://whitecr0wz.github.io/posts/SLAE-Analyzing-Shellcode/)
+
+[SLAE Assignment 4: Custom Insertion Encoder](https://whitecr0wz.github.io/posts/SLAE-Custom-Encoder/)
+
+[SLAE Assignment 3: Egghunter](https://whitecr0wz.github.io/posts/SLAE-Egghunter/)
+
+[SLAE Assignment 2: Reverse TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE-Reverse/)
+
+[SLAE Assignment 1: Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE-Bind/)
+
 ### Findings
 [Nidesoft 3GP Video Converter 2.6.18 - Local Stack Buffer Overflow](https://whitecr0wz.github.io/posts/3GP-Recorder/)
 
