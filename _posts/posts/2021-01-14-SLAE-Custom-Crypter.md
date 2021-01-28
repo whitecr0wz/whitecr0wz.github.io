@@ -118,6 +118,8 @@ boom = cast(buffer, CFUNCTYPE(c_void_p))
 boom()
 ```
 
+#### EndGame
+
 ```term
 whitecr0wz@SLAE:~/assignments/Assignment_7$ python decrypt.py 
 [*] Example: python decrypt.py <key> <IV number>
