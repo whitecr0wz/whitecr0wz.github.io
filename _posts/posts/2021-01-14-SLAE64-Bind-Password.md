@@ -41,7 +41,7 @@ following:
 
 + Execve
 
-After the dup2 syscall has been satisfied and executed, the connection should already possess the ability to interact with the other computer. Therefore, we could send a message 
+After the dup2 syscall has been satisfied and executed, the connection should already possess the ability to interact with the other gadget. Therefore, we could send a message 
 and receive information from the other device. The process will be the following:
 
 + Socket
