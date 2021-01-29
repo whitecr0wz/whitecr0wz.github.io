@@ -66,7 +66,16 @@ and receive information from the other device. The process will be the following
 
 ##### Time to stick our hands into the mud
 
-Let's start with the failure function, right after dup2:
+Let's start with the failure function, right after dup2.
+
+The process should be the following.
+
++ It is required to call the write syscall. This will be arranged by incrementing the value of AL by 1.
++ RDI will be incremented as well, as this will give RDI the STDOUT value, printing to the screen.
++ RSI will hold temporarely and push the value to print to the screen. 
++ RSI will then copy the value from RSP.
++ DL will be given the length of the entire string.
++ This should write "Incorrect credentials. " into the client's screen.
 
 ```term
         jmp question           ; Jump to the "question" function.
@@ -101,7 +110,7 @@ halt:
 
         xor rsi, rsi           ; Zeroes out RSI.
 
-        add si, 't '           ; Inserts value 't ' into RSI
+        add si, 't '           ; Inserts value 't ' into SI
         push rsi               ; Pushes the value of RSI into the stack.
 
         mov rsi, 'Incorrec'    ; Inserts value 'Incorrec' into RSI
@@ -111,10 +120,9 @@ halt:
         mov dl, 34             ; Gives DL the length of the entire string, which should be around 34. If DL is given a bigger value than the real one (I.E 50), the password will 
                                ; be printed when this message pops up.
         syscall                ; The syscall is executed.
-
 ```
 
-As the final code is quite long, I have chosen instead to just leave the [link here](https://github.com/whitecr0wz/SLAE/blob/main/SLAE64/Assignment_1/1.asm)
+You can find the full code [here](https://github.com/whitecr0wz/SLAE/blob/main/SLAE64/Assignment_1/1.asm)
 
 ### Code
 
