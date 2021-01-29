@@ -21,6 +21,48 @@ The first assignment from the seven is divided in two sections:
 + B: The discussed Bind Shell provided during the course should be modified, in order that it no longer possesses any form of NULL bytes (00). 
 
 As exercise A is already quite a complex and long exercise, the first assignment will be segmented in two different posts, thing which may repeat within the second assignment.
+Moreover, the main idea of a Bind Shell and process of programming such has already been explored [here](https://whitecr0wz.github.io/posts/SLAE-Bind/). Therefore, I thought of 
+focusing the blogs topic on the new addition regarding the password protection instead, which is by itself rather complex. 
+
+##### Remembering the basics
+
+If you remember the [x86 version of this assignment](https://whitecr0wz.github.io/posts/SLAE-Bind/), you'd remember that the required functions for a Bind Shell are the 
+following:
+
++ Socket
+
++ Bind
+
++ Listen
+
++ Accept
+
++ Dup2
+
++ Execve
+
+After the dup2 syscall has been satisfied and executed, the connection should already possess the ability to interact with the other computer. Therefore, we could send a message 
+and receive information from the other device. The process will be the following:
+
++ Socket
+
++ Bind
+
++ Listen
+
++ Accept
+
++ Dup2
+
++ Function that is only executed if the comparison ends up not matching. (write failure message)
+
++ Function that asks for the passcode (write). After the dup2 syscall is initialized, a JMP will be set so that the flow directly continues to this function.
+
++ Function that reads the input (read).
+
++ Function that compares the input with the intended passcode. If they do not match, jump to the failure function.
+
++ Execve
 
 ### Code
 
