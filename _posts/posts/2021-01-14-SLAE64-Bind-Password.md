@@ -169,7 +169,71 @@ question:
         syscall                ; The syscall is executed.
 ```
 
-You can find the full code [here](https://github.com/whitecr0wz/SLAE/blob/main/SLAE64/Assignment_1/1.asm)
+We can now proceed with the read function, which will obtain the input.
+
+The process should be the following:
+
+Arguments required for write according to the man page: ```ssize_t read(int fd, void *buf, size_t count);```
+
++ The value of RAX is set to 0, as it is the value for the read syscall.
++ The value of RDI is quite irrelevant, therefore, it is zeroed as well.
++ RSI is inserted the value of RSP.
++ DL is given the quantity of bytes to read. Nonetheless, as long as the quantity is as big as the input, anything goes!
+
+```term
+read:
+
+        xor rax, rax           ; Zeroes out RAX.
+        xor rdi, rdi           ; Zeroes out RDI.
+        xor rdx, rdx           ; Zeroes out RDX.
+
+        push rdx               ; Pushes the NULL DWORD (0x00000000) of RDX into the stack.
+        pop rbp                ; Pops the NULL DWORD in RBP.
+        push rbp               ; Pushes the NULL DWORD (0x00000000) of RBP into the stack. Without this combination of PUSH/POP instructions the printed characters would have an                                ; additional character that isn't needed (I.E an - or <).
+
+        mov rsi, rsp           ; Copies the value of RSP into RSI.
+
+        mov dl, 30             ; Gives DL the quantity of bytes to read, anything beyond intended should work as well.
+        syscall                ; The syscall is executed.
+``` 
+
+Finally, we are left with the comparison, this is where the fun begins. The process should follows a very specific procedure:
+
++ RDI is given the value of RSP. In other words, RDI should hold the value of the input.
++ RSI is used in order to save the password to compare with.
++ RCX will be used as a counter.
++ The instructions ```repe cmpsb```, in simple terms, will compare every byte of RDI with RSI, as long as these match, the Zero flag (ZF) will be set. Furthermore, if all 16 bytes are the same, the ZF will remain deployed.
+
+```term
+comparison:
+                               ; Password: WjbkN3yQRpKVEFbA
+        mov rdi, rsp           ; Copies the value of RSP into RSI. This will copy what was read on the previous function.
+
+        xor rax, rax           ; Zeroes out RAX.
+        xor rsi, rsi           ; Zeroes out RSI.
+        xor rdx, rdx           ; Zeroes out RDX.
+
+        mov rsi, 'RpKVEFbA'    ; Inserts value 'RpKVEFbA' into RSI.
+        push rsi               ; Pushes the value of RSI into the stack.
+
+        mov rsi, 'WjbkN3yQ'    ; Inserts value 'WjbkN3yQ' into RSI.
+        push rsi               ; Pushes the value of RSI into the stack.
+
+        mov rsi, rsp           ; Copies the value of RSP into RSI.
+
+        xor rcx, rcx           ; Zeroes out RCX
+        mov cl, 16             ; Gives CL a value of 16. This value should remain the same length as the password (WjbkN3yQRpKVEFbA), as this value will be crucial for 
+                               ; comparison.
+                               ; If given less, the complete password isn't needed. If given more, the credential will not work even if sent correctly.
+
+        repe cmpsb             ; Will compare the strings and check if such match. If they do, it sets the Zero flag (ZF).
+        jnz halt               ; Jump if the as long as the Zero flag (ZF) is not set, this means that if the password is incorrect, it should redirect the flow to the error 
+                               ; message.
+```
+
+#### Final Code
+
+The full code can be found [here](https://github.com/whitecr0wz/SLAE/blob/main/SLAE64/Assignment_1/1.asm)
 
 ### Code
 
