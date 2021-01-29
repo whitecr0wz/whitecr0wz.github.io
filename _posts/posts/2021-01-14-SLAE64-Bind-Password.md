@@ -137,7 +137,7 @@ Arguments required for write according to the man page: ```ssize_t write(int fd,
 + DL will be given the length of the entire string.
 + This should write "Introduce your password:" into the client's screen.
 
-```
+```term
 question:
 
         xor rax, rax           ; Zeroes out RAX
