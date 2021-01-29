@@ -204,6 +204,8 @@ Finally, we are left with the comparison, this is where the fun begins. The proc
 + RCX will be used as a counter.
 + The instructions ```repe cmpsb```, in simple terms, will compare every byte of RDI with RSI, as long as these match, the Zero flag (ZF) will be set. Furthermore, if all 16 bytes are the same, the ZF will remain deployed.
 
++ If the ZF has not been set after the ```repe cmpsb``` operations, it means that the input was incorrect, therefore, a JNZ jump has been set pointing towards the halt function, giving the failure message and repeating the loop.
+
 ```term
 comparison:
                                ; Password: WjbkN3yQRpKVEFbA
