@@ -70,6 +70,8 @@ Let's start with the failure function, right after dup2.
 
 The process should be the following.
 
+Arguments required for write according to the man page: ```ssize_t write(int fd, const void *buf, size_t count);```
+
 + It is required to call the write syscall. This will be arranged by incrementing the value of AL by 1.
 + RDI will be incremented as well, as this will give RDI the STDOUT value, printing to the screen.
 + RSI will hold temporarely and push the value to print to the screen. 
@@ -119,6 +121,51 @@ halt:
         mov rsi, rsp           ; Copies the value of RSP into RSI. The complete phrase should be "Incorrect credentials. "
         mov dl, 34             ; Gives DL the length of the entire string, which should be around 34. If DL is given a bigger value than the real one (I.E 50), the password will 
                                ; be printed when this message pops up.
+        syscall                ; The syscall is executed.
+```
+
+Great, the failure function has already been set, let us continue with the function "question".
+
+The process should be incredibly similar to the failure function, as the main point of both is to write to the screen:
+
+Arguments required for write according to the man page: ```ssize_t write(int fd, const void *buf, size_t count);```
+
++ It is required to call the write syscall. This will be arranged by incrementing the value of AL by 1.
++ RDI will be incremented as well, as this will give RDI the STDOUT value, printing to the screen.
++ RSI will hold temporarely and push the value to print to the screen. 
++ RSI will then copy the value from RSP.
++ DL will be given the length of the entire string.
++ This should write "Introduce your password:" into the client's screen.
+
+```
+question:
+
+        xor rax, rax           ; Zeroes out RAX
+        xor rdi, rdi           ; Zeroes out RDI
+        xor rsi, rsi           ; Zeroes out RSI
+        xor rdx, rdx           ; Zeroes out RDX
+
+        push rdi               ; Pushes the NULL DWORD (0x00000000) of RDI into the stack.
+        pop rbp                ; Pops the NULL DWORD in RBP.
+        push rbp               ; Pushes the NULL DWORD (0x00000000) of RBP into the stack. Without this combination of PUSH/POP instructions the printed characters would have an 
+                               ; additional character that isn't needed (I.E an - or <).
+
+        inc al                 ; Increments AL, giving the value 1 for the syscall write.
+        inc rdi                ; Increments RDI, giving the value of 1, arranging STDOUT, printing the message on the screen.
+
+        mov rsi, 'assword:'    ; Inserts value 'assword:' into RSI.
+        push rsi               ; Pushes the value of RSI into the stack.
+
+        mov rsi, 'e your p'    ; Inserts value 'e your p' into RSI.
+        push rsi               ; Pushes the value of RSI into the stack.
+
+        mov rsi, 'Introduc'    ; Inserts value 'Introduc' into RSI.
+        push rsi               ; Pushes the value of RSI into the stack.
+
+        mov rsi, rsp           ; Copies the value of RSP into RSI. The complete phrase should be "Introduce your password:"
+
+        mov dl, 28             ; Gives DL the length of the entire string, which should be around 28. If DL is given a bigger value than the real one (I.E 50), the string will 
+                               ; be printed several times and lack certain characters.
         syscall                ; The syscall is executed.
 ```
 
