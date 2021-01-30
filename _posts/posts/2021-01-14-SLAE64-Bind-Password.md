@@ -312,4 +312,4 @@ courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/on
 
 Student ID: SLAE64–27812/PA-27812
 
-You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64).
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_1/).
