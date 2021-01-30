@@ -20,7 +20,8 @@ The first assignment from the seven is divided in two sections:
 + A: Requires the creation of a Bind Shell with password protection through the Assembly language, and converting such into shellcode. 
 + B: The discussed Bind Shell provided during the course should be modified, in order that it no longer possesses any form of NULL bytes (00). 
 
-As in the [previous](https://whitecr0wz.github.io/posts/SLAE64-Bind-Password/) post exercise A was tackled, this post will be focused towards the seconodary task.
+Due to the reason that in the [previous](https://whitecr0wz.github.io/posts/SLAE64-Bind-Password/) post the first section of the exercise was tackled, this post will be focused 
+towards the secondary task.
 
 Let's analyze the Bind Shell given during the course:
 
@@ -86,9 +87,9 @@ Disassembly of section .text:
   b7:   0f 05                   syscall
 ```
 
-It seems as this assembly program has a great quantity of null opcodes. However, if we pay close attention, we may notice that most of these come from mov instructions. For 
-instance, when a single byte such as 1 is being inserted into a 64-bit register such as RAX, a lot of nulls will be parsed as well. This could easily be circumvented by pushing 
-such bytes as WORDs and then saving such values in Lower 16 bit registers such as ax, bx, dx, bp, and so forth. 
+It seems as this assembly program has a great quantity of null opcodes. Nonetheless, if we pay close attention, we might notice that most of these come from mov instructions. 
+For instance, when a single byte such as 1 is being inserted into a 64-bit register such as RAX, a lot of nulls will be parsed as well. This could easily be circumvented by 
+pushing such bytes as WORDs and then saving such values in Lower 16 bit registers such as ax, bx, dx, bp, and so forth. 
 
 Other techniques could simply implement using a lower bit register such as lower 8-bits instead of 64-bits when it comes to small operations. 
 
