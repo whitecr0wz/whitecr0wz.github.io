@@ -18,7 +18,7 @@ interaction to the attacker.
 The first assignment from the seven is divided in two sections:
 
 + A: Requires the creation of a Bind Shell with password protection through the Assembly language, and converting such into shellcode. 
-+ B: The discussed Bind Shell provided during the course should be modified, in order that it no longer possesses any form of NULL bytes (00). 
++ B: Requires the alteration of the provided Bind Shell during the course, in order that it no longer possesses any form of NULL bytes (00). 
 
 Due to the reason that in the [previous](https://whitecr0wz.github.io/posts/SLAE64-Bind-Password/) post the first section of the exercise was tackled, this post will be focused 
 towards the secondary task.
