@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Null-free Bind Shell
+title: Null-Free Bind Shell
 date: 2021-01-19 20:30:00
 categories: posts
 comments: false
