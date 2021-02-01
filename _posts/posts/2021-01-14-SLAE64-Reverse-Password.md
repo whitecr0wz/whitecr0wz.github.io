@@ -11,8 +11,9 @@ en: true
 These series of posts starting with the prefix "SLAE64 - Assignment" will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have 
 a close look at Linux Reverse Shells with password protection. 
 
-A Reverse shell is a form of malware which grants remote access to a system through a shell. However, it differentiates from its peer the Bind Shell, arranging a specific connection on a trivial address, instead of binding the compromise device into a certain port. 
-Furthermore, after the connection is established, a shell is executed, granting interaction to the attacker
+A Reverse shell is a form of malware which grants remote access to a system through a shell. However, it differentiates from its peer the Bind Shell, arranging a specific 
+connection on a trivial address, instead of binding the compromise device into a certain port. Furthermore, after the connection is established, a shell is executed, granting 
+interaction to the attacker.
 
 The first assignment from the seven is divided in two sections:
 
@@ -21,5 +22,86 @@ The first assignment from the seven is divided in two sections:
 
 As exercise A is already quite a complex and long exercise, the first assignment will be segmented in two different posts, thing which may repeat within the second assignment. 
 During the length of this post, you will observe the solution for exercise A.
-Moreover, the main idea of a Bind Shell and process of programming such has already been explored [here](https://whitecr0wz.github.io/posts/SLAE-Bind/). Therefore, I thought of 
-focusing the blog's topic on the new addition regarding the password protection instead, which is by itself rather complex. 
+
+##### Theory
+
+If you remember the [x86 version of this assignment](https://whitecr0wz.github.io/posts/SLAE-Reverse/), you'd remember that the required functions for a Bind Shell are the 
+following:
+
++ Socket
+
++ Connect
+
++ Dup2
+
++ Execve
+
+After the dup2 syscall has been satisfied and executed, the connection should already possess the ability to interact with the other gadget. Therefore, we could send a message 
+and receive information from the other device. The process will be the following:
+
++ Socket
+
++ Connect
+
++ Dup2
+
++ Function that is only executed if the comparison ends up not matching. (write failure message)
+
++ Function that asks for the passcode (write). After the dup2 syscall is initialized, a JMP will be set so that the flow directly continues to this function.
+
++ Function that reads the input (read).
+
++ Function that compares the input with the intended passcode. If they do not match, jump to the failure function.
+
++ Execve
+
++ Execve
+
+##### Time to stick our hands into the mud
+
+Let's crack this shellcode down and explain it section by section, shall we?
+
+First things first, we have to clean all registers, otherwise the shellcode would fail within a real program flow with distinct values.
+
+```term
+global _start
+
+_start:
+
+xoring:
+
+       xor rax, rax           ; Zeroes out RAX.
+       xor rbx, rbx           ; Zeroes out RBX.
+       xor rdi, rdi           ; Zeroes out RDI.
+       xor rsi, rsi           ; Zeroes out RSI.
+       xor rdx, rdx           ; Zeroes out RDX.
+       xor rbp, rbp           ; Zeroes out RBP.
+```
+
+Let's initialize the socket. The procedure should follow this path:
+
+manpage arguments: ```int socket(int domain, int type, int protocol);```
+
++ RAX obtains the syscall value.
++ RDI is incremented until the value AF_INET is given.
++ RSI is incremented once, in order to obtain the value SOCK_STREAM.
++ RDX is pushed, as its value is required to be 0.
++ The syscall is executed.
++ The RAX value is copied into RBX for sockfd arguments later on.
+
+```term
+
+socket:
+
+       push word 41           ; Pushes word 41 (socket) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+
+       inc rdi                ; Increments RDI.
+       inc rdi                ; Increments RDI. Gives the value of AF_INET.
+       inc rsi                ; Increments RSI. Gives value of SOCK_STREAM.
+
+       push rdx               ; As the protocol isn't important, the value of 0 in RDX is pushed.
+       syscall                ; The syscall is executed.
+
+       mov rbx, rax           ; The value of RAX is saved on RBX. Such value will later on be used for sockfd arguments.
+```
