@@ -150,3 +150,134 @@ connect:
        inc rsi                ; Increments RSI.
        inc rsi                ; Increments RSI. This will work as a counter, for the dup2 syscall, by incrementing RSI by three times NULLs are prvented.
 ```
+
+##### Dup2
+
+manpage arguments: ```int dup2(int oldfd, int newfd);```
+
++ RAX obtains the syscall value.
++ The value of RBX is copied into RDI, satisfying the oldfd argument.
++ RSI is decremented, satisfying the newfd argument.
++ The syscall is executed.
++ As long as the Zero flag hasn't been set, repeat the loop.
++ Jump to the function "question".
+
+```term
+dup2:
+
+       push word 33           ; Pushes word 33 (dup2) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+
+       mov rdi, rbx           ; Copies the value from RBP to RDX, granting RDI the sockfd value from the socket syscall.
+       dec rsi                ; RSI is decremented.
+       syscall                ; The syscall is executed.
+
+       jnz dup2               ; Jump to dup2 if the Zero flag (ZF) hasn't been set.
+
+       jmp question           ; Jump to the "question" function.
+```
+
+##### Halt
+
+manpage arguments: ```ssize_t write(int fd, const void *buf, size_t count);```
+
++ It is required to call the write syscall. This will be arranged by incrementing the value of AL by 1.
++ RDI will be incremented as well, as this will give RDI the STDOUT value, printing to the screen.
++ RSI will hold temporarely and push the value to print to the screen. 
++ RSI will then copy the value from RSP.
++ DL will be given the length of the entire string.
++ This should write "Failure. " into the client's screen.
+
+```term
+halt:
+
+       xor rax, rax           ; Zeroes out RAX.
+       xor rdi, rdi           ; Zeroes out RDI.
+       xor rsi, rsi           ; Zeroes out RSI.
+       xor rdx, rdx           ; Zeroes out RDX.
+
+       push rdi               ; Pushes the NULL DWORD (0x00000000) of RDI into the stack.
+       pop rbp                ; Pops the NULL DWORD in RBP.
+       push rbp               ; Pushes the NULL DWORD (0x00000000) of RBP into the stack. Without this combination of PUSH/POP instructions the printed characters would have an 
+                              ; additional character that isn't needed (I.E an - or <)
+
+       inc al                 ; Increments AL, giving the value 1 for the syscall write.
+       inc rdi                ; Increments RDI, giving the value of 1, arranging STDOUT, printing the message on the screen.
+
+       add rsi, ' '           ; Blank space.
+       push rsi               ; Pushes the value of RSI into the stack.
+
+       mov rsi, 'Failure.'    ; Inserts value 'Failure.' into RSI
+       push rsi               ; Pushes the value of RSI into the stack.
+
+       mov rsi, rsp           ; Copies the value of RSP into RSI. The complete phrase should be "Failure. "
+
+       mov dl, 9              ; Gives DL the length of the entire string, which should be around 9. If DL is given a bigger value than the real one (I.E 50), the password will 
+                              ; be printed when this message pops up.
+       syscall                ; The syscall is executed.
+```
+
+##### Question
+
+manpage arguments: ```ssize_t write(int fd, const void *buf, size_t count);```
+
++ It is required to call the write syscall. This will be arranged by incrementing the value of AL by 1.
++ RDI will be incremented as well, as this will give RDI the STDOUT value, printing to the screen.
++ RSI will hold temporarely and push the value to print to the screen. 
++ RSI will then copy the value from RSP.
++ DL will be given the length of the entire string.
++ This should write "Credentials:" into the client's screen.
+
+```term
+question:
+
+       xor rax, rax           ; Zeroes out RAX.
+       xor rdi, rdi           ; Zeroes out RDI.
+       xor rsi, rsi           ; Zeroes out RSI.
+       xor rdx, rdx           ; Zeroes out RDX.
+
+       push rdi               ; Pushes the NULL DWORD (0x00000000) of RDI into the stack.
+       pop rbp                ; Pops the NULL DWORD in RBP.
+       push rbp               ; Pushes the NULL DWORD (0x00000000) of RBP into the stack. Without this combination of PUSH/POP instructions the printed characters would have an 
+                              ; additional character that isn't needed (I.E an - or <)
+
+       inc al                 ; Increments AL, giving the value 1 for the syscall write.
+       inc rdi                ; Increments RDI, giving the value of 1, arranging STDOUT, printing the message on the screen.
+
+       mov rsi, 'entials:'    ; Inserts value 'entials:' into RSI
+       push rsi               ; Pushes the value of RSI into the stack.
+
+       mov rsi, 'Cred'        ; Inserts value 'Cred' into RSI
+       push rsi               ; Pushes the value of RSI into the stack.
+
+       mov rsi, rsp           ; Copies the value of RSP into RSI. The complete phrase should be "Credentials:"
+
+       mov dl, 16             ; Gives DL the length of the entire string, which should be around 16. If DL is given a bigger value than the real one (I.E 50), the string will be 
+                              ; printed several times and lack certain characters.
+       syscall                ; The syscall is executed.
+```
+
+##### Read
+
+manpage arguments: ```ssize_t read(int fd, void *buf, size_t count);```
+
++ The value of RAX is set to 0, as it is the value for the read syscall.
++ The value of RDI is quite irrelevant, therefore, it is zeroed as well.
++ RSI is inserted the value of RSP.
++ DL is given the quantity of bytes to read. Nonetheless, as long as the quantity is as big as the input, anything goes!
+
+```term
+       xor rax, rax           ; Zeroes out RAX.
+       xor rdi, rdi           ; Zeroes out RDI.
+       xor rdx, rdx           ; Zeroes out RDX.
+
+       push rdx               ; Pushes the NULL DWORD (0x00000000) of RDX into the stack.
+       pop rbp                ; Pops the NULL DWORD in RBP.
+       push rbp               ; Pushes the NULL DWORD (0x00000000) of RBP into the stack. Without this combination of PUSH/POP instructions the printed characters would have an 
+                              ; additional character that isn't needed (I.E an - or <).
+
+       mov rsi, rsp           ; Copies the value of RSP into RSI.
+
+       mov dl, 30             ; Gives DL the quantity of bytes to read, anything beyond intended should work as well.
+       syscall                ; The syscall is executed.
+```
