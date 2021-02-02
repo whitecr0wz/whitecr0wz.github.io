@@ -107,7 +107,61 @@ As exactly as in the [x86 version of this post](https://whitecr0wz.github.io/pos
 
 ###### C format #2
 
+```term
+#include<stdio.h>
+#include<string.h>
 
+unsigned char egg[] = \
+"\x48\xff\xc2\x52\x59\x48\xbd\x56\x57\x56\x57\x56\x57\x56\x57\x48\xbb\x11\x11\x11\x11\x11\x11\x11\x11\x48\x29\xdd\x48\xff\xc1\x48\x3b\x29\x75\xf8\x48\x8d\x49\x08\xff\xe1"
+
+;
+
+unsigned char code[] = \
+"\x45\x46\x45\x46\x45\x46\x45\x46"
+"\x48\x31\xc0\x50\x48\xbb\x6e\x65\x6f\x66\x65\x74\x63\x68\x53\x48\xbb\x75\x73\x72\x2f\x62\x69\x6e\x2f\x53\x48\xbb\x2f\x2f\x2f\x2f\x2f\x2f\x2f\x2f\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05"
+
+;
+
+main()
+{
+
+  printf("Shellcode size:  %d\n", strlen(code));
+  printf("Egg size:  %d\n", strlen(egg));
+
+        int (*ret)() = (int(*)())egg;
+
+        ret();
+
+}
+```
+
+#### EndGame #2
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3/2$ gcc neofetch.c -o neofetch -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3/2$ ./neofetch 
+Shellcode size:  60
+Egg size:  42
+       _,met$$$$$gg.          whitecr0wz@SLAE64
+    ,g$$$$$$$$$$$$$$$P.       -----------------
+  ,g$$P"     """Y$$.".        OS: Debian GNU/Linux 10 (buster) x86_64
+ ,$$P'              `$$$.     Host: VirtualBox 1.2
+',$$P       ,ggs.     `$$b:   Kernel: 4.19.0-13-amd64
+`d$$'     ,$P"'   .    $$$    Uptime: 8 mins
+ $$P      d$'     ,    $$P    Packages: 475 (dpkg)
+ $$:      $$.   -    ,d$$'    Shell: bash 5.0.3
+ $$;      Y$b._   _,d$P'      CPU: Intel i5-8300H (1) @ 2.304GHz
+ Y$$.    `.`"Y$$$$P"'         GPU: VMware SVGA II Adapter
+ `$$b      "-.__              Memory: 66MiB / 987MiB
+  `Y$$
+   `Y$$.                                              
+     `$$b.
+       `Y$$b.
+          `"Y$b._
+              `"""
+
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3/2$
+```
 
 ### Code
 
