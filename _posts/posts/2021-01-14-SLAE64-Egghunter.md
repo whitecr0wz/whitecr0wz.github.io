@@ -103,6 +103,12 @@ Egg size:  42
 $
 ```
 
+As exactly as in the [x86 version of this post](https://whitecr0wz.github.io/posts/SLAE-Egghunter/), it was required that the egghunter had to be configurable for distinct payload. Due to the reason that the only thing required is the tag, this is rather easy, let's test it with an execve shellcode that executes neofetch.
+
+###### C format #2
+
+
+
 ### Code
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
