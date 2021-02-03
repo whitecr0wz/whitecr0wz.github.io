@@ -116,6 +116,21 @@ master:
       bytes_length equ $-bytes
 ```
 
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_4$ gcc rot-mmx_xor.c -o rot-mmx_xor -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_4$ ./rot-mmx_xor 
+Shellcode Length:  32
+$
+```
+
+#### Extra bits
+
+For the sake of curiosity, I chose to submit this file to [VirusTotal.com](virustotal.com) and see the rate of detection. Interestly enough, this caught me off guard!
+
+![](/assets/img/SLAE64/1.png)
+
 ### Code
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
