@@ -127,7 +127,7 @@ $
 
 #### Extra bits
 
-For the sake of curiosity, I chose to submit this file to [VirusTotal.com](virustotal.com) and see the rate of detection. Interestly enough, this caught me off guard!
+For the sake of curiosity, I chose to submit this file to [VirusTotal.com](http://virustotal.com) and see the rate of detection. Interestly enough, this caught me off guard!
 
 ![](/assets/img/SLAE/SLAE64/1.png)
 
