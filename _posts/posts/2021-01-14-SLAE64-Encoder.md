@@ -129,7 +129,9 @@ $
 
 For the sake of curiosity, I chose to submit this file to [VirusTotal.com](virustotal.com) and see the rate of detection. Interestly enough, this caught me off guard!
 
-![](/assets/img/SLAE64/1.png)
+![](/assets/img/SLAE/SLAE64/1.png)
+
+###### Hash: b474e66209c6f09c59b5e33780a1a94c2dce9b82857cff2b0c65eb233bc0508c
 
 ### Code
 
