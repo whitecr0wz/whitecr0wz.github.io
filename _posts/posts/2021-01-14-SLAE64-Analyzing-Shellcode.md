@@ -196,6 +196,10 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 00000054  0F05              syscall                           ; Executes the syscall.
 ```
 
+#### Conclusion (#2 Shellcode)
+
+Sadly enough, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a shell that binds to port 4444.
+
 ### Code
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
