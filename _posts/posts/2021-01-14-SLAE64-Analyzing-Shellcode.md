@@ -56,3 +56,73 @@ root@whitecr0wz:~# echo -ne "\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x6
 0000002D  0F05              syscall                                 ; The syscall is executed.
 root@whitecr0wz:~#
 ```
+
+##### GDB
+
+Generating the shellcode with msfvenom:
+
+```term
+root@whitecr0wz:~# msfvenom -p linux/x64/exec CMD=/bin/ls -i 0 -f dw
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 48 bytes
+Final size of dw file: 146 bytes
+0x99583b6a, 0x622fbb48, 0x732f6e69, 0x48530068, 0x2d68e789, 0x48000063, 0xe852e689, 0x00000008,
+0x6e69622f, 0x00736c2f, 0x89485756, 0x00050fe6
+root@whitecr0wz:~#
+```
+
+###### Contents of dissect_1
+
+```term
+global _start
+
+_start:
+
+       jmp short master
+
+main:
+
+       pop rbp
+       jmp rbp
+
+
+master:
+
+       call main
+       shellcode: dd 0x99583b6a, 0x622fbb48, 0x732f6e69, 0x48530068, 0x2d68e789, 0x48000063, 0xe852e689, 0x00000008, 0x6e69622f, 0x00736c2f, 0x89485756, 0x00050fe6
+```
+
+Let's analyze the value of RBP when the instruction ```pop rbp``` is executed.
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect1$ gdb -q ./dissect_1 
+Reading symbols from ./dissect_1...(no debugging symbols found)...done.
+(gdb) break main
+Breakpoint 1 at 0x401002
+(gdb) run
+Starting program: /home/whitecr0wz/assembly/assignments/Assignment_5/dissect1/dissect_1 
+
+Breakpoint 1, 0x0000000000401002 in main ()
+(gdb) disassemble
+Dump of assembler code for function main:
+=> 0x0000000000401002 <+0>:     pop    %rbp
+   0x0000000000401003 <+1>:     jmpq   *%rbp
+End of assembler dump.
+(gdb) nexti
+0x0000000000401003 in main ()
+(gdb) x/7s $rbp 
+0x40100a <shellcode>:   "j;X\231H\273/bin/sh"
+0x401018 <shellcode+14>:        "SH\211\347h-c"
+0x401020 <shellcode+22>:        ""
+0x401021 <shellcode+23>:        "H\211\346R\350\b"
+0x401028 <shellcode+30>:        ""
+0x401029 <shellcode+31>:        ""
+0x40102a <shellcode+32>:        "/bin/ls"
+(gdb)
+```
+
+#### Conclusion (#1 Shellcode)
+
+Indeed, it seems as if ```/bin/ls``` is the last thing to be pushed into the stack. Furthermore, there is a great quantity of space between ```-c``` and ```/bin/ls``` itself.
