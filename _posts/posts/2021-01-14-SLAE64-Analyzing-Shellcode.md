@@ -46,13 +46,13 @@ root@whitecr0wz:~# echo -ne "\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x6
 0000000F  4889E7            mov rdi,rsp                             ; The value of RSP is copied into RDI.
 00000012  682D630000        push qword 0x632d                       ; The value '-c' is pushed into the stack.
 00000017  4889E6            mov rsi,rsp                             ; The value of RSP is copied into RSI.
-0000001A  52                push rdx
-0000001B  E808000000        call 0x28
+0000001A  52                push rdx                                ; Pushes the NULL DWORD found in RDX.
+0000001B  E808000000        call 0x28                               ; Calls the function that pushes '/bin/ls' into RSI, then pushes RSI into the stack.
 00000020  2F                db 0x2f
 00000021  62                db 0x62
 00000022  696E2F6C730056    imul ebp,[rsi+0x2f],dword 0x5600736c
-00000029  57                push rdi
-0000002A  4889E6            mov rsi,rsp
-0000002D  0F05              syscall
+00000029  57                push rdi                                ; Pushes the value of RDI (/bin/sh) into the stack.
+0000002A  4889E6            mov rsi,rsp                             ; The value of RSP is copied into RSI,
+0000002D  0F05              syscall                                 ; The syscall is executed.
 root@whitecr0wz:~#
 ```
