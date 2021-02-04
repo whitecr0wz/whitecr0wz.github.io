@@ -14,7 +14,45 @@ Furthermore, it is required to report the findings during the analysis.
 
 #### linux/x64/exec (Shellcode #1)
 
-The first shellcode to be analyzed will execute the operation ```/bin/sh```
+The first shellcode to be analyzed will execute the operation ```/bin/ls```
 
 Generating the shellcode with msfvenom:
 
+```term
+root@whitecr0wz:~# msfvenom -p linux/x64/exec CMD=/bin/ls -i 0 -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 47 bytes
+Final size of c file: 224 bytes
+unsigned char buf[] = 
+"\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53"
+"\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8\x08\x00"
+"\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89\xe6"
+"\x0f\x05";
+root@whitecr0wz:~#
+```
+
+##### Ndisasm
+
+```term
+root@whitecr0wz:~# echo -ne "\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8\x08\x00\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+00000000  6A3B              push byte +0x3b                         ; Pushes 59 (execve syscall value) into the stack.
+00000002  58                pop rax                                 ; Pops this value into RAX.
+00000003  99                cdq                                     ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  48BB2F62696E2F73  mov rbx,0x68732f6e69622f                ; Moves '/bin/sh' into RBX.
+         -6800
+0000000E  53                push rbx                                ; The value in RBX is pushed into the stack.
+0000000F  4889E7            mov rdi,rsp                             ; The value of RSP is copied into RDI.
+00000012  682D630000        push qword 0x632d                       ; The value '-c' is pushed into the stack.
+00000017  4889E6            mov rsi,rsp                             ; The value of RSP is copied into RSI.
+0000001A  52                push rdx
+0000001B  E808000000        call 0x28
+00000020  2F                db 0x2f
+00000021  62                db 0x62
+00000022  696E2F6C730056    imul ebp,[rsi+0x2f],dword 0x5600736c
+00000029  57                push rdi
+0000002A  4889E6            mov rsi,rsp
+0000002D  0F05              syscall
+root@whitecr0wz:~#
+```
