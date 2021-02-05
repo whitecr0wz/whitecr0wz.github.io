@@ -335,3 +335,8 @@ id
 uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
 <0wz/assembly/assignments/Assignment_6/2_shellcode$
 ```
+
+Original size: 131
+Final size: 187
+
+Increment: 43%
