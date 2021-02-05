@@ -133,7 +133,7 @@ Increment: 97%
 
 #### Netcat Bind-Shell (Shellcode #2)
 
-The second shellcode from the three will perform a bind-shell in port 1337 through the use of the tool ```netcat```. It can be found [here](http://shell-storm.org/shellcode/files/shellcode-822.php)
+The second shellcode from the three will perform a bind-shell in port 1337 through the use of the tool ```netcat```. It can be found [here](http://shell-storm.org/shellcode/files/shellcode-822.php).
 
 ###### Original code:
 
@@ -343,7 +343,7 @@ Increment: 43%
 
 #### Reverse-shell Shellcode (Shellcode #3)
 
-For the final shellcode, I have chosen to use a reverse-shell that arranges a connection towards the localhost on port 1337. It can be found [here](http://shell-storm.org/shellcode/files/shellcode-823.php)
+For the final shellcode, I have chosen to use a reverse-shell that arranges a connection towards the localhost on port 1337. It can be found [here](http://shell-storm.org/shellcode/files/shellcode-823.php).
 
 ###### Original code:
 
