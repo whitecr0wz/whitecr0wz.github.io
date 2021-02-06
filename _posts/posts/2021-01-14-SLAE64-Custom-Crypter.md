@@ -19,7 +19,7 @@ The last assignment from the seven requires the creation of a Custom Encrypter, 
 
 #### Theory
 During the length of this post, the encryption schema employed will be [DES3](https://en.wikipedia.org/wiki/Triple_DES). Moreover, the language implemented shall be Python, with the use of the library pycrypto. In addition, I have decided to combine both the encrypter and decrypter in the same file, as a form of exercise.
-Moreover, the script does not hardcode the private key, IV key nor shellcode! Making it quite dynamic.
+Even more so, the script does not hardcode the private key, IV key nor shellcode! Making it quite dynamic.
 
 ##### The Crypter
 
