@@ -21,6 +21,8 @@ The last assignment from the seven requires the creation of a Custom Encrypter, 
 During the length of this post, the encryption schema employed will be [DES3](https://en.wikipedia.org/wiki/Triple_DES). Moreover, the language implemented shall be Python, with the use of the library pycrypto. In addition, I have decided to combine both the encrypter and decrypter in the same file, as a form of exercise.
 Even more so, the script does not hardcode the key, Initialization Vector (IV) nor shellcode! Making it quite dynamic.
 
+Finally, the crypter requires that the shellcode is a multiple of 8, therefore, in order to not harm the execution, a few NOPs are parsed.
+
 ##### The Crypter
 
 ```term
@@ -113,3 +115,44 @@ Original shellcode in hex escape sequence:
 "\x48\x31\xc0\x48\x31\xf6\x48\x31\xdb\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x90\x90\x90\x90"
 whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$
 ```
+
+###### C format
+
+```term
+#include<stdio.h>
+#include<string.h>
+
+unsigned char code[] = \
+"\x48\x31\xc0\x48\x31\xf6\x48\x31\xdb\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x90\x90\x90\x90"
+
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+```
+
+#### EndGame
+
+```term
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ gcc decrypted_shellcode.c -o decrypted_shellcode -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ ./decrypted_shellcode 
+Shellcode Length:  40
+$
+```
+
+### Code
+
+This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: [http://securitytube-training.com/online-
+courses/securitytube-linux-assembly-expert/](http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/)
+
+Student ID: SLAE64-27812/PA-27812
+
+You can find all of the used resources within this post [here](https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_7).
