@@ -84,10 +84,13 @@ if sys.argv[1] == "--decrypt":
 In order to test the aforementioned tool, a simple ```/bin/sh exceve``` shellcode will be employed. Furthermore, the key may be ```scvr3BbPZ9cQ2ETYG5H2qYar```, with the IV being ```67sACHcv```.
 
 ```term
-whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ python crypter.py [*] Example: echo -ne <shellcode between quotes> | python crypter.py --encrypt <key> <IV number>
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ python crypter.py 
+[*] Example: echo -ne <shellcode between quotes> | python crypter.py --encrypt <key> <IV number>
 [*] Example: echo -ne <shellcode between quotes> | python crypter.py --decrypt <key> <IV number>
 
-whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ echo -ne "\x48\x31\xc0\x48\x31\xf6\x48\x31\xdb\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x90\x90\x90\x90" | python crypter.py --encrypt scvr3BbPZ9cQ2ETYG5H2qYar 67sACHcv 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ echo -ne
+"\x48\x31\xc0\x48\x31\xf6\x48\x31\xdb\x50\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\xb0\x3b\x0f\x05\x90\x90\x90\x90" | python 
+crypter.py --encrypt scvr3BbPZ9cQ2ETYG5H2qYar 67sACHcv 
 "\x57\x65\xc2\x9e\x96\x68\x5a\x91\xca\xb4\x78\xb3\xde\xe5\x8b\x35\xab\x62\xf1\xb1\x47\x22\x07\x01\xc8\x28\x91\x3e\xd5\x44\xbe\x72\x14\x53\xec\xd5\x8e\xdb\x8c\xc3"
 whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$
 ```
