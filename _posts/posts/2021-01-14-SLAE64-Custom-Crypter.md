@@ -89,8 +89,7 @@ if sys.argv[1] == "--decrypt":
 
 ##### Encryption
 
-In order to test the aforementioned tool, a simple ```/bin/sh exceve``` shellcode will be employed. Furthermore, the key may be ```scvr3BbPZ9cQ2ETYG5H2qYar```, with the IV being 
-```67sACHcv```.
+In order to test the aforementioned tool, a simple ```/bin/sh exceve``` shellcode will be employed. Furthermore, the key may be ```scvr3BbPZ9cQ2ETYG5H2qYar```, with the IV being  ```67sACHcv```.
 
 ```term
 whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ python crypter.py 
