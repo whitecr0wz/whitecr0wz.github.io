@@ -41,11 +41,11 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [SLAE64 - Assignment 2:B: Null-Free Bind Reverse Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/)
 
-[SLAE64 - Assignment 2:A Password-Protected Reverse TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Password-Reverse/)
+[SLAE64 - Assignment 2:A Password-Protected Reverse TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Reverse-Password/)
 
 [SLAE64 - Assignment 1:B: Null-Free Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Bind/)
 
-[SLAE64 - Assignment 1:A: Password-Protected Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Password-Bind/)
+[SLAE64 - Assignment 1:A: Password-Protected Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Bind-Password/)
 
 ### Linux x86 Shellcoding
 
