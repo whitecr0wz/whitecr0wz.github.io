@@ -251,7 +251,8 @@ _start:
 Let's assemble, link this and get its shellcode!
 
 ```term
-whitecr0wz@SLAE64:~/assembly/assignments/Assignment_1/B$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_1/B$ nasm -f elf64 1.asm -o 1.o && ld 1.o -o 1 && for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; 
+done;echo
 ```
 
 C format:
