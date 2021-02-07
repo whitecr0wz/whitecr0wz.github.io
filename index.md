@@ -35,7 +35,7 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [SLAE64 - Assignment 5: Analyzing 3rd party Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/)
 
-[SLAE64 - Assignment 4: Custom Insertion Encoder](https://whitecr0wz.github.io/posts/SLAE64-Custom-Encoder/)
+[SLAE64 - Assignment 4: Custom Insertion Encoder](https://whitecr0wz.github.io/posts/SLAE64-Encoder/)
 
 [SLAE64 - Assignment 3: Egghunter](https://whitecr0wz.github.io/posts/SLAE64-Egghunter/)
 
