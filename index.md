@@ -27,6 +27,26 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [Backdooring PE Files through Code Caves (VOL:I)](https://whitecr0wz.github.io/posts/Backdooring-PE/)
 
+### Linux x64 Shellcoding
+
+[SLAE64 - Assignment 7: Custom Crypter](https://whitecr0wz.github.io/posts/SLAE64-Custom-Crypter/)
+
+[SLAE64 - Assignment 6: Polymorphic Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Polymorphic/)
+
+[SLAE64 - Assignment 5: Analyzing 3rd party Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/)
+
+[SLAE64 - Assignment 4: Custom Insertion Encoder](https://whitecr0wz.github.io/posts/SLAE64-Custom-Encoder/)
+
+[SLAE64 - Assignment 3: Egghunter](https://whitecr0wz.github.io/posts/SLAE64-Egghunter/)
+
+[SLAE64 - Assignment 2:B: Null-Free Bind Reverse Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/)
+
+[SLAE64 - Assignment 2:A Password-Protected Reverse TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Password-Reverse/)
+
+[SLAE64 - Assignment 1:B: Null-Free Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Bind/)
+
+[SLAE64 - Assignment 1:A: Password-Protected Bind TCP Shellcode](https://whitecr0wz.github.io/posts/SLAE64-Password-Bind/)
+
 ### Linux x86 Shellcoding
 
 [SLAE - Assignment 7: Custom Crypter](https://whitecr0wz.github.io/posts/SLAE-Custom-Crypter/)
