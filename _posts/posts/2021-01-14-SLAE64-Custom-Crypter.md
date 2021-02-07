@@ -107,7 +107,7 @@ whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$
 
 ##### Decryption
 
-In order to decrypt the shellcode, the process is quite simple.
+The process of decryption is quite simple.
 
 ```term
 whitecr0wz@SLAE64:~/assembly/assignments/Assignment_7$ python crypter.py 
