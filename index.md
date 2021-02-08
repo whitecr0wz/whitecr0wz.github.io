@@ -18,6 +18,8 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 [Exploiting Vanilla Buffer Overflows on Windows](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/)
 
 ### Linux Privilege Escalation Series
+[Privilege Escalation - SUDO - LD_PRELOAD](https://whitecr0wz.github.io/posts/LD_PRELOAD/)
+
 [Privilege Escalation - PATH Variable](https://whitecr0wz.github.io/posts/Privilege-Escalation-Path/)
 
 ### PE Backdooring Series
