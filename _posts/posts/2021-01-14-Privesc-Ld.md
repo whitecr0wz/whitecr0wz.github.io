@@ -53,3 +53,4 @@ pipe    ALL=NOPASSWD:/usr/bin/ping
 
 #includedir /etc/sudoers.d
 ```
+![](/assets/img/Findings5/1.png)
