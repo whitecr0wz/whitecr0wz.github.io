@@ -54,7 +54,7 @@ pipe    ALL=NOPASSWD:/usr/bin/ping
 #includedir /etc/sudoers.d
 ```
 
-If you took a close look to the file, you may see that the first highlighted line sets the flag for ```LD_PRELOAD```. In addition, the user ```pipe``` is given the privilege of 
+If you glance at the file, you may see that the first highlighted line sets the flag for ```LD_PRELOAD```. In addition, the user ```pipe``` is given the privilege of 
 executing ```SUDO``` in ```/usr/bin/ping```. However, ping is useless when it comes to ```SUDO``` exploitation, therefore, ```LD_PRELOAD``` is the only possible vector.
 
 ##### Detection
