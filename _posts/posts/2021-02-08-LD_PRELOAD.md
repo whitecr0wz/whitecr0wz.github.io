@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Privilege Escalation - SUDO; LD_PRELOAD Hijacking
+title: Privilege Escalation - SUDO - LD_PRELOAD Hijacking
 date: 2021-02-08 14:39:00
 categories: posts
 comments: false
@@ -53,3 +53,22 @@ pipe    ALL=NOPASSWD:/usr/bin/ping
 
 #includedir /etc/sudoers.d
 ```
+
+If you took a close look to the file, you may see that the first highlighted line sets the flag for ```LD_PRELOAD```. In addition, the user ```pipe``` is given the privilege of 
+executing ```SUDO``` in ```/usr/bin/ping```. However, ping is useless when it comes to ```SUDO``` exploitation, therefore, ```LD_PRELOAD``` is the only possible vector.
+
+##### Detection
+
+Detecting this vulnerability is quite simple.
+
+```term
+pipe@whitecr0wz:/tmp$ sudo -l
+Matching Defaults entries for pipe on whitecr0wz:
+    env_reset, env_keep+=LD_PRELOAD, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User pipe may run the following commands on whitecr0wz:
+    (root) NOPASSWD: /usr/bin/ping
+pipe@whitecr0wz:/tmp$
+```
+
+Take a glance at the flag ```env_keep+=LD_PRELOAD```, this means that we can set ```LD_PRELOAD```.
