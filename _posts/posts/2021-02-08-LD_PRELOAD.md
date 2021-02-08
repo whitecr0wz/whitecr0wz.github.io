@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Privilege Escalation - SUDO LD_PRELOAD Hijacking
+title: Privilege Escalation - SUDO: LD_PRELOAD Hijacking
 date: 2021-02-08 14:39:00
 categories: posts
 comments: false
@@ -53,5 +53,3 @@ pipe    ALL=NOPASSWD:/usr/bin/ping
 
 #includedir /etc/sudoers.d
 ```
-
-![](/assets/img/Findings1/1.png)
