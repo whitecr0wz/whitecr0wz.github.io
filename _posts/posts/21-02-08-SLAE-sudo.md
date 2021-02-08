@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Privilege Escalation - SUDO: 'LD_PRELOAD' Privilege Escalation
+title: 'LD_PRELOAD' Privilege Escalation
 date: 2021-02-08 14:39:00
 categories: posts
 comments: false
