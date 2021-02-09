@@ -17,7 +17,7 @@ This site was created by Felipe Winsnes. Here you will find multiple posts regar
 
 [Exploiting Vanilla Buffer Overflows on Windows](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/)
 
-### Social-Engineering Series
+### Social-Engineering & AV-Evasion Series
 [Spear-Phishing through Website Clonage](https://whitecr0wz.github.io/posts/Phishing/)
 
 [Beating ASLR & NX/DEP without PE Headers/Code Caves (VOL:III)](https://whitecr0wz.github.io/posts/Backdooring-PE-III/)
