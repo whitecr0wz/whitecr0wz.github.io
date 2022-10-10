@@ -1,10 +1,9 @@
 ---
-layout: post
-title: Custom Crypter
-date: 2021-01-17 20:30:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 7 - Custom Crypter
+author: fwinsnes
+date: 2021-01-28 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 #### Introduction

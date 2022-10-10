@@ -1,5 +1,5 @@
 ---
-title: Egghunter 
+title: SLAE - Assignment 3 - Egghunter 
 author: fwinsnes
 date: 2021-01-16 13:44:00 +0800
 categories: [SLAE]

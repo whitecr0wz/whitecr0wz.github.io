@@ -1,10 +1,9 @@
 ---
-layout: post
-title: Null-Free Bind Shell
-date: 2021-01-19 20:30:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 1B - Null-Free Bind TCP Shellcode 
+author: fwinsnes
+date: 2021-01-21 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 #### Introduction

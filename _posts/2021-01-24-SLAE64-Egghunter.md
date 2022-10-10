@@ -1,10 +1,9 @@
 ---
-layout: post
-title: x86_64 Egghunter
-date: 2021-01-14 13:44:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 3 - Egghunter
+author: fwinsnes
+date: 2021-01-24 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 #### Introduction

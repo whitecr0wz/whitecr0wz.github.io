@@ -1,11 +1,11 @@
 ---
-layout: post
-title: ROT & MMX XOR Encode
-date: 2021-01-14 13:44:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 4 - Custom Insertion Encoder
+author: fwinsnes
+date: 2021-01-25 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
+
 
 #### Introduction
 

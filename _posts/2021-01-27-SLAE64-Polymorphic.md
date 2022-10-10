@@ -1,10 +1,9 @@
 ---
-layout: post
-title: Polymorphic Shellcode
-date: 2021-01-17 20:30:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 6 - Polymorphic Shellcode
+author: fwinsnes
+date: 2021-01-27 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 #### Introduction

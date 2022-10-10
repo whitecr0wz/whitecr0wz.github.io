@@ -1,5 +1,5 @@
 ---
-title: Reverse TCP Shell
+title: SLAE - Assignment 1 - Bind TCP Shellcode
 author: fwinsnes
 date: 2021-01-14 13:44:00 +0800
 categories: [SLAE]

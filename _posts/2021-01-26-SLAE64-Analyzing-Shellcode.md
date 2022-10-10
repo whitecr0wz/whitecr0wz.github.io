@@ -1,10 +1,9 @@
 ---
-layout: post
-title: Analyzing Metasploit's x86_64 Shellcode
-date: 2021-01-17 20:30:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode
+author: fwinsnes
+date: 2021-01-26 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 These series of posts starting with the prefix "SLAE64 - Assignment" will be created in order to fulfill the requirements of the SLAE64 certification. 

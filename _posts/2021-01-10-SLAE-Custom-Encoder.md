@@ -1,5 +1,5 @@
 ---
-title: Custom Encoder 
+title: SLAE - Assignment 4 - Custom Insertion Encoder
 author: fwinsnes
 date: 2021-01-17 13:44:00 +0800
 categories: [SLAE]

@@ -1,11 +1,11 @@
 ---
-layout: post
-title: Password-protected Bind TCP Shell
-date: 2021-01-14 13:44:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 1A - Password-Protected Bind TCP Shellcode
+author: fwinsnes
+date: 2021-01-20 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
+
 #### Introduction
 
 These series of posts starting with the prefix "SLAE64 - Assignment" will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have 

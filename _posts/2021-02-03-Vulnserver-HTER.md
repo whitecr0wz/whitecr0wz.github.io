@@ -1,9 +1,9 @@
 ---
 title: Vulnserver HTER - Vanilla BOF & Character Conversion 
 author: fwinsnes
-date: 2020-03-09 11:33:00 +0800
+date: 2021-02-03 11:33:00 +0800
 categories: [Binary Exploitation]
-tags: [vulnerability]
+tags: [shellcoding, vulnerability]
 ---
 
 # Introduction

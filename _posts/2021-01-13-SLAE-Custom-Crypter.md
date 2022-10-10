@@ -1,5 +1,5 @@
 ---
-title: Custom Encrypter  
+title: SLAE - Assignment 7 - Custom Crypter
 author: fwinsnes
 date: 2021-01-19 13:44:00 +0800
 categories: [SLAE]

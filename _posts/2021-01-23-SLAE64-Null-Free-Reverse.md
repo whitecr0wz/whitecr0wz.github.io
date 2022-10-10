@@ -1,10 +1,9 @@
 ---
-layout: post
-title: Null-Free Reverse Shell
-date: 2021-01-19 20:30:00
-categories: posts
-comments: false
-en: true
+title: SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode
+author: fwinsnes
+date: 2021-01-23 13:44:00 +0800
+categories: [SLAE64]
+tags: [assembly, shellcoding]
 ---
 
 These series of posts starting with the prefix "SLAE64 - Assignment" will be created in order to fulfill the requirements of the SLAE64 certification.
