@@ -12,7 +12,7 @@ tags: [assembly, shellcoding, vulnerability]
 
 ### The basics once again
 
-##### As with any other vulnerable applicaiton to a buffer overflow, we need to test it first in order to exploit it, as in the [previous](https://whitecr0wz.github.io/posts/Exploiting-Stack-Overflows-On-Windows/) walkthrough in vulnserver, the parameter was vulnerable to the use of /.:/ after it being called, let's test if this works as well with LTER.
+##### As with any other vulnerable applicaiton to a buffer overflow, we need to test it first in order to exploit it.
 
 ###### PoC code:
 
