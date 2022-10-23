@@ -83,7 +83,7 @@ theme_mode: dark
 # img_cdn: 'https://raw.githubusercontent.com/cotes2020/chirpy-images/main'
 
 # the avatar on sidebar, support local or CORS resources
-avatar: 'https://media-exp1.licdn.com/dms/image/C4E03AQHvovPwVVam7Q/profile-displayphoto-shrink_200_200/0/1614102459661?e=1671062400&v=beta&t=CQjW6XfzhpDRgtYpgeFKdJLtrs8jqL0XONe9on2wsG8'
+avatar: 'https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg'
 
 # boolean type, the global switch for ToC in posts.
 toc: true
