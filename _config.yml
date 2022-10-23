@@ -21,9 +21,9 @@ timezone: Americas/Argentina/Buenos_Aires
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: vlan0.xyz 
+title: Another techblog 
 
-tagline: Just messing around with packets! 
+tagline: Just sharing interesting tech stuff :) 
 
 description: >-                        # used by seo meta and the atom feed
   A minimal, responsive, and powerful Jekyll theme for presenting professional writing.
