@@ -10,7 +10,7 @@ Today the a basic Broadcast-type Network will be dissected within the length of 
 
 #### Diagram
 
-![](/assets/img/Networking/VyOS/SOHO/VyOS-SOHO-Diagram.png)
+![](/assets/img/Networking/VyOS/routing/OSPF/VyOS-OSPF-I-Diagram.png)
 
 Network consists of 5 VyOS-powered routers, from which 4 connect to a central switch to which send all OSPF-related communication. 
 
