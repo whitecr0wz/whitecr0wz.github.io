@@ -6,7 +6,7 @@ categories: [Computer Networking]
 tags: [VyOS, Networking, Routing, OSPF]
 ---
 
-Today the a basic Broadcast-type Network will be dissected within the length of this post:
+The following OSPF Network will be dissected within the length of this post:
 
 #### Diagram
 
