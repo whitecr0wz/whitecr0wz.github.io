@@ -94,7 +94,7 @@ vyos@R4:~$
 ```
 
 ```term
-vyos@IGW-RT:~$ show configuration commands | grep -vE 'ntp|syslog|login|conntrack|config-management|console|hw-id'
+vyos@EDGE-RT:~$ show configuration commands | grep -vE 'ntp|syslog|login|conntrack|config-management|console|hw-id'
 set firewall group address-group Allowed-Networks-Towards-Internet address '10.10.10.0-10.10.10.32'
 set firewall group address-group Allowed-Networks-Towards-Internet address '10.10.11.0-10.10.11.16'
 set firewall group address-group Allowed-Networks-Towards-Internet address '10.10.254.0-10.10.254.2'
@@ -111,13 +111,13 @@ set protocols ospf default-information originate
 set protocols ospf interface eth0 passive disable
 set protocols static route 0.0.0.0/0 next-hop 10.11.10.1
 set service ssh port '22'
-set system host-name 'IGW-RT'
-vyos@IGW-RT:~$
+set system host-name 'EDGE-RT'
+vyos@EDGE-RT:~$
 ```
 
 #### Neighbors
 
-We can see the neighbour adjacencies coming up
+The neighbor adjacencies are noticed to transition into their Complete status.
 
 + R1
 
@@ -301,7 +301,6 @@ vyos@R1:~$
 ```
 
 #### Traces 
-
 
 ```term
 PC1> trace 10.10.10.18 -P 6
